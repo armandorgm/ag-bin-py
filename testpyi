@@ -1,0 +1,18 @@
+# exchange.pyi
+
+from typing import Dict
+
+class Exchange:
+    def fetch_balance(self) -> Dict[str, Any]:
+        ...
+
+# Define el diccionario devuelto por fetch_balance
+class BalanceInfo:
+    makerCommission: str
+    takerCommission: str
+    # ... otras propiedades ...
+
+# Usa el diccionario en la propiedad 'info'
+class BalanceResponse:
+    info: BalanceInfo
+    # ... otras propiedades ...
