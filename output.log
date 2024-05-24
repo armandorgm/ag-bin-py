@@ -1,0 +1,48 @@
+2024-05-20 11:47:34,027 - order_monitor - INFO - <class 'models.BotSymbolStartData'>
+2024-05-20 11:48:40,764 - order_monitor - INFO - <class 'models.BotSymbolStartData'>
+2024-05-20 11:49:38,839 - order_monitor - INFO - <class 'models.BotSymbolStartData'>
+2024-05-20 11:50:26,184 - order_monitor - INFO - <class 'models.BotSymbolStartData'>
+2024-05-24 08:21:32,836 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-31' coro=<AiohttpClient.ping_loop() done, defined at C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\base\ws\aiohttp_client.py:104> exception=ConnectionResetError('Cannot write to closing transport')>
+Traceback (most recent call last):
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\base\ws\aiohttp_client.py", line 123, in ping_loop
+    await self.connection.ping()
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\aiohttp\client_ws.py", line 157, in ping
+    await self._writer.ping(message)
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\aiohttp\http_websocket.py", line 715, in ping
+    await self._send_frame(message, WSMsgType.PING)
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\aiohttp\http_websocket.py", line 675, in _send_frame
+    self._write(header + mask + message)
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\aiohttp\http_websocket.py", line 702, in _write
+    raise ConnectionResetError("Cannot write to closing transport")
+ConnectionResetError: Cannot write to closing transport
+2024-05-24 08:21:32,858 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-65' coro=<AiohttpClient.ping_loop() done, defined at C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\base\ws\aiohttp_client.py:104> exception=ConnectionResetError('Cannot write to closing transport')>
+Traceback (most recent call last):
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\base\ws\aiohttp_client.py", line 123, in ping_loop
+    await self.connection.ping()
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\aiohttp\client_ws.py", line 157, in ping
+    await self._writer.ping(message)
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\aiohttp\http_websocket.py", line 715, in ping
+    await self._send_frame(message, WSMsgType.PING)
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\aiohttp\http_websocket.py", line 675, in _send_frame
+    self._write(header + mask + message)
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\aiohttp\http_websocket.py", line 702, in _write
+    raise ConnectionResetError("Cannot write to closing transport")
+ConnectionResetError: Cannot write to closing transport
+2024-05-24 08:36:28,174 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-26' coro=<OrderMonitor.start() done, defined at c:\Users\arman\myProjects\ag-bin-py\order_monitor.py:84> exception=NetworkError(ClientConnectionError('Connector is closed.'))>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\order_monitor.py", line 89, in start
+    currentPrice = (await self.exchange.watch_ticker(botOperation.symbol))['last']
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\pro\binance.py", line 1011, in watch_ticker
+    tickers = await self.watch_tickers([symbol], self.extend(params, {'callerMethodName': 'watchTicker'}))
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\pro\binance.py", line 1025, in watch_tickers
+    newTickers = await self.watch_multi_ticker_helper('watchTickers', channelName, symbols, params)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\pro\binance.py", line 1095, in watch_multi_ticker_helper
+    result = await self.watch_multiple(url, messageHashes, self.deep_extend(request, params), subscriptionArgs, subscribe)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ccxt.base.errors.NetworkError: Connector is closed.

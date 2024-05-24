@@ -37,13 +37,7 @@ class Mbw:
         selected = int(input("input the positionSide number\n"))
         print("selected: " +positionSide[selected-1])
         return positionSide[selected-1]
-        
-    async def orderStatus(self):
-        symbol = self.selectSymbol()
-        order_id = input("ingrese el id de la orden")
-        order_status = await self.exchange.fetch_order(order_id,symbol)
-        pprint.pprint(order_status)
-        
+                
     async def createOrder(self):
         try:
             min_notional = 5

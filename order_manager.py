@@ -1,14 +1,22 @@
+import math
+from models import BotOperation
 from user_interface import UserInterface
 import ccxt.pro as ccxtpro
-import ccxt
 import asyncio
 from pprint import pprint
 import open_new_console
-import utils
-from order_manage_dao import OrderManagerDAO
+from dao import OrderManagerDAO
 from ccxt.base.types import OrderType,OrderSide,PositionSide,Order
+from order_monitor import OrderMonitor
+from db_integrity import DbIntegrity
+from interfaces.iOrderManager import iOrderManager
 
-class OrderManager:
+
+
+test= {
+    "order_id" : "55928602627"
+}
+class OrderManager(iOrderManager):
     def __init__(self, api_key: str, secret: str, user_interface: UserInterface):
         self.dao = OrderManagerDAO("order_manager.db")
         self.exchange = ccxtpro.binanceusdm({
@@ -20,11 +28,14 @@ class OrderManager:
         }
     })  
         #self.exchange.set_sandbox_mode(True)
-        self.market = asyncio.create_task(self.exchange.load_markets())
+        self.loadMarketsTask = asyncio.create_task(self.exchange.load_markets())
         self.user_interface = user_interface
         self.symbols = ["BNB/USDT","ATA/USDT","TRX/USDT"]
         print("exchange instatiace")
-        self.open_orders = []
+        self.monitor = OrderMonitor(self, self.exchange,self.dao)
+        self.integrityChecker = DbIntegrity(self.dao,self.exchange)
+
+
 
     async def startMenu(self):
 
@@ -32,14 +43,17 @@ class OrderManager:
         try:
             option=None
             while option !=str(0):
-                print("1) print my Positions")
-                print("2) createOrder")
-                print("3) showOpenPosition")
-                print("4) orderStatus")
-                print("5) openTakeMinProfit")
-                print("6) Create new bot Operation")
-                print("0) Exit")
+                print("""
+1) print my Positions")
+2) createOrder")
+3) showOpenPosition")
+4) Monitor Orders
+5) Show Market Data
+6) Create new bot Operation
+7) watch Orders
+0) Exit""")
                 option = input("write a number from menu\n")
+                await self.loadMarketsTask
                 match option:
                     case "1":
                         #print(exchange.markets)
@@ -50,11 +64,33 @@ class OrderManager:
                     case "3":
                         await self.showOpenPosition()
                     case "4":
-                        await self.orderStatus()
+                        await self.monitor.start()
+                        break
                     case "5":
-                        await self.openTakeMinProfit()
+                        symbol = self.user_interface.select_symbol()
+                        market = await self.loadMarketsTask
+                        symbolData = self.exchange.market(symbol)
+                        pprint(symbolData)
+                        #await self.integrityChecker.checkDbIntegrity()
+                        break
                     case "6":
                         await self.createNewBotOperation()
+                        break
+                    case "7":
+                        if self.exchange.has['watchBalance']:
+                            while True:
+                                try:
+                                    orders = await self.exchange.watch_orders(symbol=None, since=None, limit=5, params={})
+                                    await self.monitor.start()
+                                    print(self.exchange.iso8601(self.exchange.milliseconds()), orders)
+                                except Exception as e:
+                                    print(e)
+                                except KeyboardInterrupt:
+                                    pass
+                                finally:
+                                    await self.exchange.close()
+                                    # stop the loop on exception or leave it commented to retry
+                                    # raise e
                     case "99":
                         await self.testFuction()
                     case "0":
@@ -73,27 +109,15 @@ class OrderManager:
             
     async def monitor_order(self, order_id, symbol):
         raise "not implemented monitor_order yet"
+             
+    def getMinAmountAtPrice(self,price:float):
+        minPrice = 5
+        minQuantity = math.ceil(minPrice / price)
+        print(f"cantidad minima: {minQuantity}")
+        return minQuantity
     
-    def getPricePrecision(self):
-        if(self.exchange.market(self.symbol)):
-            return self.exchange.market(self.symbol)
-  
-        
-    async def orderStatus(self):
-        symbol = self.selectSymbol()
-        order_id = input("ingrese el id de la orden")
-        order_status = await self.exchange.fetch_order(order_id,symbol)
-        pprint.pprint(order_status)
-     
-    async def openTakeMinProfit(self):
-        order_id = "55928602627"
-        #order_status = await self.exchange.fetch_order_status(order_id)#need symbol
-        #orders = await self.exchange.fetch_orders(self.user_interface.select_symbol() )#works
-        #pprint(orders)
-     
-     
     async def getMinAmountAtMarketPrice(self,symbol,side:OrderSide) -> int:
-        await self.market
+        await self.loadMarketsTask
         min_notional = 5
         book = await self.exchange.watch_order_book(symbol,5)
         price = float(book["asks" if side =="buy" else "bids"][0][0])
@@ -115,6 +139,7 @@ class OrderManager:
         pprint(order["side"])
         pprint(order["amount"])
         pprint(order["price"])
+        
         opositeSide = 'sell' if order["side"] == 'buy' else 'buy'
         opositePositionSide:PositionSide = "short" if str(order["info"]["positionSide"]).lower() == "long" else "long"
 
@@ -122,15 +147,16 @@ class OrderManager:
  
     async def createNewBotOperation(self):
             symbol = self.user_interface.select_symbol()
-            market = await self.market
+            market = await self.loadMarketsTask
             symbolData = self.exchange.market(symbol)
             pprint(symbolData)
             positionSide = self.user_interface.selectPositionSide()
             
             #minimalAmount = self.exchange.amount_to_precision(symbol,(5/price)+self.exchange.market(symbol)["limits"]["amount"]["min"] )
             if positionSide == "BOTH":
-                startingOrder = await self.createOrderV2(symbol,"market", "buy", await self.getMinAmountAtMarketPrice(symbol,"buy"),None,"long")
-                await self.createOpositeOrder(startingOrder)
+                longOrder = await self.createOrderV2(symbol,"market", "buy", await self.getMinAmountAtMarketPrice(symbol,"buy"),None,"long")
+                shortOrder = await self.createOpositeOrder(longOrder)
+                self.dao.registerNewOperation(longOrder["price"],longOrder[symbol],longOrder["id"],shortOrder["id"])
     
     async def createOrder(self):
         
@@ -225,7 +251,77 @@ class OrderManager:
             self.exchange.verbose = True     
             order = await self.exchange.create_order(symbol, type, side, amoung, price, params={"positionSide":positionSide})
             self.exchange.verbose = False
+            self.dao.storeNewOrder(order["id"],order["status"])
             return order
+    
+    async def getValuesForNewProfitOperationOrders(self, botOperation:BotOperation,slotPrice):
+        
+        positionSide = botOperation.position_side
+        offsetPercentage = botOperation.threshold
+        symbol = botOperation.symbol
+        profitOperationSides = ["buy","sell"] if positionSide.lower() == "long" else ["sell","buy"]
+        
+        print(f"slot type and price: type({type(slotPrice)} and price{slotPrice})")
+        
+        orderType  = [None, None]
+        paramsPair = [None, None]
+        pricePair = [None, None]
+        # Calcula el precio de cierre según el lado de la posición y el porcentaje de offset
+
+        currentPrice = (await self.exchange.watch_ticker(botOperation.symbol))['last']
+        print(f"Posicion Actual {positionSide}")
+        print(f"Precio Actual: {currentPrice} {"superior" if currentPrice > slotPrice else "inferior"} al slotPrice")
+        if positionSide.lower() == "long":
+            closingOrderPrice = slotPrice * (1 + offsetPercentage / 100)
+            pricePair=[slotPrice,closingOrderPrice]
+            if currentPrice > slotPrice:
+                orderType = ["LIMIT","STOP"]
+                paramsPair = [
+                    {"positionSide":positionSide},
+                    {"positionSide":positionSide,"stopPrice":pricePair[0]}]
+            else:
+                orderType = ["STOP","TAKE_PROFIT"]
+                paramsPair = [
+                    {"positionSide":positionSide,"stopPrice":pricePair[0]},
+                    {"positionSide":positionSide,"stopPrice":pricePair[0]}]
+        else:
+            closingOrderPrice = slotPrice / (1 + offsetPercentage / 100)
+            pricePair=[slotPrice,closingOrderPrice]
+            if currentPrice < slotPrice:
+                orderType = ["LIMIT","STOP"]
+                paramsPair = [
+                    {"positionSide":positionSide},
+                    {"positionSide":positionSide,"stopPrice":pricePair[0]}]
+            else:
+                orderType = ["STOP","TAKE_PROFIT"]
+                paramsPair = [
+                    {"positionSide":positionSide,"stopPrice":pricePair[0]},
+                    {"positionSide":positionSide,"stopPrice":pricePair[0]}]
+
+        
+        openAndCloseOrderList:list=[]
+        amount = self.getMinAmountAtPrice(slotPrice)
+        for i,side in enumerate(profitOperationSides):
+            openAndCloseOrderList.append((symbol, orderType[i], profitOperationSides[i], amount, self.exchange.price_to_precision(symbol,pricePair[i]),paramsPair[i]))
+        
+        pprint(openAndCloseOrderList)
+        return openAndCloseOrderList
+
+    
+    async def create_profit_operation(self, botOperationId:int, slotPrice:float):
+        botOperation = self.dao.getBotOperation(botOperationId)
+        print("create_profit_operation,botOperation",botOperation)
+        
+        createOrderParamsList = await self.getValuesForNewProfitOperationOrders(botOperation, slotPrice)
+        self.exchange.verbose = True
+        openingOrder = await self.exchange.create_order(*createOrderParamsList[0])
+        closingOrder = await self.exchange.create_order(*createOrderParamsList[1])
+        self.exchange.verbose = False
+        res = self.dao.storeNewProfitOperation(botOperationId, slotPrice,openingOrder["id"],closingOrder["id"])
+        pprint(res)
+        return
+      
+        
     
     async def monitor_order_and_create_second(self, order_id,symbol,type,side,amount,price, positionSide):
         print("monitor_order_and_create_second() started")
