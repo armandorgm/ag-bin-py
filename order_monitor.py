@@ -90,9 +90,12 @@ class OrderMonitor:
                     
                     lowerPricethreshold,upperPricethreshold = self.find_enclosing_thresholds(botOperation.entry_price, currentPrice,botOperation.threshold)
                     slots = [lowerPricethreshold,upperPricethreshold]
+                    print("default order",slots)
+                    print(botOperation.position_side.lower(),"== long ->", botOperation.position_side.lower() == "long")
                     
-                    if botOperation.position_side.lower() == "ssss".lower():
+                    if botOperation.position_side.lower() == "long":
                         slots.reverse()
+                    print("new order",slots)
                         
                     for slotPrice in slots:
                         slotPrice = float(self.exchange.price_to_precision(botOperation.symbol, slotPrice))

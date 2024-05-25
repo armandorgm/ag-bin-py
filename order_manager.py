@@ -82,7 +82,11 @@ class OrderManager(iOrderManager):
                                 try:
                                     orders = await self.exchange.watch_orders(symbol=None, since=None, limit=5, params={})
                                     await self.monitor.start()
-                                    print(self.exchange.iso8601(self.exchange.milliseconds()), orders)
+                                    #pprint(orders)
+                                    for order in orders:
+                                        print(order["id"],order["info"]["ps"],order["type"],order["price"],order["stopPrice"],order["status"],)
+                                    #print(self.exchange.iso8601(self.exchange.milliseconds()), orders)
+
                                 except Exception as e:
                                     print(e)
                                 except KeyboardInterrupt:
@@ -275,22 +279,22 @@ class OrderManager(iOrderManager):
             closingOrderPrice = slotPrice * (1 + offsetPercentage / 100)
             pricePair=[slotPrice,closingOrderPrice]
             if currentPrice > slotPrice:
-                orderType = ["LIMIT","STOP"]
-                paramsPair = [
-                    {"positionSide":positionSide},
-                    {"positionSide":positionSide,"stopPrice":pricePair[0]}]
-            else:
-                orderType = ["STOP","TAKE_PROFIT"]
+                orderType = ["TAKE_PROFIT_MARKET","STOP"]
                 paramsPair = [
                     {"positionSide":positionSide,"stopPrice":pricePair[0]},
+                    {"positionSide":positionSide,"stopPrice":pricePair[0]}]
+            else:
+                orderType = ["LIMIT","TAKE_PROFIT"]
+                paramsPair = [
+                    {"positionSide":positionSide},
                     {"positionSide":positionSide,"stopPrice":pricePair[0]}]
         else:
             closingOrderPrice = slotPrice / (1 + offsetPercentage / 100)
             pricePair=[slotPrice,closingOrderPrice]
             if currentPrice < slotPrice:
-                orderType = ["LIMIT","STOP"]
+                orderType = ["TAKE_PROFIT_MARKET","STOP"]
                 paramsPair = [
-                    {"positionSide":positionSide},
+                    {"positionSide":positionSide,"stopPrice":pricePair[0]},
                     {"positionSide":positionSide,"stopPrice":pricePair[0]}]
             else:
                 orderType = ["STOP","TAKE_PROFIT"]

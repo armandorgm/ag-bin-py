@@ -46,3 +46,197 @@ Traceback (most recent call last):
     result = await self.watch_multiple(url, messageHashes, self.deep_extend(request, params), subscriptionArgs, subscribe)
              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 ccxt.base.errors.NetworkError: Connector is closed.
+2024-05-24 11:28:33,401 - asyncio - ERROR - Unclosed connection
+client_connection: Connection<ConnectionKey(host='fstream.binance.com', port=443, is_ssl=True, ssl=True, proxy=None, proxy_auth=None, proxy_headers_hash=None)>
+2024-05-24 11:28:33,403 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-140' coro=<AiohttpClient.ping_loop() done, defined at C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\base\ws\aiohttp_client.py:104> exception=ConnectionResetError('Cannot write to closing transport')>
+Traceback (most recent call last):
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\base\ws\aiohttp_client.py", line 123, in ping_loop
+    await self.connection.ping()
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\aiohttp\client_ws.py", line 157, in ping
+    await self._writer.ping(message)
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\aiohttp\http_websocket.py", line 715, in ping
+    await self._send_frame(message, WSMsgType.PING)
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\aiohttp\http_websocket.py", line 675, in _send_frame
+    self._write(header + mask + message)
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\aiohttp\http_websocket.py", line 702, in _write
+    raise ConnectionResetError("Cannot write to closing transport")
+ConnectionResetError: Cannot write to closing transport
+2024-05-24 11:45:37,641 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-182' coro=<AiohttpClient.ping_loop() done, defined at C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\base\ws\aiohttp_client.py:104> exception=ConnectionResetError('Cannot write to closing transport')>
+Traceback (most recent call last):
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\base\ws\aiohttp_client.py", line 123, in ping_loop
+    await self.connection.ping()
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\aiohttp\client_ws.py", line 157, in ping
+    await self._writer.ping(message)
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\aiohttp\http_websocket.py", line 715, in ping
+    await self._send_frame(message, WSMsgType.PING)
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\aiohttp\http_websocket.py", line 675, in _send_frame
+    self._write(header + mask + message)
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\aiohttp\http_websocket.py", line 702, in _write
+    raise ConnectionResetError("Cannot write to closing transport")
+ConnectionResetError: Cannot write to closing transport
+2024-05-24 11:45:37,644 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-70' coro=<AiohttpClient.ping_loop() done, defined at C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\base\ws\aiohttp_client.py:104> exception=ConnectionResetError('Cannot write to closing transport')>
+Traceback (most recent call last):
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\base\ws\aiohttp_client.py", line 123, in ping_loop
+    await self.connection.ping()
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\aiohttp\client_ws.py", line 157, in ping
+    await self._writer.ping(message)
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\aiohttp\http_websocket.py", line 715, in ping
+    await self._send_frame(message, WSMsgType.PING)
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\aiohttp\http_websocket.py", line 675, in _send_frame
+    self._write(header + mask + message)
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\aiohttp\http_websocket.py", line 702, in _write
+    raise ConnectionResetError("Cannot write to closing transport")
+ConnectionResetError: Cannot write to closing transport
+2024-05-24 11:45:37,646 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-161' coro=<AiohttpClient.ping_loop() done, defined at C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\base\ws\aiohttp_client.py:104> exception=ConnectionResetError('Cannot write to closing transport')>
+Traceback (most recent call last):
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\base\ws\aiohttp_client.py", line 123, in ping_loop
+    await self.connection.ping()
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\aiohttp\client_ws.py", line 157, in ping
+    await self._writer.ping(message)
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\aiohttp\http_websocket.py", line 715, in ping
+    await self._send_frame(message, WSMsgType.PING)
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\aiohttp\http_websocket.py", line 675, in _send_frame
+    self._write(header + mask + message)
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\aiohttp\http_websocket.py", line 702, in _write
+    raise ConnectionResetError("Cannot write to closing transport")
+ConnectionResetError: Cannot write to closing transport
+2024-05-24 13:51:44,676 - asyncio - ERROR - Unclosed connection
+client_connection: Connection<ConnectionKey(host='fstream.binance.com', port=443, is_ssl=True, ssl=True, proxy=None, proxy_auth=None, proxy_headers_hash=None)>
+2024-05-24 20:34:17,878 - asyncio - ERROR - Unclosed connection
+client_connection: Connection<ConnectionKey(host='fstream.binance.com', port=443, is_ssl=True, ssl=True, proxy=None, proxy_auth=None, proxy_headers_hash=None)>
+2024-05-24 20:34:17,939 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-59' coro=<AiohttpClient.ping_loop() done, defined at C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\base\ws\aiohttp_client.py:104> exception=ConnectionResetError('Cannot write to closing transport')>
+Traceback (most recent call last):
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\base\ws\aiohttp_client.py", line 123, in ping_loop
+    await self.connection.ping()
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\aiohttp\client_ws.py", line 157, in ping
+    await self._writer.ping(message)
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\aiohttp\http_websocket.py", line 715, in ping
+    await self._send_frame(message, WSMsgType.PING)
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\aiohttp\http_websocket.py", line 675, in _send_frame
+    self._write(header + mask + message)
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\aiohttp\http_websocket.py", line 702, in _write
+    raise ConnectionResetError("Cannot write to closing transport")
+ConnectionResetError: Cannot write to closing transport
+2024-05-24 20:34:17,994 - asyncio - ERROR - Unclosed connection
+client_connection: Connection<ConnectionKey(host='fstream.binance.com', port=443, is_ssl=True, ssl=True, proxy=None, proxy_auth=None, proxy_headers_hash=None)>
+2024-05-25 02:31:31,575 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-75' coro=<AiohttpClient.ping_loop() done, defined at C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\base\ws\aiohttp_client.py:104> exception=ConnectionResetError('Cannot write to closing transport')>
+Traceback (most recent call last):
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\base\ws\aiohttp_client.py", line 123, in ping_loop
+    await self.connection.ping()
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\aiohttp\client_ws.py", line 157, in ping
+    await self._writer.ping(message)
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\aiohttp\http_websocket.py", line 715, in ping
+    await self._send_frame(message, WSMsgType.PING)
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\aiohttp\http_websocket.py", line 675, in _send_frame
+    self._write(header + mask + message)
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\aiohttp\http_websocket.py", line 702, in _write
+    raise ConnectionResetError("Cannot write to closing transport")
+ConnectionResetError: Cannot write to closing transport
+2024-05-25 02:31:31,594 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-136' coro=<AiohttpClient.ping_loop() done, defined at C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\base\ws\aiohttp_client.py:104> exception=ConnectionResetError('Cannot write to closing transport')>
+Traceback (most recent call last):
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\base\ws\aiohttp_client.py", line 123, in ping_loop
+    await self.connection.ping()
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\aiohttp\client_ws.py", line 157, in ping
+    await self._writer.ping(message)
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\aiohttp\http_websocket.py", line 715, in ping
+    await self._send_frame(message, WSMsgType.PING)
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\aiohttp\http_websocket.py", line 675, in _send_frame
+    self._write(header + mask + message)
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\aiohttp\http_websocket.py", line 702, in _write
+    raise ConnectionResetError("Cannot write to closing transport")
+ConnectionResetError: Cannot write to closing transport
+2024-05-25 02:31:31,596 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-197' coro=<AiohttpClient.ping_loop() done, defined at C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\base\ws\aiohttp_client.py:104> exception=ConnectionResetError('Cannot write to closing transport')>
+Traceback (most recent call last):
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\base\ws\aiohttp_client.py", line 123, in ping_loop
+    await self.connection.ping()
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\aiohttp\client_ws.py", line 157, in ping
+    await self._writer.ping(message)
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\aiohttp\http_websocket.py", line 715, in ping
+    await self._send_frame(message, WSMsgType.PING)
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\aiohttp\http_websocket.py", line 675, in _send_frame
+    self._write(header + mask + message)
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\aiohttp\http_websocket.py", line 702, in _write
+    raise ConnectionResetError("Cannot write to closing transport")
+ConnectionResetError: Cannot write to closing transport
+2024-05-25 02:31:31,597 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-208' coro=<AiohttpClient.ping_loop() done, defined at C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\base\ws\aiohttp_client.py:104> exception=ConnectionResetError('Cannot write to closing transport')>
+Traceback (most recent call last):
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\base\ws\aiohttp_client.py", line 123, in ping_loop
+    await self.connection.ping()
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\aiohttp\client_ws.py", line 157, in ping
+    await self._writer.ping(message)
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\aiohttp\http_websocket.py", line 715, in ping
+    await self._send_frame(message, WSMsgType.PING)
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\aiohttp\http_websocket.py", line 675, in _send_frame
+    self._write(header + mask + message)
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\aiohttp\http_websocket.py", line 702, in _write
+    raise ConnectionResetError("Cannot write to closing transport")
+ConnectionResetError: Cannot write to closing transport
+2024-05-25 05:26:53,997 - asyncio - ERROR - Unclosed connection
+client_connection: Connection<ConnectionKey(host='fstream.binance.com', port=443, is_ssl=True, ssl=True, proxy=None, proxy_auth=None, proxy_headers_hash=None)>
+2024-05-25 05:26:53,997 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-178' coro=<AiohttpClient.ping_loop() done, defined at C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\base\ws\aiohttp_client.py:104> exception=ConnectionResetError('Cannot write to closing transport')>
+Traceback (most recent call last):
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\base\ws\aiohttp_client.py", line 123, in ping_loop
+    await self.connection.ping()
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\aiohttp\client_ws.py", line 157, in ping
+    await self._writer.ping(message)
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\aiohttp\http_websocket.py", line 715, in ping
+    await self._send_frame(message, WSMsgType.PING)
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\aiohttp\http_websocket.py", line 675, in _send_frame
+    self._write(header + mask + message)
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\aiohttp\http_websocket.py", line 702, in _write
+    raise ConnectionResetError("Cannot write to closing transport")
+ConnectionResetError: Cannot write to closing transport
+2024-05-25 05:26:54,001 - asyncio - ERROR - Unclosed connection
+client_connection: Connection<ConnectionKey(host='fstream.binance.com', port=443, is_ssl=True, ssl=True, proxy=None, proxy_auth=None, proxy_headers_hash=None)>
+2024-05-25 05:26:54,001 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-193' coro=<AiohttpClient.ping_loop() done, defined at C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\base\ws\aiohttp_client.py:104> exception=ConnectionResetError('Cannot write to closing transport')>
+Traceback (most recent call last):
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\base\ws\aiohttp_client.py", line 123, in ping_loop
+    await self.connection.ping()
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\aiohttp\client_ws.py", line 157, in ping
+    await self._writer.ping(message)
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\aiohttp\http_websocket.py", line 715, in ping
+    await self._send_frame(message, WSMsgType.PING)
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\aiohttp\http_websocket.py", line 675, in _send_frame
+    self._write(header + mask + message)
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\aiohttp\http_websocket.py", line 702, in _write
+    raise ConnectionResetError("Cannot write to closing transport")
+ConnectionResetError: Cannot write to closing transport
+2024-05-25 08:34:39,733 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-210' coro=<AiohttpClient.ping_loop() done, defined at C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\base\ws\aiohttp_client.py:104> exception=ConnectionResetError('Cannot write to closing transport')>
+Traceback (most recent call last):
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\base\ws\aiohttp_client.py", line 123, in ping_loop
+    await self.connection.ping()
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\aiohttp\client_ws.py", line 157, in ping
+    await self._writer.ping(message)
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\aiohttp\http_websocket.py", line 715, in ping
+    await self._send_frame(message, WSMsgType.PING)
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\aiohttp\http_websocket.py", line 675, in _send_frame
+    self._write(header + mask + message)
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\aiohttp\http_websocket.py", line 702, in _write
+    raise ConnectionResetError("Cannot write to closing transport")
+ConnectionResetError: Cannot write to closing transport
+2024-05-25 08:34:39,736 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-115' coro=<AiohttpClient.ping_loop() done, defined at C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\base\ws\aiohttp_client.py:104> exception=ConnectionResetError('Cannot write to closing transport')>
+Traceback (most recent call last):
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\base\ws\aiohttp_client.py", line 123, in ping_loop
+    await self.connection.ping()
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\aiohttp\client_ws.py", line 157, in ping
+    await self._writer.ping(message)
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\aiohttp\http_websocket.py", line 715, in ping
+    await self._send_frame(message, WSMsgType.PING)
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\aiohttp\http_websocket.py", line 675, in _send_frame
+    self._write(header + mask + message)
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\aiohttp\http_websocket.py", line 702, in _write
+    raise ConnectionResetError("Cannot write to closing transport")
+ConnectionResetError: Cannot write to closing transport
