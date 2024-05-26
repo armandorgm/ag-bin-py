@@ -1,3 +1,5 @@
+import json
+import logging
 import math
 from models import BotOperation
 from user_interface import UserInterface
@@ -17,8 +19,10 @@ test= {
     "order_id" : "55928602627"
 }
 class OrderManager(iOrderManager):
-    def __init__(self, api_key: str, secret: str, user_interface: UserInterface):
-        self.dao = OrderManagerDAO("order_manager.db")
+    def __init__(self, api_key: str, secret: str, user_interface: UserInterface,testMode:bool=False):
+        self.testMode = testMode
+        db = "test_order_manager.db" if testMode else "order_manager.db"
+        self.dao = OrderManagerDAO(db)
         self.exchange = ccxtpro.binanceusdm({
         'apiKey': api_key,
         'secret': secret,
@@ -27,7 +31,10 @@ class OrderManager(iOrderManager):
             'leverageBrackets' : None
         }
     })  
-        #self.exchange.set_sandbox_mode(True)
+        #############
+        self.exchange.set_sandbox_mode(testMode)
+        self.exchange.verbose = testMode
+        ##############
         self.loadMarketsTask = asyncio.create_task(self.exchange.load_markets())
         self.user_interface = user_interface
         self.symbols = ["BNB/USDT","ATA/USDT","TRX/USDT"]
@@ -77,24 +84,7 @@ class OrderManager(iOrderManager):
                         await self.createNewBotOperation()
                         break
                     case "7":
-                        if self.exchange.has['watchBalance']:
-                            while True:
-                                try:
-                                    orders = await self.exchange.watch_orders(symbol=None, since=None, limit=5, params={})
-                                    await self.monitor.start()
-                                    #pprint(orders)
-                                    for order in orders:
-                                        print(order["id"],order["info"]["ps"],order["type"],order["price"],order["stopPrice"],order["status"],)
-                                    #print(self.exchange.iso8601(self.exchange.milliseconds()), orders)
-
-                                except Exception as e:
-                                    print(e)
-                                except KeyboardInterrupt:
-                                    pass
-                                finally:
-                                    await self.exchange.close()
-                                    # stop the loop on exception or leave it commented to retry
-                                    # raise e
+                        await self.monitorByWs()
                     case "99":
                         await self.testFuction()
                     case "0":
@@ -110,7 +100,44 @@ class OrderManager(iOrderManager):
             pass
         finally:
             await self.exchange.close()
+    
+    async def monitorByWs(self):
+        #logging.info(json.dumps(self.exchange.has, indent=4, sort_keys=True))
+        await self.monitor.start()
+
+        while True:
+            try:
+                print("#"*100)
+                orders = await self.exchange.watch_orders(symbol=None, since=None, limit=None, params={})
+                print("cantidad de ordenes recibidas por ws:",len(orders))
+                for order in orders:
+                    pprint(orders)
+                    print(order["lastUpdateTimestamp"],order["datetime"],order["id"],order["info"]["ps"],order["side"],order["type"],order["reduceOnly"],order["price"],order["stopPrice"],order["status"],)
+                    print("order[status].lower() value",order["status"].lower())
+                    if order["reduceOnly"] == False:
+                        print("It is a opening order. Nothing to do on db")
+                    elif order["status"].lower() != "open":#if is ReduceOnly
+                        profitOperation = self.dao.getProfitOperationByClosingOrderId(order["id"])
+                        if profitOperation:
+                            res = self.dao.archiveProfitOperation(profitOperation.id)
+                            print("the return of a deleted row is:",res,"and profitOperationIs:",profitOperation)
+                await self.monitor.start()
+                            
+            except Exception as e:
+                #print(e)
+                logging.error(e)
+                try:
+                    await self.exchange.close()
+                except Exception as e:
+                    logging.error(f"Error closing exchange connection: {e}")
+                finally:
+                    print("waiting 30 seconds to start bucle again maybe?")
+                    await self.exchange.sleep(30000)
+            except KeyboardInterrupt:
+                break
             
+                
+    
     async def monitor_order(self, order_id, symbol):
         raise "not implemented monitor_order yet"
              
@@ -121,12 +148,15 @@ class OrderManager(iOrderManager):
         return minQuantity
     
     async def getMinAmountAtMarketPrice(self,symbol,side:OrderSide) -> int:
-        await self.loadMarketsTask
-        min_notional = 5
-        book = await self.exchange.watch_order_book(symbol,5)
-        price = float(book["asks" if side =="buy" else "bids"][0][0])
+        try:
+            await self.loadMarketsTask
+            min_notional = 5
+            book = await self.exchange.watch_order_book(symbol,5)
+            price = float(book["asks" if side =="buy" else "bids"][0][0])
 
-        return self.exchange.amount_to_precision(symbol,(min_notional/price)+self.exchange.market(symbol)["limits"]["amount"]["min"] )
+            return self.exchange.amount_to_precision(symbol,(min_notional/price)+self.exchange.market(symbol)["limits"]["amount"]["min"] )
+        finally:
+            await self.exchange.close()
  
     async def testFuction(self):
         order_id = "55928602627"
@@ -172,11 +202,11 @@ class OrderManager(iOrderManager):
             price = ""
             positionSide=""
   
+            self.exchange.verbose = self.testMode
             symbol = self.user_interface.select_symbol()
             taskWatchOrderBook = asyncio.create_task (self.exchange.watch_order_book(symbol,5))
             positionSide = self.user_interface.selectPositionSide()       
             
-
             await taskWatchOrderBook
             book = await  self.exchange.watch_order_book(symbol,5)
           
@@ -279,28 +309,38 @@ class OrderManager(iOrderManager):
             closingOrderPrice = slotPrice * (1 + offsetPercentage / 100)
             pricePair=[slotPrice,closingOrderPrice]
             if currentPrice > slotPrice:
-                orderType = ["TAKE_PROFIT_MARKET","STOP"]
-                paramsPair = [
-                    {"positionSide":positionSide,"stopPrice":pricePair[0]},
-                    {"positionSide":positionSide,"stopPrice":pricePair[0]}]
-            else:
-                orderType = ["LIMIT","TAKE_PROFIT"]
+                orderType = [
+                    "LIMIT",
+                    "STOP"]
                 paramsPair = [
                     {"positionSide":positionSide},
+                    {"positionSide":positionSide,"stopPrice":pricePair[0]}]
+            else:
+                orderType = [
+                    "STOP_MARKET",
+                    "TAKE_PROFIT"]
+                paramsPair = [
+                    {"positionSide":positionSide,"stopPrice":pricePair[0]},
                     {"positionSide":positionSide,"stopPrice":pricePair[0]}]
         else:
             closingOrderPrice = slotPrice / (1 + offsetPercentage / 100)
             pricePair=[slotPrice,closingOrderPrice]
             if currentPrice < slotPrice:
-                orderType = ["TAKE_PROFIT_MARKET","STOP"]
+                orderType = [
+                    "LIMIT",
+                    "STOP"]
                 paramsPair = [
-                    {"positionSide":positionSide,"stopPrice":pricePair[0]},
+                    {"positionSide":positionSide},
                     {"positionSide":positionSide,"stopPrice":pricePair[0]}]
             else:
-                orderType = ["STOP","TAKE_PROFIT"]
+                orderType = [
+                    "STOP_MARKET",
+                    "TAKE_PROFIT"]
                 paramsPair = [
                     {"positionSide":positionSide,"stopPrice":pricePair[0]},
                     {"positionSide":positionSide,"stopPrice":pricePair[0]}]
+
+        
 
         
         openAndCloseOrderList:list=[]
@@ -317,10 +357,12 @@ class OrderManager(iOrderManager):
         print("create_profit_operation,botOperation",botOperation)
         
         createOrderParamsList = await self.getValuesForNewProfitOperationOrders(botOperation, slotPrice)
-        self.exchange.verbose = True
+        self.exchange.verbose = True        
+    
         openingOrder = await self.exchange.create_order(*createOrderParamsList[0])
         closingOrder = await self.exchange.create_order(*createOrderParamsList[1])
         self.exchange.verbose = False
+        
         res = self.dao.storeNewProfitOperation(botOperationId, slotPrice,openingOrder["id"],closingOrder["id"])
         pprint(res)
         return

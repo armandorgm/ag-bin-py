@@ -24,6 +24,7 @@ def body(binance:ccxt.binanceusdm,markets):
         except Exception as e:
             print(e)
             # raise e
+        
     
     #binance.watch_ticker("BNBUSDT")    
 

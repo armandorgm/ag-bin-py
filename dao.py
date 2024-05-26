@@ -54,6 +54,26 @@ class OrderManagerDAO:
         profitOperation = session.query(ProfitOperation).filter_by(bot_operation_id=botOperationId).all()
         session.close()
         return profitOperation
+    def getProfitOperationByClosingOrderId(self,closingOrderId:int):
+        session = self.Session()
+        profitOperation = session.query(ProfitOperation).filter_by(take_profit_order_id=closingOrderId).first()
+        session.close()
+        return profitOperation
+    def archiveProfitOperation(self,profitOperationId:int):
+        session = self.Session()
+        try:
+            profitOperation = session.query(ProfitOperation).filter_by(id=profitOperationId).first()
+            if profitOperation:
+                session.delete(profitOperation)
+                session.commit()
+                return profitOperation
+        except Exception as e:
+            session.rollback()
+            raise e
+        finally:
+            session.close()
+            
+        
 
     def closeFirstNonClosedProfitOperation(self, botOperationId:int, takeProfitOrderId:int):
         session = self.Session()

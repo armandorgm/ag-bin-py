@@ -240,3 +240,290 @@ Traceback (most recent call last):
   File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\aiohttp\http_websocket.py", line 702, in _write
     raise ConnectionResetError("Cannot write to closing transport")
 ConnectionResetError: Cannot write to closing transport
+2024-05-25 09:45:01,623 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-51' coro=<AiohttpClient.ping_loop() done, defined at C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\base\ws\aiohttp_client.py:104> exception=ConnectionResetError('Cannot write to closing transport')>
+Traceback (most recent call last):
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\base\ws\aiohttp_client.py", line 123, in ping_loop
+    await self.connection.ping()
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\aiohttp\client_ws.py", line 157, in ping
+    await self._writer.ping(message)
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\aiohttp\http_websocket.py", line 715, in ping
+    await self._send_frame(message, WSMsgType.PING)
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\aiohttp\http_websocket.py", line 675, in _send_frame
+    self._write(header + mask + message)
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\aiohttp\http_websocket.py", line 702, in _write
+    raise ConnectionResetError("Cannot write to closing transport")
+ConnectionResetError: Cannot write to closing transport
+2024-05-25 09:49:24,975 - asyncio - ERROR - Task was destroyed but it is pending!
+task: <Task cancelling name='Task-1' coro=<main() done, defined at c:\Users\arman\myProjects\ag-bin-py\main.py:7> wait_for=<Future pending cb=[Task.task_wakeup()]> cb=[gather.<locals>._done_callback() at C:\Python312\Lib\asyncio\tasks.py:767]>
+2024-05-25 09:49:24,976 - asyncio - ERROR - Task was destroyed but it is pending!
+task: <Task pending name='Task-71' coro=<AiohttpClient.ping_loop() running at C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\base\ws\aiohttp_client.py:124> wait_for=<Future pending cb=[Task.task_wakeup()]>>
+2024-05-25 10:22:27,848 - asyncio - ERROR - Task was destroyed but it is pending!
+task: <Task cancelling name='Task-1' coro=<main() done, defined at c:\Users\arman\myProjects\ag-bin-py\main.py:7> wait_for=<Future pending cb=[Task.task_wakeup()]> cb=[gather.<locals>._done_callback() at C:\Python312\Lib\asyncio\tasks.py:767]>
+2024-05-25 10:22:27,850 - ccxt.base.exchange - WARNING - binanceusdm requires to release all resources with an explicit call to the .close() coroutine. If you are using the exchange instance with async coroutines, add `await exchange.close()` to your code into a place when you're done with the exchange and don't need the exchange instance anymore (at the end of your async coroutine).
+2024-05-25 10:22:27,850 - asyncio - ERROR - Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x00000214E83F54F0>
+2024-05-25 10:22:27,851 - asyncio - ERROR - Task was destroyed but it is pending!
+task: <Task pending name='Task-78' coro=<AiohttpClient.ping_loop() running at C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\base\ws\aiohttp_client.py:124> wait_for=<Future pending cb=[Task.task_wakeup()]>>
+2024-05-25 10:22:36,019 - root - INFO - {'publicAPI': True, 'privateAPI': True, 'CORS': None, 'spot': True, 'margin': True, 'swap': True, 'future': True, 'option': True, 'addMargin': True, 'cancelAllOrders': True, 'cancelOrder': True, 'cancelOrders': True, 'createDepositAddress': False, 'createLimitOrder': True, 'createMarketOrder': True, 'createOrder': True, 'createPostOnlyOrder': True, 'createReduceOnlyOrder': True, 'createStopOrder': True, 'createStopLimitOrder': True, 'createStopMarketOrder': False, 'editOrder': True, 'fetchAccounts': None, 'fetchBalance': True, 'fetchBidsAsks': True, 'fetchBorrowInterest': True, 'fetchBorrowRate': None, 'fetchBorrowRateHistory': True, 'fetchBorrowRatesPerSymbol': None, 'fetchBorrowRates': None, 'fetchCanceledOrders': 'emulated', 'fetchClosedOrder': False, 'fetchClosedOrders': 'emulated', 'fetchCurrencies': True, 'fetchDeposit': False, 'fetchDepositAddress': True, 'fetchDepositAddresses': False, 'fetchDepositAddressesByNetwork': False, 'fetchDeposits': True, 'fetchFundingHistory': True, 'fetchFundingRate': True, 'fetchFundingRateHistory': True, 'fetchFundingRates': True, 'fetchIndexOHLCV': True, 'fetchLastPrices': True, 'fetchL2OrderBook': True, 'fetchLedger': True, 'fetchLedgerEntry': True, 'fetchLeverageTiers': True, 'fetchMarketLeverageTiers': 'emulated', 'fetchMarkets': True, 'fetchMarkOHLCV': True, 'fetchMyTrades': True, 'fetchOHLCV': True, 'fetchOpenOrder': True, 'fetchOpenOrders': True, 'fetchOrder': True, 'fetchOrderBook': True, 'fetchOrderBooks': False, 'fetchOrders': True, 'fetchOrderTrades': True, 'fetchPermissions': None, 'fetchPosition': True, 'fetchPositions': True, 'fetchPositionsRisk': True, 'fetchPremiumIndexOHLCV': False, 'fetchStatus': True, 'fetchTicker': True, 'fetchTickers': True, 'fetchTime': True, 'fetchTrades': True, 'fetchTradingFee': True, 'fetchTradingFees': True, 'fetchTradingLimits': 'emulated', 'fetchTransactions': False, 'fetchTransfers': True, 'fetchWithdrawal': False, 'fetchWithdrawals': True, 'reduceMargin': True, 'setLeverage': True, 'setMargin': False, 'setMarginMode': True, 'setPositionMode': True, 'signIn': False, 'transfer': True, 'withdraw': True, 'watchOrderBook': True, 'watchOrders': True, 'watchMyTrades': True, 'watchTickers': True, 'watchTicker': True, 'watchTrades': True, 'watchTradesForSymbols': True, 'watchOrderBookForSymbols': True, 'watchOHLCVForSymbols': False, 'watchBalance': True, 'watchOHLCV': True, 'borrowCrossMargin': True, 'borrowIsolatedMargin': True, 'closeAllPositions': False, 'closePosition': False, 'createConvertTrade': True, 'createLimitBuyOrder': True, 'createLimitSellOrder': True, 'createMarketBuyOrder': True, 'createMarketBuyOrderWithCost': True, 'createMarketOrderWithCost': True, 'createMarketSellOrder': True, 'createMarketSellOrderWithCost': True, 'createOrders': True, 'createOrderWithTakeProfitAndStopLoss': True, 'createStopLossOrder': True, 'createTakeProfitOrder': True, 'createTrailingPercentOrder': True, 'createTriggerOrder': True, 'fetchBorrowRateHistories': False, 'fetchCanceledAndClosedOrders': 'emulated', 'fetchConvertCurrencies': True, 'fetchConvertQuote': True, 'fetchConvertTrade': True, 'fetchConvertTradeHistory': True, 'fetchCrossBorrowRate': True, 'fetchCrossBorrowRates': False, 'fetchDepositsWithdrawals': False, 'fetchDepositWithdrawFee': 'emulated', 'fetchDepositWithdrawFees': True, 'fetchGreeks': True, 'fetchIsolatedBorrowRate': 'emulated', 'fetchIsolatedBorrowRates': True, 'fetchL3OrderBook': False, 'fetchLeverage': 'emulated', 'fetchLeverages': True, 'fetchLiquidations': False, 'fetchMarginAdjustmentHistory': True, 'fetchMarginMode': 'emulated', 'fetchMarginModes': True, 'fetchMyLiquidations': True, 'fetchMySettlementHistory': True, 'fetchOpenInterest': True, 'fetchOpenInterestHistory': True, 'fetchOption': True, 'fetchOptionChain': False, 'fetchPositionHistory': False, 'fetchPositionMode': True, 'fetchPositionsHistory': False, 'fetchSettlementHistory': True, 'fetchTransactionFee': 'emulated', 'fetchTransactionFees': True, 'fetchTransfer': False, 'fetchUnderlyingAssets': False, 'fetchVolatilityHistory': False, 'fetchWithdrawAddresses': False, 'fetchWithdrawalWhitelist': False, 'repayCrossMargin': True, 'repayIsolatedMargin': True, 'sandbox': True, 'ws': True, 'watchBidsAsks': True, 'watchOrdersForSymbols': True, 'watchPositions': True, 'createOrderWs': True, 'editOrderWs': True, 'cancelOrderWs': True, 'cancelOrdersWs': False, 'cancelAllOrdersWs': True, 'fetchBalanceWs': True, 'fetchDepositsWs': False, 'fetchMarketsWs': False, 'fetchMyTradesWs': True, 'fetchOHLCVWs': True, 'fetchOrderBookWs': True, 'fetchOpenOrdersWs': True, 'fetchOrderWs': True, 'fetchOrdersWs': True, 'fetchPositionWs': True, 'fetchPositionForSymbolWs': True, 'fetchPositionsWs': True, 'fetchTickerWs': True, 'fetchTradesWs': True, 'fetchTradingFeesWs': False, 'fetchWithdrawalsWs': False}
+2024-05-25 10:59:22,107 - root - INFO - {"publicAPI": true, "privateAPI": true, "CORS": null, "spot": true, "margin": true, "swap": true, "future": true, "option": true, "addMargin": true, "cancelAllOrders": true, "cancelOrder": true, "cancelOrders": true, "createDepositAddress": false, "createLimitOrder": true, "createMarketOrder": true, "createOrder": true, "createPostOnlyOrder": true, "createReduceOnlyOrder": true, "createStopOrder": true, "createStopLimitOrder": true, "createStopMarketOrder": false, "editOrder": true, "fetchAccounts": null, "fetchBalance": true, "fetchBidsAsks": true, "fetchBorrowInterest": true, "fetchBorrowRate": null, "fetchBorrowRateHistory": true, "fetchBorrowRatesPerSymbol": null, "fetchBorrowRates": null, "fetchCanceledOrders": "emulated", "fetchClosedOrder": false, "fetchClosedOrders": "emulated", "fetchCurrencies": true, "fetchDeposit": false, "fetchDepositAddress": true, "fetchDepositAddresses": false, "fetchDepositAddressesByNetwork": false, "fetchDeposits": true, "fetchFundingHistory": true, "fetchFundingRate": true, "fetchFundingRateHistory": true, "fetchFundingRates": true, "fetchIndexOHLCV": true, "fetchLastPrices": true, "fetchL2OrderBook": true, "fetchLedger": true, "fetchLedgerEntry": true, "fetchLeverageTiers": true, "fetchMarketLeverageTiers": "emulated", "fetchMarkets": true, "fetchMarkOHLCV": true, "fetchMyTrades": true, "fetchOHLCV": true, "fetchOpenOrder": true, "fetchOpenOrders": true, "fetchOrder": true, "fetchOrderBook": true, "fetchOrderBooks": false, "fetchOrders": true, "fetchOrderTrades": true, "fetchPermissions": null, "fetchPosition": true, "fetchPositions": true, "fetchPositionsRisk": true, "fetchPremiumIndexOHLCV": false, "fetchStatus": true, "fetchTicker": true, "fetchTickers": true, "fetchTime": true, "fetchTrades": true, "fetchTradingFee": true, "fetchTradingFees": true, "fetchTradingLimits": "emulated", "fetchTransactions": false, "fetchTransfers": true, "fetchWithdrawal": false, "fetchWithdrawals": true, "reduceMargin": true, "setLeverage": true, "setMargin": false, "setMarginMode": true, "setPositionMode": true, "signIn": false, "transfer": true, "withdraw": true, "watchOrderBook": true, "watchOrders": true, "watchMyTrades": true, "watchTickers": true, "watchTicker": true, "watchTrades": true, "watchTradesForSymbols": true, "watchOrderBookForSymbols": true, "watchOHLCVForSymbols": false, "watchBalance": true, "watchOHLCV": true, "borrowCrossMargin": true, "borrowIsolatedMargin": true, "closeAllPositions": false, "closePosition": false, "createConvertTrade": true, "createLimitBuyOrder": true, "createLimitSellOrder": true, "createMarketBuyOrder": true, "createMarketBuyOrderWithCost": true, "createMarketOrderWithCost": true, "createMarketSellOrder": true, "createMarketSellOrderWithCost": true, "createOrders": true, "createOrderWithTakeProfitAndStopLoss": true, "createStopLossOrder": true, "createTakeProfitOrder": true, "createTrailingPercentOrder": true, "createTriggerOrder": true, "fetchBorrowRateHistories": false, "fetchCanceledAndClosedOrders": "emulated", "fetchConvertCurrencies": true, "fetchConvertQuote": true, "fetchConvertTrade": true, "fetchConvertTradeHistory": true, "fetchCrossBorrowRate": true, "fetchCrossBorrowRates": false, "fetchDepositsWithdrawals": false, "fetchDepositWithdrawFee": "emulated", "fetchDepositWithdrawFees": true, "fetchGreeks": true, "fetchIsolatedBorrowRate": "emulated", "fetchIsolatedBorrowRates": true, "fetchL3OrderBook": false, "fetchLeverage": "emulated", "fetchLeverages": true, "fetchLiquidations": false, "fetchMarginAdjustmentHistory": true, "fetchMarginMode": "emulated", "fetchMarginModes": true, "fetchMyLiquidations": true, "fetchMySettlementHistory": true, "fetchOpenInterest": true, "fetchOpenInterestHistory": true, "fetchOption": true, "fetchOptionChain": false, "fetchPositionHistory": false, "fetchPositionMode": true, "fetchPositionsHistory": false, "fetchSettlementHistory": true, "fetchTransactionFee": "emulated", "fetchTransactionFees": true, "fetchTransfer": false, "fetchUnderlyingAssets": false, "fetchVolatilityHistory": false, "fetchWithdrawAddresses": false, "fetchWithdrawalWhitelist": false, "repayCrossMargin": true, "repayIsolatedMargin": true, "sandbox": true, "ws": true, "watchBidsAsks": true, "watchOrdersForSymbols": true, "watchPositions": true, "createOrderWs": true, "editOrderWs": true, "cancelOrderWs": true, "cancelOrdersWs": false, "cancelAllOrdersWs": true, "fetchBalanceWs": true, "fetchDepositsWs": false, "fetchMarketsWs": false, "fetchMyTradesWs": true, "fetchOHLCVWs": true, "fetchOrderBookWs": true, "fetchOpenOrdersWs": true, "fetchOrderWs": true, "fetchOrdersWs": true, "fetchPositionWs": true, "fetchPositionForSymbolWs": true, "fetchPositionsWs": true, "fetchTickerWs": true, "fetchTradesWs": true, "fetchTradingFeesWs": false, "fetchWithdrawalsWs": false}
+2024-05-25 10:59:33,048 - root - INFO - {"publicAPI": true, "privateAPI": true, "CORS": null, "spot": true, "margin": true, "swap": true, "future": true, "option": true, "addMargin": true, "cancelAllOrders": true, "cancelOrder": true, "cancelOrders": true, "createDepositAddress": false, "createLimitOrder": true, "createMarketOrder": true, "createOrder": true, "createPostOnlyOrder": true, "createReduceOnlyOrder": true, "createStopOrder": true, "createStopLimitOrder": true, "createStopMarketOrder": false, "editOrder": true, "fetchAccounts": null, "fetchBalance": true, "fetchBidsAsks": true, "fetchBorrowInterest": true, "fetchBorrowRate": null, "fetchBorrowRateHistory": true, "fetchBorrowRatesPerSymbol": null, "fetchBorrowRates": null, "fetchCanceledOrders": "emulated", "fetchClosedOrder": false, "fetchClosedOrders": "emulated", "fetchCurrencies": true, "fetchDeposit": false, "fetchDepositAddress": true, "fetchDepositAddresses": false, "fetchDepositAddressesByNetwork": false, "fetchDeposits": true, "fetchFundingHistory": true, "fetchFundingRate": true, "fetchFundingRateHistory": true, "fetchFundingRates": true, "fetchIndexOHLCV": true, "fetchLastPrices": true, "fetchL2OrderBook": true, "fetchLedger": true, "fetchLedgerEntry": true, "fetchLeverageTiers": true, "fetchMarketLeverageTiers": "emulated", "fetchMarkets": true, "fetchMarkOHLCV": true, "fetchMyTrades": true, "fetchOHLCV": true, "fetchOpenOrder": true, "fetchOpenOrders": true, "fetchOrder": true, "fetchOrderBook": true, "fetchOrderBooks": false, "fetchOrders": true, "fetchOrderTrades": true, "fetchPermissions": null, "fetchPosition": true, "fetchPositions": true, "fetchPositionsRisk": true, "fetchPremiumIndexOHLCV": false, "fetchStatus": true, "fetchTicker": true, "fetchTickers": true, "fetchTime": true, "fetchTrades": true, "fetchTradingFee": true, "fetchTradingFees": true, "fetchTradingLimits": "emulated", "fetchTransactions": false, "fetchTransfers": true, "fetchWithdrawal": false, "fetchWithdrawals": true, "reduceMargin": true, "setLeverage": true, "setMargin": false, "setMarginMode": true, "setPositionMode": true, "signIn": false, "transfer": true, "withdraw": true, "watchOrderBook": true, "watchOrders": true, "watchMyTrades": true, "watchTickers": true, "watchTicker": true, "watchTrades": true, "watchTradesForSymbols": true, "watchOrderBookForSymbols": true, "watchOHLCVForSymbols": false, "watchBalance": true, "watchOHLCV": true, "borrowCrossMargin": true, "borrowIsolatedMargin": true, "closeAllPositions": false, "closePosition": false, "createConvertTrade": true, "createLimitBuyOrder": true, "createLimitSellOrder": true, "createMarketBuyOrder": true, "createMarketBuyOrderWithCost": true, "createMarketOrderWithCost": true, "createMarketSellOrder": true, "createMarketSellOrderWithCost": true, "createOrders": true, "createOrderWithTakeProfitAndStopLoss": true, "createStopLossOrder": true, "createTakeProfitOrder": true, "createTrailingPercentOrder": true, "createTriggerOrder": true, "fetchBorrowRateHistories": false, "fetchCanceledAndClosedOrders": "emulated", "fetchConvertCurrencies": true, "fetchConvertQuote": true, "fetchConvertTrade": true, "fetchConvertTradeHistory": true, "fetchCrossBorrowRate": true, "fetchCrossBorrowRates": false, "fetchDepositsWithdrawals": false, "fetchDepositWithdrawFee": "emulated", "fetchDepositWithdrawFees": true, "fetchGreeks": true, "fetchIsolatedBorrowRate": "emulated", "fetchIsolatedBorrowRates": true, "fetchL3OrderBook": false, "fetchLeverage": "emulated", "fetchLeverages": true, "fetchLiquidations": false, "fetchMarginAdjustmentHistory": true, "fetchMarginMode": "emulated", "fetchMarginModes": true, "fetchMyLiquidations": true, "fetchMySettlementHistory": true, "fetchOpenInterest": true, "fetchOpenInterestHistory": true, "fetchOption": true, "fetchOptionChain": false, "fetchPositionHistory": false, "fetchPositionMode": true, "fetchPositionsHistory": false, "fetchSettlementHistory": true, "fetchTransactionFee": "emulated", "fetchTransactionFees": true, "fetchTransfer": false, "fetchUnderlyingAssets": false, "fetchVolatilityHistory": false, "fetchWithdrawAddresses": false, "fetchWithdrawalWhitelist": false, "repayCrossMargin": true, "repayIsolatedMargin": true, "sandbox": true, "ws": true, "watchBidsAsks": true, "watchOrdersForSymbols": true, "watchPositions": true, "createOrderWs": true, "editOrderWs": true, "cancelOrderWs": true, "cancelOrdersWs": false, "cancelAllOrdersWs": true, "fetchBalanceWs": true, "fetchDepositsWs": false, "fetchMarketsWs": false, "fetchMyTradesWs": true, "fetchOHLCVWs": true, "fetchOrderBookWs": true, "fetchOpenOrdersWs": true, "fetchOrderWs": true, "fetchOrdersWs": true, "fetchPositionWs": true, "fetchPositionForSymbolWs": true, "fetchPositionsWs": true, "fetchTickerWs": true, "fetchTradesWs": true, "fetchTradingFeesWs": false, "fetchWithdrawalsWs": false}
+2024-05-25 15:51:06,618 - root - INFO - {
+    "CORS": null,
+    "addMargin": true,
+    "borrowCrossMargin": true,
+    "borrowIsolatedMargin": true,
+    "cancelAllOrders": true,
+    "cancelAllOrdersWs": true,
+    "cancelOrder": true,
+    "cancelOrderWs": true,
+    "cancelOrders": true,
+    "cancelOrdersWs": false,
+    "closeAllPositions": false,
+    "closePosition": false,
+    "createConvertTrade": true,
+    "createDepositAddress": false,
+    "createLimitBuyOrder": true,
+    "createLimitOrder": true,
+    "createLimitSellOrder": true,
+    "createMarketBuyOrder": true,
+    "createMarketBuyOrderWithCost": true,
+    "createMarketOrder": true,
+    "createMarketOrderWithCost": true,
+    "createMarketSellOrder": true,
+    "createMarketSellOrderWithCost": true,
+    "createOrder": true,
+    "createOrderWithTakeProfitAndStopLoss": true,
+    "createOrderWs": true,
+    "createOrders": true,
+    "createPostOnlyOrder": true,
+    "createReduceOnlyOrder": true,
+    "createStopLimitOrder": true,
+    "createStopLossOrder": true,
+    "createStopMarketOrder": false,
+    "createStopOrder": true,
+    "createTakeProfitOrder": true,
+    "createTrailingPercentOrder": true,
+    "createTriggerOrder": true,
+    "editOrder": true,
+    "editOrderWs": true,
+    "fetchAccounts": null,
+    "fetchBalance": true,
+    "fetchBalanceWs": true,
+    "fetchBidsAsks": true,
+    "fetchBorrowInterest": true,
+    "fetchBorrowRate": null,
+    "fetchBorrowRateHistories": false,
+    "fetchBorrowRateHistory": true,
+    "fetchBorrowRates": null,
+    "fetchBorrowRatesPerSymbol": null,
+    "fetchCanceledAndClosedOrders": "emulated",
+    "fetchCanceledOrders": "emulated",
+    "fetchClosedOrder": false,
+    "fetchClosedOrders": "emulated",
+    "fetchConvertCurrencies": true,
+    "fetchConvertQuote": true,
+    "fetchConvertTrade": true,
+    "fetchConvertTradeHistory": true,
+    "fetchCrossBorrowRate": true,
+    "fetchCrossBorrowRates": false,
+    "fetchCurrencies": true,
+    "fetchDeposit": false,
+    "fetchDepositAddress": true,
+    "fetchDepositAddresses": false,
+    "fetchDepositAddressesByNetwork": false,
+    "fetchDepositWithdrawFee": "emulated",
+    "fetchDepositWithdrawFees": true,
+    "fetchDeposits": true,
+    "fetchDepositsWithdrawals": false,
+    "fetchDepositsWs": false,
+    "fetchFundingHistory": true,
+    "fetchFundingRate": true,
+    "fetchFundingRateHistory": true,
+    "fetchFundingRates": true,
+    "fetchGreeks": true,
+    "fetchIndexOHLCV": true,
+    "fetchIsolatedBorrowRate": "emulated",
+    "fetchIsolatedBorrowRates": true,
+    "fetchL2OrderBook": true,
+    "fetchL3OrderBook": false,
+    "fetchLastPrices": true,
+    "fetchLedger": true,
+    "fetchLedgerEntry": true,
+    "fetchLeverage": "emulated",
+    "fetchLeverageTiers": true,
+    "fetchLeverages": true,
+    "fetchLiquidations": false,
+    "fetchMarginAdjustmentHistory": true,
+    "fetchMarginMode": "emulated",
+    "fetchMarginModes": true,
+    "fetchMarkOHLCV": true,
+    "fetchMarketLeverageTiers": "emulated",
+    "fetchMarkets": true,
+    "fetchMarketsWs": false,
+    "fetchMyLiquidations": true,
+    "fetchMySettlementHistory": true,
+    "fetchMyTrades": true,
+    "fetchMyTradesWs": true,
+    "fetchOHLCV": true,
+    "fetchOHLCVWs": true,
+    "fetchOpenInterest": true,
+    "fetchOpenInterestHistory": true,
+    "fetchOpenOrder": true,
+    "fetchOpenOrders": true,
+    "fetchOpenOrdersWs": true,
+    "fetchOption": true,
+    "fetchOptionChain": false,
+    "fetchOrder": true,
+    "fetchOrderBook": true,
+    "fetchOrderBookWs": true,
+    "fetchOrderBooks": false,
+    "fetchOrderTrades": true,
+    "fetchOrderWs": true,
+    "fetchOrders": true,
+    "fetchOrdersWs": true,
+    "fetchPermissions": null,
+    "fetchPosition": true,
+    "fetchPositionForSymbolWs": true,
+    "fetchPositionHistory": false,
+    "fetchPositionMode": true,
+    "fetchPositionWs": true,
+    "fetchPositions": true,
+    "fetchPositionsHistory": false,
+    "fetchPositionsRisk": true,
+    "fetchPositionsWs": true,
+    "fetchPremiumIndexOHLCV": false,
+    "fetchSettlementHistory": true,
+    "fetchStatus": true,
+    "fetchTicker": true,
+    "fetchTickerWs": true,
+    "fetchTickers": true,
+    "fetchTime": true,
+    "fetchTrades": true,
+    "fetchTradesWs": true,
+    "fetchTradingFee": true,
+    "fetchTradingFees": true,
+    "fetchTradingFeesWs": false,
+    "fetchTradingLimits": "emulated",
+    "fetchTransactionFee": "emulated",
+    "fetchTransactionFees": true,
+    "fetchTransactions": false,
+    "fetchTransfer": false,
+    "fetchTransfers": true,
+    "fetchUnderlyingAssets": false,
+    "fetchVolatilityHistory": false,
+    "fetchWithdrawAddresses": false,
+    "fetchWithdrawal": false,
+    "fetchWithdrawalWhitelist": false,
+    "fetchWithdrawals": true,
+    "fetchWithdrawalsWs": false,
+    "future": true,
+    "margin": true,
+    "option": true,
+    "privateAPI": true,
+    "publicAPI": true,
+    "reduceMargin": true,
+    "repayCrossMargin": true,
+    "repayIsolatedMargin": true,
+    "sandbox": true,
+    "setLeverage": true,
+    "setMargin": false,
+    "setMarginMode": true,
+    "setPositionMode": true,
+    "signIn": false,
+    "spot": true,
+    "swap": true,
+    "transfer": true,
+    "watchBalance": true,
+    "watchBidsAsks": true,
+    "watchMyTrades": true,
+    "watchOHLCV": true,
+    "watchOHLCVForSymbols": false,
+    "watchOrderBook": true,
+    "watchOrderBookForSymbols": true,
+    "watchOrders": true,
+    "watchOrdersForSymbols": true,
+    "watchPositions": true,
+    "watchTicker": true,
+    "watchTickers": true,
+    "watchTrades": true,
+    "watchTradesForSymbols": true,
+    "withdraw": true,
+    "ws": true
+}
+2024-05-25 19:09:15,840 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-58' coro=<AiohttpClient.ping_loop() done, defined at C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\base\ws\aiohttp_client.py:104> exception=ConnectionResetError('Cannot write to closing transport')>
+Traceback (most recent call last):
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\base\ws\aiohttp_client.py", line 123, in ping_loop
+    await self.connection.ping()
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\aiohttp\client_ws.py", line 157, in ping
+    await self._writer.ping(message)
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\aiohttp\http_websocket.py", line 715, in ping
+    await self._send_frame(message, WSMsgType.PING)
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\aiohttp\http_websocket.py", line 675, in _send_frame
+    self._write(header + mask + message)
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\aiohttp\http_websocket.py", line 702, in _write
+    raise ConnectionResetError("Cannot write to closing transport")
+ConnectionResetError: Cannot write to closing transport
+2024-05-26 04:12:03,519 - asyncio - ERROR - Unclosed connection
+client_connection: Connection<ConnectionKey(host='fstream.binance.com', port=443, is_ssl=True, ssl=True, proxy=None, proxy_auth=None, proxy_headers_hash=None)>
+2024-05-26 04:12:03,521 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-77' coro=<AiohttpClient.ping_loop() done, defined at C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\base\ws\aiohttp_client.py:104> exception=ConnectionResetError('Cannot write to closing transport')>
+Traceback (most recent call last):
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\base\ws\aiohttp_client.py", line 123, in ping_loop
+    await self.connection.ping()
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\aiohttp\client_ws.py", line 157, in ping
+    await self._writer.ping(message)
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\aiohttp\http_websocket.py", line 715, in ping
+    await self._send_frame(message, WSMsgType.PING)
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\aiohttp\http_websocket.py", line 675, in _send_frame
+    self._write(header + mask + message)
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\aiohttp\http_websocket.py", line 702, in _write
+    raise ConnectionResetError("Cannot write to closing transport")
+ConnectionResetError: Cannot write to closing transport
+2024-05-26 06:47:34,993 - asyncio - ERROR - Unclosed connection
+client_connection: Connection<ConnectionKey(host='fstream.binance.com', port=443, is_ssl=True, ssl=True, proxy=None, proxy_auth=None, proxy_headers_hash=None)>
+2024-05-26 06:47:34,993 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-191' coro=<AiohttpClient.ping_loop() done, defined at C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\base\ws\aiohttp_client.py:104> exception=ConnectionResetError('Cannot write to closing transport')>
+Traceback (most recent call last):
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\base\ws\aiohttp_client.py", line 123, in ping_loop
+    await self.connection.ping()
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\aiohttp\client_ws.py", line 157, in ping
+    await self._writer.ping(message)
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\aiohttp\http_websocket.py", line 715, in ping
+    await self._send_frame(message, WSMsgType.PING)
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\aiohttp\http_websocket.py", line 675, in _send_frame
+    self._write(header + mask + message)
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\aiohttp\http_websocket.py", line 702, in _write
+    raise ConnectionResetError("Cannot write to closing transport")
+ConnectionResetError: Cannot write to closing transport
+2024-05-26 06:47:34,996 - asyncio - ERROR - Unclosed connection
+client_connection: Connection<ConnectionKey(host='fstream.binance.com', port=443, is_ssl=True, ssl=True, proxy=None, proxy_auth=None, proxy_headers_hash=None)>
+2024-05-26 06:47:34,996 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-202' coro=<AiohttpClient.ping_loop() done, defined at C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\base\ws\aiohttp_client.py:104> exception=ConnectionResetError('Cannot write to closing transport')>
+Traceback (most recent call last):
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\base\ws\aiohttp_client.py", line 123, in ping_loop
+    await self.connection.ping()
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\aiohttp\client_ws.py", line 157, in ping
+    await self._writer.ping(message)
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\aiohttp\http_websocket.py", line 715, in ping
+    await self._send_frame(message, WSMsgType.PING)
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\aiohttp\http_websocket.py", line 675, in _send_frame
+    self._write(header + mask + message)
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\aiohttp\http_websocket.py", line 702, in _write
+    raise ConnectionResetError("Cannot write to closing transport")
+ConnectionResetError: Cannot write to closing transport
+2024-05-26 08:31:38,906 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-164' coro=<AiohttpClient.ping_loop() done, defined at C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\base\ws\aiohttp_client.py:104> exception=ConnectionResetError('Cannot write to closing transport')>
+Traceback (most recent call last):
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\base\ws\aiohttp_client.py", line 123, in ping_loop
+    await self.connection.ping()
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\aiohttp\client_ws.py", line 157, in ping
+    await self._writer.ping(message)
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\aiohttp\http_websocket.py", line 715, in ping
+    await self._send_frame(message, WSMsgType.PING)
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\aiohttp\http_websocket.py", line 675, in _send_frame
+    self._write(header + mask + message)
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\aiohttp\http_websocket.py", line 702, in _write
+    raise ConnectionResetError("Cannot write to closing transport")
+ConnectionResetError: Cannot write to closing transport

@@ -23,8 +23,7 @@ async def main():
             #await exchange.sleep (1000) # every 100 ms
             print(str(count) + "\t", exchange.iso8601(exchange.milliseconds()), res,"\n\n")
     except Exception as e:
-        print(e)
-        
+        print(e)        
     except KeyboardInterrupt:
         pass
     finally:
