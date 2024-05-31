@@ -222,13 +222,13 @@ class OrderManager(iOrderManager):
     async def monitor_order(self, order_id, symbol):
         raise "not implemented monitor_order yet"
       
-    def getMinAmountAtPrice(self,symbol:str, price:float):
+    def getMinAmountAtPrice(self, symbol: str, price: float):
         amountPrecision = self.exchange.market(symbol)["precision"]["amount"]
-
         minPrice = 5
-        minQuantity = round(minPrice / price,amountPrecision)
-        print(f"cantidad minima: {minQuantity}")
+        minQuantity = round(minPrice / price, amountPrecision)
+        print(f"cantidad mínima: {minQuantity}")
         return minQuantity
+
     
     async def getMinAmountAtMarketPrice(self,symbol,side:OrderSide) -> int:
         try:
