@@ -23,6 +23,19 @@ class OrderManagerDAO:
         session.commit()
         return new_order.id
     
+    def removeProfitOperation(self,profitOperationId:int):
+        session = self.Session()
+        try:
+            profitOperation = session.query(ProfitOperation).filter_by(id=profitOperationId).first()
+            if profitOperation:
+                session.delete(profitOperation)
+                session.commit()
+        except Exception as e:
+            session.rollback()
+            raise e
+        finally:
+            session.close()
+    
     def storeNewProfitOperation(self, botOperationId:int, slotPrice:float, openOrderId:int=None, takeProfitOrderId:int=None):
         session = self.Session()
         existing_operation = (session.query(ProfitOperation)
@@ -49,7 +62,7 @@ class OrderManagerDAO:
         profitOperation = session.query(ProfitOperation).all()
         session.close()
         return profitOperation
-    def getProfitOperationsByOperationId(self, botOperationId):
+    def getProfitOperationsByBotOperationId(self, botOperationId):
         session = self.Session()
         profitOperation = session.query(ProfitOperation).filter_by(bot_operation_id=botOperationId).all()
         session.close()

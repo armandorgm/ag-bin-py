@@ -58,6 +58,7 @@ class OrderManager(iOrderManager):
 5) Show Market Data
 6) Create new bot Operation
 7) watch Orders
+8) create a counter size order until position is at least half size the oposite
 0) Exit""")
                 option = input("write a number from menu\n")
                 await self.loadMarketsTask
@@ -85,6 +86,12 @@ class OrderManager(iOrderManager):
                         break
                     case "7":
                         await self.monitorByWs()
+                    case "8":   # crear una operacion que reciba una posicion y crear una
+                                # orden que su tamaño sumado a el tamaño de dicha posicion 
+                                # abierta sea igual a la mitad del tamaño de la poscion contraria
+                        symbol = self.user_interface.select_symbol()
+                        positionSide = self.user_interface.selectPositionSide()
+                        await self.funcion001([symbol],positionSide,0.1)
                     case "99":
                         await self.testFuction()
                     case "0":
@@ -101,6 +108,80 @@ class OrderManager(iOrderManager):
         finally:
             await self.exchange.close()
     
+    @staticmethod
+    def calculate_price_with_profit_offset(entry_price: float, positionSide: str, profitOffset: float) -> float:
+        if positionSide.lower() == "long":
+            # Si es una posición larga, aumenta el precio según el profitOffset
+            return entry_price * (1 + profitOffset/100)
+        elif positionSide.lower() == "short":
+            # Si es una posición corta, disminuye el precio según el profitOffset
+            return entry_price * (1 - profitOffset/100)
+        else:
+            raise ValueError("positionSide debe ser 'long' o 'short'")
+
+    async def funcion001(self, symbol:list[str], positionSide:str,profitOffset:float):
+        # crear una operacion que reciba una posicion y crear una
+        # orden que su tamaño sumado a el tamaño de dicha posicion 
+        # abierta sea igual a la mitad del tamaño de la poscion contraria
+        postitionList = await self.exchange.fetch_positions(symbol)
+        mainObj = None
+        opositeObj = None
+        for obj in postitionList:
+            if obj["side"] == positionSide.lower():
+                mainObj = obj
+            else:
+                opositeObj = obj
+        mainSide = "buy" if positionSide.lower() == "long" else "sell"
+        opositeSide = "sell" if positionSide.lower() == "long" else "buy"
+
+        amount = (opositeObj["contracts"]/2)-mainObj["contracts"]
+        pprint(mainObj)
+        print (f"la cantidad seria {amount}")
+        #mainOrder = await self.exchange.create_order(symbol[0],"market",mainSide,amount,params={"positionSide":positionSide.upper()})
+        mainOrder = await self.exchange.fetch_order("11814138706",symbol[0])
+        amount = 63
+        pprint(mainOrder)
+        rawProfitPrice = self.calculate_price_with_profit_offset(mainOrder["average"],positionSide,0.1)
+        print("rawProfitPrice",rawProfitPrice)
+        profitPrice = self.exchange.price_to_precision(symbol[0],rawProfitPrice)
+        print("ProfitPrice",profitPrice)
+        profitOrder = await self.exchange.create_order(symbol[0],"limit",opositeSide,amount,profitPrice,params={"positionSide":positionSide.upper()})
+        pprint(profitOrder)
+    
+    async def clearProfitOperationByBotOperationId(self, botOperationId:int):
+        botOperation = self.dao.getBotOperation(botOperationId)
+        profitOperations = self.dao.getProfitOperationsByBotOperationId(botOperationId)
+        for profitOperation in profitOperations:
+            orders:list[Order]=[]
+            openingOrder = await self.exchange.fetch_order(profitOperation.open_order_id,botOperation.symbol)
+            orders.append( openingOrder)
+            closingOrder = await self.exchange.fetch_order(profitOperation.take_profit_order_id,botOperation.symbol)
+            orders.append( closingOrder)
+            eliminarRowResponse = "si"
+            if openingOrder["status"] not in ["closed","open"]:
+                logging.warn(f"el estado de la opening orden {openingOrder["id"]} es {openingOrder["status"]}")
+                logging.warn(f"se cancelara la orden de cierre id '{closingOrder["id"]}' con estado '{closingOrder["status"]}'")
+                #res = input("estas seguro de eliminar el row? si/no")
+                if(eliminarRowResponse != "si"):#cualquier cosa diferente a si evita el borrado
+                    continue
+                cancelled = await self.exchange.cancel_order(closingOrder["id"],closingOrder["symbol"])
+                pprint(cancelled)
+                self.dao.removeProfitOperation(profitOperation.id)
+            if closingOrder["status"] != "open":
+                logging.warn(f"el estado de la closing orden {closingOrder["id"]} es {closingOrder["status"]}")
+                #res = input(f"estas seguro de eliminar el row? y la opening order {openingOrder["id"]} con estado {openingOrder["status"]} si/no")
+                if(eliminarRowResponse != "si"):#cualquier cosa diferente a si evita el borrado
+                    continue
+                if openingOrder["status"] == "open":
+                    cancelled = await self.exchange.cancel_order(openingOrder["id"],openingOrder["symbol"])
+                    pprint(cancelled)
+                self.dao.removeProfitOperation(profitOperation.id)
+                
+    async def createProfitOrder(self,order:Order,profitPercent:float):
+        positionSide = order["info"]["ps"]
+        
+        pass
+        
     async def monitorByWs(self):
         #logging.info(json.dumps(self.exchange.has, indent=4, sort_keys=True))
         await self.monitor.start()
@@ -111,11 +192,13 @@ class OrderManager(iOrderManager):
                 orders = await self.exchange.watch_orders(symbol=None, since=None, limit=None, params={})
                 print("cantidad de ordenes recibidas por ws:",len(orders))
                 for order in orders:
-                    pprint(orders)
+                    pprint(order)
                     print(order["lastUpdateTimestamp"],order["datetime"],order["id"],order["info"]["ps"],order["side"],order["type"],order["reduceOnly"],order["price"],order["stopPrice"],order["status"],)
                     print("order[status].lower() value",order["status"].lower())
                     if order["reduceOnly"] == False:
                         print("It is a opening order. Nothing to do on db")
+                        if order["status"] =="closed":
+                            await self.createProfitOrder(order,0.2)
                     elif order["status"].lower() != "open":#if is ReduceOnly
                         profitOperation = self.dao.getProfitOperationByClosingOrderId(order["id"])
                         if profitOperation:
@@ -136,14 +219,14 @@ class OrderManager(iOrderManager):
             except KeyboardInterrupt:
                 break
             
-                
-    
     async def monitor_order(self, order_id, symbol):
         raise "not implemented monitor_order yet"
-             
-    def getMinAmountAtPrice(self,price:float):
+      
+    def getMinAmountAtPrice(self,symbol:str, price:float):
+        amountPrecision = self.exchange.market(symbol)["precision"]["amount"]
+
         minPrice = 5
-        minQuantity = math.ceil(minPrice / price)
+        minQuantity = round(minPrice / price,amountPrecision)
         print(f"cantidad minima: {minQuantity}")
         return minQuantity
     
@@ -164,8 +247,6 @@ class OrderManager(iOrderManager):
         order = await self.exchange.fetch_order(order_id,symbol)
         pprint(order)
         await self.createOpositeOrder(order)
-        
-
         
     async def createOpositeOrder(self, order:Order)->Order:
         pprint(order["symbol"])
@@ -344,7 +425,8 @@ class OrderManager(iOrderManager):
 
         
         openAndCloseOrderList:list=[]
-        amount = self.getMinAmountAtPrice(slotPrice)
+        pprint(self.exchange.market(symbol))
+        amount = self.exchange.amount_to_precision(symbol,self.getMinAmountAtPrice(symbol,slotPrice))
         for i,side in enumerate(profitOperationSides):
             openAndCloseOrderList.append((symbol, orderType[i], profitOperationSides[i], amount, self.exchange.price_to_precision(symbol,pricePair[i]),paramsPair[i]))
         
@@ -367,7 +449,29 @@ class OrderManager(iOrderManager):
         pprint(res)
         return
       
-        
+    async def isSlotInactive(self, botOperationId, slotPrice):
+            botOperation = self.dao.getBotOperation(botOperationId)
+            slotPrice = self.exchange.price_to_precision(botOperation.symbol, slotPrice)
+            #slotList = self.dao.getProfitOperations()
+            slotList = self.dao.getProfitOperationsByBotOperationId(botOperationId)
+            print("slotList Lengh", len(slotList))
+  
+            for slot in slotList:
+                if(str(slotPrice) == str(slot.slot_price)):
+                    print(f"\n{'#'*6} profitOperation #{slot.id} price: {slot.slot_price} {'#'*6}")
+                    symbol = botOperation.symbol
+                    print("price slot found")
+                    openCloseOrderPairId = [slot.open_order_id, slot.take_profit_order_id]
+                    for orderId in openCloseOrderPairId:
+                        
+                        if(orderId):
+                            print("orderID found",orderId)
+                            orderStatus = (await self.exchange.fetch_order(orderId, symbol))["status"]
+                            if(orderStatus == "open"):
+                                print(f"Order {orderId} is still active ({orderStatus})")
+                                return False
+                   
+            return True
     
     async def monitor_order_and_create_second(self, order_id,symbol,type,side,amount,price, positionSide):
         print("monitor_order_and_create_second() started")

@@ -41,3 +41,11 @@ class iOrderManager(ABC):
     @abstractmethod          
     async def myPositions(self):
         pass
+    
+    @abstractmethod
+    async def clearProfitOperationByBotOperationId(self,botOperationId:int):
+        pass
+    
+    @abstractmethod
+    async def isSlotInactive(self, botOperationId, slotPrice)-> bool: 
+        pass

@@ -5,6 +5,7 @@ import logging
 from models import BotOperation
 from db_integrity import DbIntegrity
 from interfaces.iOrderManager import iOrderManager
+from bot_operation import BotOperation as BotOperationClass
 
 # Configurar logging
 logging.basicConfig(level=logging.INFO,
@@ -58,55 +59,35 @@ class OrderMonitor:
             threshold_amount = slotPrice * (threshold / 100)
             return abs(slotPrice - currentPrice) <= threshold_amount
         
-        async def isSlotInactive(self, botOperationId, slotPrice):
-            botOperation = self.dao.getBotOperation(botOperationId)
-            slotPrice = self.exchange.price_to_precision(botOperation.symbol, slotPrice)
-            #slotList = self.dao.getProfitOperations()
-            slotList = self.dao.getProfitOperationsByOperationId(botOperationId)
-            print("slotList Lengh", len(slotList))
-  
-            for slot in slotList:
-                if(str(slotPrice) == str(slot.slot_price)):
-                    symbol = botOperation.symbol
-                    print("price slot found")
-                    openCloseOrderPairId = [slot.open_order_id, slot.take_profit_order_id]
-                    for orderId in openCloseOrderPairId:
-                        
-                        if(orderId):
-                            print("orderID found",orderId)
-                            orderStatus = (await self.exchange.fetch_order(orderId, symbol))["status"]
-                            if(orderStatus == "open"):
-                                print(f"Order {orderId} is still active ({orderStatus})")
-                                return False
-                   
-            return True
+        
                        
         async def start(self):
-            while self.active:
-                botOperations = self.dao.getBotOperations()
-                for botOperation in botOperations:
+            botOperations = self.dao.getBotOperations()
+            for botOperation in botOperations:
+                theBotOperation = BotOperationClass(botOperation.id,botOperation.entry_price,botOperation.position_side,botOperation.symbol,botOperation.threshold,"standard")
+                print(f"\n{'#'*4} botOperation {botOperation.id} {botOperation.symbol} {botOperation.position_side} {'#'*4}")
+                await self.orderManager.clearProfitOperationByBotOperationId(botOperation.id)
+                
+                
+                currentPrice = (await self.exchange.watch_ticker(botOperation.symbol))['last']
+                
+                lowerPricethreshold,upperPricethreshold = self.find_enclosing_thresholds(botOperation.entry_price, currentPrice,botOperation.threshold)
+                slots = [lowerPricethreshold,upperPricethreshold]
+                print(botOperation.position_side.lower(),"== long ->", botOperation.position_side.lower() == "long")
+                
+                if botOperation.position_side.lower() == "long":
+                    slots.reverse()
+                    print("slots inveridos para colocar primero la orden mas lejana ")
                     
-                    currentPrice = (await self.exchange.watch_ticker(botOperation.symbol))['last']
-                    
-                    lowerPricethreshold,upperPricethreshold = self.find_enclosing_thresholds(botOperation.entry_price, currentPrice,botOperation.threshold)
-                    slots = [lowerPricethreshold,upperPricethreshold]
-                    print("default order",slots)
-                    print(botOperation.position_side.lower(),"== long ->", botOperation.position_side.lower() == "long")
-                    
-                    if botOperation.position_side.lower() == "long":
-                        slots.reverse()
-                    print("new order",slots)
-                        
-                    for slotPrice in slots:
-                        slotPrice = float(self.exchange.price_to_precision(botOperation.symbol, slotPrice))
+                for slotPrice in slots:
+                    slotPrice = float(self.exchange.price_to_precision(botOperation.symbol, slotPrice))
 
-                        print("checking slot price",slotPrice)
-                        if( await self.isSlotInactive(botOperation.id, slotPrice) ):
-                            print(f"slot {slotPrice} for {botOperation.symbol} is open")
-                            await self.orderManager.create_profit_operation(botOperation.id,slotPrice)
+                    print("checking slot price",slotPrice)
+                    if( await self.orderManager.isSlotInactive(botOperation.id, slotPrice) ):
+                        print(f"slot {slotPrice} for {botOperation.symbol} is open")
+                        await self.orderManager.create_profit_operation(botOperation.id,slotPrice)
 
                     
                     
-                self.active = not self.active
                     
             

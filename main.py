@@ -11,7 +11,7 @@ async def main():
     #######
     selection = input('''
 1.) testMode
-2.)Realmode          ''')
+2.) Realmode          ''')
     match(selection):
         case "1":
             api_key, secret = config_manager.get_api_test_credentials()
