@@ -226,6 +226,10 @@ class OrderManager(iOrderManager):
         amountPrecision = self.exchange.market(symbol)["precision"]["amount"]
         minPrice = 5
         minQuantity = round(minPrice / price, amountPrecision)
+        if not minQuantity * price >= minPrice:
+            minQuantity = minQuantity+1
+            print(f"min quantity was changed from {minQuantity-1} to {minQuantity}")
+        minQuantity = minQuantity
         print(f"cantidad mínima: {minQuantity}")
         return minQuantity
 

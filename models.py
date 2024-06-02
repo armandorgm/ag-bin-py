@@ -15,10 +15,11 @@ class BotOperation(Base):
     position_side = Column(String, nullable=False)
     active = Column(Boolean)
     threshold = Column(Integer)
+    min_quantity = Column(Float)
     
     #Relations
-    profit_operations = relationship("ProfitOperation", back_populates="bot_operation")
-    orders = relationship("OrderStatus", back_populates="bot_operation")  
+    #profit_operations = relationship("ProfitOperation", back_populates="bot_operation")
+    #orders = relationship("OrderStatus", back_populates="bot_operation")  
     
     #Representation
     def __repr__(self):
