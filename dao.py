@@ -1,3 +1,4 @@
+from typing import Union, cast
 from sqlalchemy import create_engine, Column, Integer, Float, String, Sequence,Boolean
 #from sqlalchemy.ext.declarative import declarative_base #deprecated
 from sqlalchemy.orm import declarative_base
@@ -36,7 +37,7 @@ class OrderManagerDAO:
         finally:
             session.close()
     
-    def storeNewProfitOperation(self, botOperationId:int, slotPrice:float, openOrderId:int=None, takeProfitOrderId:int=None):
+    def storeNewProfitOperation(self, botOperationId:int, slotPrice:float, openOrderId:Union[int,None]=None, takeProfitOrderId:int=None):
         session = self.Session()
         existing_operation = (session.query(ProfitOperation)
             .filter_by(
@@ -57,6 +58,7 @@ class OrderManagerDAO:
         session.commit()
         return (existing_operation if existing_operation else newProfitOperation)
         
+    
     def getProfitOperations(self):
         session = self.Session()
         profitOperation = session.query(ProfitOperation).all()
@@ -123,7 +125,7 @@ class OrderManagerDAO:
         session.close()
         return operations
     
-    def getBotOperation(self,operationId)->BotOperation:
+    def getBotOperation(self,operationId:int)->BotOperation:
         session = self.Session()
         operation = session.query(BotOperation).get(operationId)
         session.close()

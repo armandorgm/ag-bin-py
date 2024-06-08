@@ -1,6 +1,6 @@
 import asyncio
 from config_manager import ConfigManager
-from order_manager import OrderManager
+from bot_manager import OrderManager
 from user_interface import UserInterface
 
 
@@ -18,9 +18,13 @@ async def main():
             testMode = True
         case "2":
             api_key, secret = config_manager.get_api_credentials()
-    user_interface = UserInterface(["BNB/USDT", "ATA/USDT", "TRX/USDT","BTC/USDT"])
-    order_manager = OrderManager(api_key, secret, user_interface,testMode)
-    await order_manager.startMenu()
+        case _:
+            pass
+    if api_key and secret:
+        user_interface = UserInterface(["BNB/USDT", "ATA/USDT", "TRX/USDT","BTC/USDT"])
+        order_manager = OrderManager(api_key, secret, user_interface,testMode)
+        await order_manager.theTime()
+        await order_manager.startMenu()
     
     
 if __name__ == '__main__':

@@ -610,3 +610,215 @@ ConnectionResetError: Cannot write to closing transport
 2024-05-28 11:34:42,804 - root - ERROR - binanceusdm {"code":-2019,"msg":"Margin is insufficient."}
 2024-05-28 11:42:34,692 - root - ERROR - binanceusdm {"code":-2019,"msg":"Margin is insufficient."}
 2024-05-31 22:16:42,028 - root - ERROR - binanceusdm {"code":-2021,"msg":"Order would immediately trigger."}
+2024-06-03 14:35:08,761 - ccxt.base.exchange - WARNING - binanceusdm requires to release all resources with an explicit call to the .close() coroutine. If you are using the exchange instance with async coroutines, add `await exchange.close()` to your code into a place when you're done with the exchange and don't need the exchange instance anymore (at the end of your async coroutine).
+2024-06-03 15:12:15,615 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-12' coro=<BotOperation.start() done, defined at c:\Users\arman\myProjects\ag-bin-py\bot_operation_service.py:39> exception=ExchangeClosedByUser('Connection closed by the user')>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\bot_operation_service.py", line 45, in start
+    pprint(await self.exchange.watch_balance())
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\pro\binance.py", line 1700, in watch_balance
+    return await self.watch(url, messageHash, message, type)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ccxt.base.errors.ExchangeClosedByUser: Connection closed by the user
+2024-06-03 15:38:52,057 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-12' coro=<BotOperation.start() done, defined at c:\Users\arman\myProjects\ag-bin-py\bot_operation_service.py:39> exception=ExchangeClosedByUser('Connection closed by the user')>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\bot_operation_service.py", line 45, in start
+    pprint(await self.exchange.watch_balance())
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\pro\binance.py", line 1700, in watch_balance
+    return await self.watch(url, messageHash, message, type)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ccxt.base.errors.ExchangeClosedByUser: Connection closed by the user
+2024-06-03 15:40:11,760 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-12' coro=<BotOperation.start() done, defined at c:\Users\arman\myProjects\ag-bin-py\bot_operation_service.py:39> exception=ExchangeClosedByUser('Connection closed by the user')>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\bot_operation_service.py", line 45, in start
+    pprint(await self.exchange.watch_balance())
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\pro\binance.py", line 1700, in watch_balance
+    return await self.watch(url, messageHash, message, type)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ccxt.base.errors.ExchangeClosedByUser: Connection closed by the user
+2024-06-03 15:46:02,790 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-12' coro=<BotOperation.start() done, defined at c:\Users\arman\myProjects\ag-bin-py\bot_operation_service.py:39> exception=BadSymbol('binanceusdm does not have market symbol T')>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\bot_operation_service.py", line 45, in start
+    pprint(await self.exchange.watch_order_book(self.symbol,5))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\pro\binance.py", line 1040, in watch_bids_asks
+    result = await self.watch_multi_ticker_helper('watchBidsAsks', 'bookTicker', symbols, params)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\pro\binance.py", line 1047, in watch_multi_ticker_helper
+    symbols = self.market_symbols(symbols, None, True, False, True)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\base\exchange.py", line 3257, in market_symbols
+    market = self.market(symbols[i])
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\binance.py", line 2562, in market
+    raise BadSymbol(self.id + ' does not have market symbol ' + symbol)
+ccxt.base.errors.BadSymbol: binanceusdm does not have market symbol T
+2024-06-03 15:47:29,811 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-12' coro=<BotOperation.start() done, defined at c:\Users\arman\myProjects\ag-bin-py\bot_operation_service.py:39> exception=ExchangeClosedByUser('Connection closed by the user')>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\bot_operation_service.py", line 45, in start
+    pprint(await self.exchange.watch_order_book(self.symbol,5))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\pro\binance.py", line 230, in watch_order_book
+    return await self.watch_order_book_for_symbols([symbol], limit, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\pro\binance.py", line 281, in watch_order_book_for_symbols
+    orderbook = await self.watch_multiple(url, messageHashes, message, messageHashes, subscription)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ccxt.base.errors.ExchangeClosedByUser: Connection closed by the user
+2024-06-03 15:53:04,986 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-12' coro=<BotOperation.start() done, defined at c:\Users\arman\myProjects\ag-bin-py\bot_operation_service.py:40> exception=TypeError("'coroutine' object is not subscriptable")>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\bot_operation_service.py", line 46, in start
+    pprint(await self.exchange.watch_order_book(self.symbol,5)["asks"][0])
+                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+TypeError: 'coroutine' object is not subscriptable
+2024-06-03 15:53:40,938 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-12' coro=<BotOperation.start() done, defined at c:\Users\arman\myProjects\ag-bin-py\bot_operation_service.py:40> exception=TypeError("'coroutine' object is not subscriptable")>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\bot_operation_service.py", line 46, in start
+    pprint((await self.exchange.watch_order_book(self.symbol,5))["asks"][0])
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: 'coroutine' object is not subscriptable
+2024-06-03 16:37:27,367 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-12' coro=<BotOperation.start() done, defined at c:\Users\arman\myProjects\ag-bin-py\bot_operation_service.py:40> exception=NotSupported('binanceusdm watchOHLCVForSymbols() is not supported yet')>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\bot_operation_service.py", line 46, in start
+    pprint((await self.exchange.watch_ohlcv_for_symbols(self.symbol,None,5))["asks"][0])
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\base\exchange.py", line 584, in watch_ohlcv_for_symbols
+    raise NotSupported(self.id + ' watchOHLCVForSymbols() is not supported yet')
+ccxt.base.errors.NotSupported: binanceusdm watchOHLCVForSymbols() is not supported yet
+2024-06-03 16:40:31,675 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-12' coro=<BotOperation.start() done, defined at c:\Users\arman\myProjects\ag-bin-py\bot_operation_service.py:40> exception=NotSupported('binanceusdm watchOHLCVForSymbols() is not supported yet')>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\bot_operation_service.py", line 47, in start
+    pprint((await self.exchange.watch_ohlcv(self.symbol,"1m",None,5))["asks"][0])
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\base\exchange.py", line 584, in watch_ohlcv_for_symbols
+    raise NotSupported(self.id + ' watchOHLCVForSymbols() is not supported yet')
+ccxt.base.errors.NotSupported: binanceusdm watchOHLCVForSymbols() is not supported yet
+2024-06-03 17:05:50,116 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-12' coro=<BotOperation.start() done, defined at c:\Users\arman\myProjects\ag-bin-py\bot_operation_service.py:40> exception=TypeError('list indices must be integers or slices, not str')>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\bot_operation_service.py", line 47, in start
+    pprint((await self.exchange.watch_ohlcv(self.symbol,"1m"))["asks"][0])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: list indices must be integers or slices, not str
+2024-06-03 17:06:53,827 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-12' coro=<BotOperation.start() done, defined at c:\Users\arman\myProjects\ag-bin-py\bot_operation_service.py:40> exception=TypeError('list indices must be integers or slices, not str')>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\bot_operation_service.py", line 47, in start
+    #pprint((await self.exchange.watch_order_book(self.symbol,5))["asks"][0])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: list indices must be integers or slices, not str
+2024-06-03 17:08:09,454 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-12' coro=<BotOperation.start() done, defined at c:\Users\arman\myProjects\ag-bin-py\bot_operation_service.py:40> exception=NotSupported('binanceusdm watchOHLCVForSymbols() is not supported yet')>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\bot_operation_service.py", line 46, in start
+    self.exchange.verbose = True
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\base\exchange.py", line 584, in watch_ohlcv_for_symbols
+    raise NotSupported(self.id + ' watchOHLCVForSymbols() is not supported yet')
+ccxt.base.errors.NotSupported: binanceusdm watchOHLCVForSymbols() is not supported yet
+2024-06-04 13:13:16,719 - asyncio - ERROR - Exception in callback Future.race.<locals>.callback(<Task cancell...tasks.py:435>>) at C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\base\ws\future.py:25
+handle: <Handle Future.race.<locals>.callback(<Task cancell...tasks.py:435>>) at C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\base\ws\future.py:25>
+Traceback (most recent call last):
+  File "C:\Python312\Lib\asyncio\runners.py", line 194, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "C:\Python312\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python312\Lib\asyncio\base_events.py", line 685, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "c:\Users\arman\myProjects\ag-bin-py\main.py", line 27, in main
+    await order_manager.startMenu()
+  File "c:\Users\arman\myProjects\ag-bin-py\bot_manager.py", line 142, in startMenu
+    raise e
+  File "c:\Users\arman\myProjects\ag-bin-py\bot_manager.py", line 127, in startMenu
+    asyncio.create_task(self.create_bot_operation())
+  File "C:\Python312\Lib\asyncio\tasks.py", line 420, in create_task
+    task = loop.create_task(coro)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python312\Lib\asyncio\base_events.py", line 457, in create_task
+    task = tasks.Task(coro, loop=self, name=name, context=context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: a coroutine was expected, got None
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python312\Lib\asyncio\events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\base\ws\future.py", line 26, in callback
+    exception = done.exception()
+                ^^^^^^^^^^^^^^^^
+  File "C:\Python312\Lib\asyncio\tasks.py", line 464, in wait
+    return await _wait(fs, timeout, return_when, loop)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python312\Lib\asyncio\tasks.py", line 550, in _wait
+    await waiter
+asyncio.exceptions.CancelledError
+2024-06-04 13:13:16,806 - asyncio - ERROR - Future exception was never retrieved
+future: <Future finished exception=NetworkError(RuntimeError('Session is closed'))>
+ccxt.base.errors.NetworkError: Session is closed
+2024-06-04 13:16:05,155 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-12' coro=<BotOperation.start() done, defined at c:\Users\arman\myProjects\ag-bin-py\bot_operation_service.py:68> exception=AttributeError("'BotOperation' object has no attribute 'estrategia'")>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\bot_operation_service.py", line 79, in start
+    self.actualizar_datos({"precio_actual":lastPrice})
+  File "c:\Users\arman\myProjects\ag-bin-py\bot_operation_service.py", line 42, in actualizar_datos
+    accion, precio_entrada = self.estrategia.evaluar_orden(datos_mercado, self.precio_entrada, self.porcentaje)
+                             ^^^^^^^^^^^^^^^
+AttributeError: 'BotOperation' object has no attribute 'estrategia'. Did you mean: '_strategy'?
+2024-06-04 13:18:29,767 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-12' coro=<BotOperation.start() done, defined at c:\Users\arman\myProjects\ag-bin-py\bot_operation_service.py:68> exception=AttributeError("'BotOperation' object has no attribute 'precio_entrada'")>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\bot_operation_service.py", line 79, in start
+    self.actualizar_datos({"precio_actual":lastPrice})
+  File "c:\Users\arman\myProjects\ag-bin-py\bot_operation_service.py", line 42, in actualizar_datos
+    accion, precio_entrada = self._strategy.evaluar_orden(datos_mercado, self.precio_entrada, self.porcentaje)
+                                                                         ^^^^^^^^^^^^^^^^^^^
+AttributeError: 'BotOperation' object has no attribute 'precio_entrada'
+2024-06-04 13:22:16,950 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-12' coro=<BotOperation.start() done, defined at c:\Users\arman\myProjects\ag-bin-py\bot_operation_service.py:68> exception=AttributeError("'BotOperation' object has no attribute 'porcentaje'")>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\bot_operation_service.py", line 81, in start
+    self.actualizar_datos({"precio_actual":lastPrice})
+  File "c:\Users\arman\myProjects\ag-bin-py\bot_operation_service.py", line 42, in actualizar_datos
+    accion, precio_entrada = self._strategy.evaluar_orden(datos_mercado, self.entryPrice, self.porcentaje)
+                                                                                          ^^^^^^^^^^^^^^^
+AttributeError: 'BotOperation' object has no attribute 'porcentaje'
+2024-06-04 13:25:02,830 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-12' coro=<BotOperation.start() done, defined at c:\Users\arman\myProjects\ag-bin-py\bot_operation_service.py:68> exception=AttributeError("'BotOperation' object has no attribute 'numero_ordenes_contra'")>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\bot_operation_service.py", line 81, in start
+    self.actualizar_datos({"precio_actual":lastPrice})
+  File "c:\Users\arman\myProjects\ag-bin-py\bot_operation_service.py", line 49, in actualizar_datos
+    self.numero_ordenes_contra += 1
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'BotOperation' object has no attribute 'numero_ordenes_contra'
+2024-06-04 14:26:55,592 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-10' coro=<BotOperation.start() done, defined at c:\Users\arman\myProjects\ag-bin-py\bot_operation_service.py:82> exception=ExchangeClosedByUser('Connection closed by the user')>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\bot_operation_service.py", line 87, in start
+    entryReferencePrice = (await self.exchange.watch_ticker(self.symbol))['last']
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\pro\binance.py", line 1011, in watch_ticker
+    tickers = await self.watch_tickers([symbol], self.extend(params, {'callerMethodName': 'watchTicker'}))
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\pro\binance.py", line 1025, in watch_tickers
+    newTickers = await self.watch_multi_ticker_helper('watchTickers', channelName, symbols, params)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\pro\binance.py", line 1095, in watch_multi_ticker_helper
+    result = await self.watch_multiple(url, messageHashes, self.deep_extend(request, params), subscriptionArgs, subscribe)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ccxt.base.errors.ExchangeClosedByUser: Connection closed by the user

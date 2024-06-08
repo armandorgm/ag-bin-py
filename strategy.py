@@ -8,7 +8,12 @@ class Strategy(ABC):
     The Context uses this interface to call the algorithm defined by Concrete
     Strategies.
     """
-
+    """
     @abstractmethod
     def do_algorithm(self, data: List):
+        pass
+    """
+    
+    @abstractmethod
+    def evaluar_orden(self, datos_mercado, precio_entrada, porcentaje):
         pass

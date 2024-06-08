@@ -1,6 +1,7 @@
-from sqlalchemy import create_engine, Column, Integer, String, Float, ForeignKey,Boolean
+from typing import Union, cast
+from sqlalchemy import Column, Integer, String, Float, ForeignKey,Boolean
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship,sessionmaker
+from sqlalchemy.orm import relationship
 
 # Crea una instancia Base para declarar modelos
 Base = declarative_base()
@@ -43,14 +44,15 @@ class OrderStatus(Base):
 
 class ProfitOperation(Base):
     __tablename__ = 'profit_operations'
-    id = Column(Integer, primary_key=True, unique=True)
+    id = cast(int,Column(Integer, primary_key=True, unique=True))
     bot_operation_id = Column(Integer, ForeignKey('bot_operations.id'), nullable=False,)
     slot_price = Column(Float, nullable=False)
-    open_order_id = Column(Integer,unique=True)
-    take_profit_order_id = Column(Integer,unique=True)
+    _open_order_id = Column(Integer,unique=True,nullable=True)
+    take_profit_order_id = Column(Integer,unique=True,nullable=True)
     #Relación 
     bot_operation  = relationship("BotOperation", back_populates="profit_operations")
     
     #def __init__(self,):
-        
+    
+
 

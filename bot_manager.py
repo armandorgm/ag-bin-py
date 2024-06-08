@@ -1,6 +1,10 @@
+from datetime import datetime
+from decimal import Decimal
 import json
 import logging
 import math
+from typing import List,Union
+from interfaces.exchange_basic import Num, iPosition
 from models import BotOperation
 from user_interface import UserInterface
 import ccxt.pro as ccxtpro
@@ -12,7 +16,8 @@ from ccxt.base.types import OrderType,OrderSide,PositionSide,Order
 from order_monitor import OrderMonitor
 from db_integrity import DbIntegrity
 from interfaces.iOrderManager import iOrderManager
-
+from utils import Utilidades
+from bot_operation_service import BotOperation as BotService
 
 
 test= {
@@ -33,7 +38,7 @@ class OrderManager(iOrderManager):
     })  
         #############
         self.exchange.set_sandbox_mode(testMode)
-        self.exchange.verbose = testMode
+        self.exchange.verbose = False#testMode
         ##############
         self.loadMarketsTask = asyncio.create_task(self.exchange.load_markets())
         self.user_interface = user_interface
@@ -41,6 +46,26 @@ class OrderManager(iOrderManager):
         print("exchange instatiace")
         self.monitor = OrderMonitor(self, self.exchange,self.dao)
         self.integrityChecker = DbIntegrity(self.dao,self.exchange)
+        # Obtener la hora del servidor
+        
+    async def theTime(self):
+        server_time = await self.exchange.fetch_time()  # Tiempo en milisegundos
+        server_datetime = datetime.fromtimestamp(server_time / 1000)
+
+        # Obtener la hora local
+        local_datetime = datetime.now()
+
+        # Imprimir las horas para comparación
+        print(f"Server Time (UTC): {server_datetime}")
+        print(f"Local Time (UTC): {local_datetime}")
+
+        # Calcular la diferencia
+        difference = local_datetime - server_datetime
+        print(f"Diferencia: {difference}")
+        
+        # También puedes mostrar la diferencia en segundos si prefieres
+        difference_in_seconds = abs(difference.total_seconds())
+        print(f"Diferencia en segundos: {difference_in_seconds:.2f} segundos")
 
 
 
@@ -59,8 +84,13 @@ class OrderManager(iOrderManager):
 6) Create new bot Operation
 7) watch Orders
 8) create a counter size order until position is at least half size the oposite
+9) Create Bot Operation
 0) Exit""")
-                option = input("write a number from menu\n")
+                # Usar input asincrónico no bloqueante
+                loop = asyncio.get_event_loop()
+                option = await loop.run_in_executor(None, input, "Introduce algo: ")
+                print(f"Usuario introdujo: {option}")
+                #option = input("write a number from menu\n")
                 await self.loadMarketsTask
                 match option:
                     case "1":
@@ -92,8 +122,15 @@ class OrderManager(iOrderManager):
                         symbol = self.user_interface.select_symbol()
                         positionSide = self.user_interface.selectPositionSide()
                         await self.funcion001([symbol],positionSide,0.1)
+                    
+                    case "9":#9) Create Bot Operation
+                        self.create_bot_operation()
+            
+                    case "10":# Stop Bot Operation
+                        self.botOperation.stop()
                     case "99":
-                        await self.testFuction()
+                        await asyncio.sleep(5)
+                        #await self.testFuction()
                     case "0":
                         print("Exiting the menu...")
                         break  # Salir del bucle
@@ -107,6 +144,9 @@ class OrderManager(iOrderManager):
             pass
         finally:
             await self.exchange.close()
+    def create_bot_operation(self):
+        self.botOperation = BotService(self.exchange,"LONG","TRX/USDT",0.02,"standard","miBotLong")
+        botTask = asyncio.create_task(self.botOperation.start())
     
     @staticmethod
     def calculate_price_with_profit_offset(entry_price: float, positionSide: str, profitOffset: float) -> float:
@@ -123,9 +163,9 @@ class OrderManager(iOrderManager):
         # crear una operacion que reciba una posicion y crear una
         # orden que su tamaño sumado a el tamaño de dicha posicion 
         # abierta sea igual a la mitad del tamaño de la poscion contraria
-        postitionList = await self.exchange.fetch_positions(symbol)
-        mainObj = None
-        opositeObj = None
+        postitionList:List[iPosition] = await self.exchange.fetch_positions(symbol) # type: ignore
+        mainObj :Union[iPosition,None]= None
+        opositeObj:Union[iPosition,None] = None
         for obj in postitionList:
             if obj["side"] == positionSide.lower():
                 mainObj = obj
@@ -134,19 +174,20 @@ class OrderManager(iOrderManager):
         mainSide = "buy" if positionSide.lower() == "long" else "sell"
         opositeSide = "sell" if positionSide.lower() == "long" else "buy"
 
-        amount = (opositeObj["contracts"]/2)-mainObj["contracts"]
-        pprint(mainObj)
-        print (f"la cantidad seria {amount}")
-        #mainOrder = await self.exchange.create_order(symbol[0],"market",mainSide,amount,params={"positionSide":positionSide.upper()})
-        mainOrder = await self.exchange.fetch_order("11814138706",symbol[0])
-        amount = 63
-        pprint(mainOrder)
-        rawProfitPrice = self.calculate_price_with_profit_offset(mainOrder["average"],positionSide,0.1)
-        print("rawProfitPrice",rawProfitPrice)
-        profitPrice = self.exchange.price_to_precision(symbol[0],rawProfitPrice)
-        print("ProfitPrice",profitPrice)
-        profitOrder = await self.exchange.create_order(symbol[0],"limit",opositeSide,amount,profitPrice,params={"positionSide":positionSide.upper()})
-        pprint(profitOrder)
+        if opositeObj and mainObj:
+            amount = (opositeObj["contracts"]/2)-mainObj["contracts"]
+            pprint(mainObj)
+            print (f"la cantidad seria {amount}")
+            #mainOrder = await self.exchange.create_order(symbol[0],"market",mainSide,amount,params={"positionSide":positionSide.upper()})
+            mainOrder = await self.exchange.fetch_order("11814138706",symbol[0])
+            amount = 63
+            pprint(mainOrder)
+            rawProfitPrice = self.calculate_price_with_profit_offset(Utilidades.to_float(mainOrder["average"]),positionSide,0.1)
+            print("rawProfitPrice",rawProfitPrice)
+            profitPrice = self.exchange.price_to_precision(symbol[0],rawProfitPrice)
+            print("ProfitPrice",profitPrice)
+            profitOrder = await self.exchange.create_order(symbol[0],"limit",opositeSide,amount,profitPrice,params={"positionSide":positionSide.upper()})
+            pprint(profitOrder)
     
     async def clearProfitOperationByBotOperationId(self, botOperationId:int):
         botOperation = self.dao.getBotOperation(botOperationId)

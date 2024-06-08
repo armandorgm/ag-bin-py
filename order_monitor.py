@@ -5,7 +5,7 @@ import logging
 from models import BotOperation
 from db_integrity import DbIntegrity
 from interfaces.iOrderManager import iOrderManager
-from bot_operation import BotOperation as BotOperationClass
+from bot_operation_service import BotOperation as BotOperationClass
 
 # Configurar logging
 logging.basicConfig(level=logging.INFO,
