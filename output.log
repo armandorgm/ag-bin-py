@@ -822,3 +822,19 @@ Traceback (most recent call last):
     result = await self.watch_multiple(url, messageHashes, self.deep_extend(request, params), subscriptionArgs, subscribe)
              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 ccxt.base.errors.ExchangeClosedByUser: Connection closed by the user
+2024-06-05 09:31:22,386 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-12' coro=<BotOperation.start() done, defined at c:\Users\arman\myProjects\ag-bin-py\bot_operation_service.py:84> exception=RequestTimeout('Connection to wss://fstream.binance.com/ws/0 timed out due to a ping-pong keepalive missing on time')>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\bot_operation_service.py", line 95, in start
+    lastPrice = (await self.exchange.watch_ticker(self.symbol))['last']
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\pro\binance.py", line 1011, in watch_ticker
+    tickers = await self.watch_tickers([symbol], self.extend(params, {'callerMethodName': 'watchTicker'}))
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\pro\binance.py", line 1025, in watch_tickers
+    newTickers = await self.watch_multi_ticker_helper('watchTickers', channelName, symbols, params)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\pro\binance.py", line 1095, in watch_multi_ticker_helper
+    result = await self.watch_multiple(url, messageHashes, self.deep_extend(request, params), subscriptionArgs, subscribe)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ccxt.base.errors.RequestTimeout: Connection to wss://fstream.binance.com/ws/0 timed out due to a ping-pong keepalive missing on time
