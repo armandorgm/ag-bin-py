@@ -23,9 +23,11 @@ async def main():
     if api_key and secret:
         user_interface = UserInterface(["BNB/USDT", "ATA/USDT", "TRX/USDT","BTC/USDT"])
         order_manager = OrderManager(api_key, secret, user_interface,testMode)
-        await order_manager.theTime()
-        await order_manager.startMenu()
-    
+        try:
+            await order_manager.theTime()
+            await order_manager.startMenu()
+        except KeyboardInterrupt:
+            await order_manager.exchange.close()
     
 if __name__ == '__main__':
         asyncio.run(main())

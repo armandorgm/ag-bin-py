@@ -2,7 +2,7 @@ from dao import OrderManagerDAO
 from  ccxt.pro import binanceusdm
 from pprint import pprint
 import logging
-from models import BotOperation
+from sql_models.models import BotOperation_model
 from db_integrity import DbIntegrity
 from interfaces.iOrderManager import iOrderManager
 from bot_operation_service import BotOperation as BotOperationClass

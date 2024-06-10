@@ -3,7 +3,7 @@ from  ccxt.pro import binanceusdm
 from ccxt.base.types import Order
 from pprint import pprint
 
-from models import BotOperation, OrderStatus
+from sql_models.models import BotOperation_model, OrderStatus
 
 class DbIntegrity:
     def __init__(self, dao:OrderManagerDAO, exchange:binanceusdm):

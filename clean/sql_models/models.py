@@ -7,16 +7,15 @@ from sqlalchemy.orm import relationship
 Base = declarative_base()
 
 # Definir modelos
-class BotOperation(Base):
+class BotOperation_model(Base):
     __tablename__ = 'bot_operations'
     id = Column(Integer, primary_key=True)
     entry_price = Column(Float, nullable=False)
     symbol = Column(String, nullable=False, unique=True)
-    start_order_id = Column(Integer, nullable=False, unique=True)
-    position_side = Column(String, nullable=False)
+    #position_side = Column(String, nullable=False)
     active = Column(Boolean)
     threshold = Column(Integer)
-    min_quantity = Column(Float)
+    name = Column(String, nullable=False, unique=True)
     
     #Relations
     #profit_operations = relationship("ProfitOperation", back_populates="bot_operation")
@@ -35,7 +34,7 @@ class OrderStatus(Base):
     reduce_only = Column(Boolean)
     
     # Relaciónes
-    bot_operation = relationship("BotOperation", back_populates="orders")
+    #bot_operation = relationship("BotOperation_model", back_populates="orders")
 
     #Representation
     def __repr__(self):
@@ -50,9 +49,17 @@ class ProfitOperation(Base):
     _open_order_id = Column(Integer,unique=True,nullable=True)
     take_profit_order_id = Column(Integer,unique=True,nullable=True)
     #Relación 
-    bot_operation  = relationship("BotOperation", back_populates="profit_operations")
+    #bot_operation  = relationship("BotOperation_model", back_populates="profit_operations")
     
     #def __init__(self,):
     
+class Strategy_model(Base):
+    __tablename__ = 'strategies'
+    id = cast(int,Column(Integer, primary_key=True, unique=True))
+    name = cast(str,Column(String, nullable=False))
 
-
+class Symbol_model(Base):
+    __tablename__ = 'symbols'
+    id = cast(int,Column(Integer, primary_key=True, unique=True))
+    name = cast(str,Column(String, nullable=False))
+    

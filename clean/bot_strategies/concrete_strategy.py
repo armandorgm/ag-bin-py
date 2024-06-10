@@ -6,7 +6,7 @@ interface. The interface makes them interchangeable in the Context.
 
 from typing import List, Union
 from interfaces.exchange_basic import StrategyMessage
-from strategy import Strategy
+from bot_strategies.strategy import Strategy
 
 """
 class ConcreteStrategyA(Strategy):

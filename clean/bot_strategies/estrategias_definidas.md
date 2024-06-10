@@ -1,3 +1,8 @@
+cada Estrategia necesita tener:
+    memoria: esfimera o perpetua?
+    ultimo precio:
+
+
 estrategia A:
     llamando cada linea un stop, 
     si el precio alcanzo un stop a favor,
@@ -10,3 +15,6 @@ estrategia A:
     si el precio alcanzo el segundo stop en contra:
         1.)abrir operacion opuesta
         2.)asignar +1 al contador
+
+estrategia_precio_fijo
+estrategia_precio_dinamico

@@ -4,7 +4,7 @@ from sqlalchemy import create_engine, Column, Integer, Float, String, Sequence,B
 from sqlalchemy.orm import declarative_base
 
 from sqlalchemy.orm import sessionmaker
-from models import OrderStatus,BotOperation,ProfitOperation
+from sql_models.models import OrderStatus,BotOperation_model,ProfitOperation,Strategy_model,Symbol_model
 from sqlalchemy import or_
 
 Base = declarative_base()
@@ -12,11 +12,24 @@ Base = declarative_base()
     
 # DAO refactorizado
 class OrderManagerDAO:
+    
     def __init__(self, db_file):
         self.engine = create_engine(f'sqlite:///{db_file}')
         self.Session = sessionmaker(bind=self.engine)
         Base.metadata.create_all(self.engine)
 
+    def get_strategies(self):
+        session = self.Session()
+        strategies = session.query(Strategy_model).all()
+        session.close()
+        return strategies
+    
+    def get_symbols(self):
+        session = self.Session()
+        symbols = session.query(Symbol_model).all()
+        session.close()
+        return symbols
+    
     def storeNewOrder(self, id:int, status:str, operationId:int, type:str, reduceOnly:bool):
         session = self.Session()
         new_order = OrderStatus(id=id,status=status,operation_id=operationId,type=type,reduce_only=reduceOnly)
@@ -109,7 +122,7 @@ class OrderManagerDAO:
     
     def registerNewOperation(self, entryPrice: float, symbol: str, longOrderId, shortOrderId):
         session = self.Session()
-        new_operation = BotOperation(
+        new_operation = BotOperation_model(
             entry_price=entryPrice,
             symbol=symbol,
             long_entry_order_id=longOrderId,
@@ -121,13 +134,13 @@ class OrderManagerDAO:
 
     def getBotOperations(self):
         session = self.Session()
-        operations = session.query(BotOperation).filter(BotOperation.active).all()
+        operations = session.query(BotOperation_model).filter(BotOperation_model.active).all()
         session.close()
         return operations
     
-    def getBotOperation(self,operationId:int)->BotOperation:
+    def getBotOperation(self,operationId:int)->BotOperation_model:
         session = self.Session()
-        operation = session.query(BotOperation).get(operationId)
+        operation = session.query(BotOperation_model).get(operationId)
         session.close()
         return operation
     
@@ -139,7 +152,7 @@ class OrderManagerDAO:
     
     def getOperationOrdersByOperationId(self,operationId:int):
         session = self.Session()
-        orderStatus = session.query(OrderStatus).join(BotOperation).filter(OrderStatus.operation_id == operationId, or_(OrderStatus.status == "closed", OrderStatus.status == "open")).all()
+        orderStatus = session.query(OrderStatus).join(BotOperation_model).filter(OrderStatus.operation_id == operationId, or_(OrderStatus.status == "closed", OrderStatus.status == "open")).all()
         session.close()
         return orderStatus
     
@@ -148,16 +161,3 @@ class OrderManagerDAO:
     # No necesitas definir __del__ para cerrar la sesión explícitamente
     # SQLAlchemy manejará la sesión por debajo
 
-# Ejemplo de uso
-if __name__ == "__main__":
-    dao = OrderManagerDAO('order_manager.db')
-
-    #dao.registerNewOperation(31.5864, "test", 1, 2)
-    prompt = input("ingress an operation ID")
-    orders = dao.getOperationOrdersByOperationId(int(prompt))
-    for order in orders:
-        print(order)
-        #print((orderStatus.operation_id,orderStatus.status, botOperation.position_side))
-
-        
-    

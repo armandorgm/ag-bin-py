@@ -2,7 +2,7 @@ import pprint as pprint
 import ccxt.pro as ccxtpro
 import open_new_console
 import asyncio
-from config_manager import ConfigManager
+from clean.config_manager import ConfigManager
 
 env = ConfigManager()
 

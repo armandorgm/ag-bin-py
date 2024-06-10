@@ -2,7 +2,7 @@ from asyncio import sleep
 import asyncio
 from pprint import pprint
 from bot_strategies.concrete_strategy import EstrategiaLong,EstrategiaShort
-from strategy import Strategy
+from bot_strategies.strategy import Strategy
 from ccxt.pro import binanceusdm
 #from models import BotOperation as BotOperationModel
 #from dao import OrderManagerDAO
@@ -10,22 +10,11 @@ from bot import Bot
 from interfaces.exchange_basic import iPositionSide
 class BotOperation(Bot):
     
-    @staticmethod
-    def startMenu():
-        selection = input(""""
-                          Select an option:
-                          
-                          """)
-    
-    def getStrategy(strategyName)->Strategy:
-        match strategyName:
-            case "standard":
-                pass
-                #return ConcreteStrategyA
-            case _:
-                raise "estrategia con nombre desconocido"
-        pass
-    def __init__(self, 
+    def __init__(self, name,strategy_selected,offsetPrecent,razon_comun_type):
+        super().__init__(name)
+        print(f"acaba de crear una operacion con nombre {name}, estrategia '{strategy_selected}', offset '{offsetPrecent}'")
+        
+    def __init__1(self, 
                  exchange:binanceusdm, 
                  position_side:iPositionSide, 
                  symbol:str, 

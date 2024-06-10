@@ -838,3 +838,13 @@ Traceback (most recent call last):
     result = await self.watch_multiple(url, messageHashes, self.deep_extend(request, params), subscriptionArgs, subscribe)
              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 ccxt.base.errors.RequestTimeout: Connection to wss://fstream.binance.com/ws/0 timed out due to a ping-pong keepalive missing on time
+2024-06-08 12:05:56,217 - ccxt.base.exchange - WARNING - binanceusdm requires to release all resources with an explicit call to the .close() coroutine. If you are using the exchange instance with async coroutines, add `await exchange.close()` to your code into a place when you're done with the exchange and don't need the exchange instance anymore (at the end of your async coroutine).
+2024-06-09 10:40:53,547 - ccxt.base.exchange - WARNING - binanceusdm requires to release all resources with an explicit call to the .close() coroutine. If you are using the exchange instance with async coroutines, add `await exchange.close()` to your code into a place when you're done with the exchange and don't need the exchange instance anymore (at the end of your async coroutine).
+2024-06-09 10:55:04,105 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-12' coro=<BotOperation.start() done, defined at c:\Users\arman\myProjects\ag-bin-py\clean\bot_operation_service.py:80> exception=AttributeError("'BotOperation' object has no attribute 'exchange'")>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\clean\bot_operation_service.py", line 85, in start
+    entryReferencePrice = (await self.exchange.watch_ticker(self.symbol))['last']
+                                 ^^^^^^^^^^^^^
+AttributeError: 'BotOperation' object has no attribute 'exchange'
+2024-06-09 15:01:33,516 - ccxt.base.exchange - WARNING - binanceusdm requires to release all resources with an explicit call to the .close() coroutine. If you are using the exchange instance with async coroutines, add `await exchange.close()` to your code into a place when you're done with the exchange and don't need the exchange instance anymore (at the end of your async coroutine).
