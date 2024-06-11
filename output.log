@@ -848,3 +848,142 @@ Traceback (most recent call last):
                                  ^^^^^^^^^^^^^
 AttributeError: 'BotOperation' object has no attribute 'exchange'
 2024-06-09 15:01:33,516 - ccxt.base.exchange - WARNING - binanceusdm requires to release all resources with an explicit call to the .close() coroutine. If you are using the exchange instance with async coroutines, add `await exchange.close()` to your code into a place when you're done with the exchange and don't need the exchange instance anymore (at the end of your async coroutine).
+2024-06-10 15:41:23,017 - ccxt.base.exchange - WARNING - binanceusdm requires to release all resources with an explicit call to the .close() coroutine. If you are using the exchange instance with async coroutines, add `await exchange.close()` to your code into a place when you're done with the exchange and don't need the exchange instance anymore (at the end of your async coroutine).
+2024-06-10 23:25:00,584 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-12' coro=<BotOperation.start() done, defined at c:\Users\arman\myProjects\ag-bin-py\clean\bot_operation_service.py:80> exception=AttributeError("'BotOperation' object has no attribute 'exchange'")>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\clean\bot_operation_service.py", line 85, in start
+    entryReferencePrice = (await self.exchange.watch_ticker(self.symbol))['last']
+                                 ^^^^^^^^^^^^^
+AttributeError: 'BotOperation' object has no attribute 'exchange'
+2024-06-10 23:31:30,342 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-12' coro=<BotOperation.start() done, defined at c:\Users\arman\myProjects\ag-bin-py\clean\bot_operation_service.py:82> exception=AttributeError("'BotOperation' object has no attribute 'exchange'")>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\clean\bot_operation_service.py", line 86, in start
+    entryReferencePrice = (await self.exchange.watch_ticker(self.symbol))['last']
+                                 ^^^^^^^^^^^^^
+AttributeError: 'BotOperation' object has no attribute 'exchange'
+2024-06-10 23:44:26,988 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-12' coro=<Bot_Operation.start() done, defined at c:\Users\arman\myProjects\ag-bin-py\clean\bot_operation.py:81> exception=AttributeError("'Bot_Operation' object has no attribute 'exchange'")>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\clean\bot_operation.py", line 85, in start
+    entryReferencePrice = (await self.exchange.watch_ticker(self.symbol))['last']
+                                 ^^^^^^^^^^^^^
+AttributeError: 'Bot_Operation' object has no attribute 'exchange'
+2024-06-11 00:04:02,372 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-12' coro=<Bot_Operation.start() done, defined at c:\Users\arman\myProjects\ag-bin-py\clean\bot_operation.py:80> exception=AttributeError("'Bot_Operation' object has no attribute 'exchange'")>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\clean\bot_operation.py", line 84, in start
+    entryReferencePrice = (await self.exchange.watch_ticker(self.symbol))['last']
+                                 ^^^^^^^^^^^^^
+AttributeError: 'Bot_Operation' object has no attribute 'exchange'
+2024-06-11 00:05:16,707 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-12' coro=<Bot_Operation.start() done, defined at c:\Users\arman\myProjects\ag-bin-py\clean\bot_operation.py:81> exception=AttributeError("'Bot_Operation' object has no attribute 'symbol'")>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\clean\bot_operation.py", line 85, in start
+    entryReferencePrice = (await self.exchange.watch_ticker(self.symbol))['last']
+                                                            ^^^^^^^^^^^
+AttributeError: 'Bot_Operation' object has no attribute 'symbol'
+2024-06-11 00:08:18,733 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-12' coro=<Bot_Operation.start() done, defined at c:\Users\arman\myProjects\ag-bin-py\clean\bot_operation.py:82> exception=AttributeError("'Bot_Operation' object has no attribute 'threshold'")>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\clean\bot_operation.py", line 94, in start
+    self.actualizar_datos({"precio_actual":lastPrice})
+  File "c:\Users\arman\myProjects\ag-bin-py\clean\bot_operation.py", line 43, in actualizar_datos
+    accion, precio_entrada = self._strategy.evaluar_orden(datos_mercado, self.entryPrice, self.threshold)
+                                                                                          ^^^^^^^^^^^^^^
+AttributeError: 'Bot_Operation' object has no attribute 'threshold'
+2024-06-11 00:11:59,935 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-12' coro=<Bot_Operation.start() done, defined at c:\Users\arman\myProjects\ag-bin-py\clean\bot_operation.py:82> exception=AttributeError("'Bot_Operation' object has no attribute 'threshold'")>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\clean\bot_operation.py", line 94, in start
+    self.actualizar_datos({"precio_actual":lastPrice})
+  File "c:\Users\arman\myProjects\ag-bin-py\clean\bot_operation.py", line 43, in actualizar_datos
+    accion, precio_entrada = self._strategy.evaluar_orden(datos_mercado, self.entryPrice, self.threshold)
+                                                                                          ^^^^^^^^^^^^^^
+AttributeError: 'Bot_Operation' object has no attribute 'threshold'
+2024-06-11 00:13:01,583 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-12' coro=<Bot_Operation.start() done, defined at c:\Users\arman\myProjects\ag-bin-py\clean\bot_operation.py:82> exception=TypeError('cannot unpack non-iterable NoneType object')>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\clean\bot_operation.py", line 94, in start
+    self.actualizar_datos({"precio_actual":lastPrice})
+  File "c:\Users\arman\myProjects\ag-bin-py\clean\bot_operation.py", line 43, in actualizar_datos
+    accion, precio_entrada = self._strategy.evaluar_orden(datos_mercado, self.entryPrice)
+    ^^^^^^^^^^^^^^^^^^^^^^
+TypeError: cannot unpack non-iterable NoneType object
+2024-06-11 00:28:49,373 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-12' coro=<Bot_Operation.start() done, defined at c:\Users\arman\myProjects\ag-bin-py\clean\bot_operation.py:82> exception=TypeError('StrategyA.evaluar_orden() takes 2 positional arguments but 3 were given')>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\clean\bot_operation.py", line 94, in start
+    self.actualizar_datos({"precio_actual":lastPrice})
+  File "c:\Users\arman\myProjects\ag-bin-py\clean\bot_operation.py", line 43, in actualizar_datos
+    accion, precio_entrada = self._strategy.evaluar_orden(datos_mercado, self.entryPrice)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: StrategyA.evaluar_orden() takes 2 positional arguments but 3 were given
+2024-06-11 02:05:30,190 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-12' coro=<Bot_Operation.start() done, defined at c:\Users\arman\myProjects\ag-bin-py\clean\bot_operation.py:82> exception=AttributeError("'StrategyA' object has no attribute '_ref_price'")>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\clean\bot_operation.py", line 94, in start
+    self.actualizar_datos({"precio_actual":lastPrice})
+  File "c:\Users\arman\myProjects\ag-bin-py\clean\bot_operation.py", line 43, in actualizar_datos
+    accion, precio_entrada = self._strategy.evaluar_orden(datos_mercado)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\arman\myProjects\ag-bin-py\clean\bot_strategies\StrategyA.py", line 21, in evaluar_orden
+    if not self._ref_price:
+           ^^^^^^^^^^^^^^^
+AttributeError: 'StrategyA' object has no attribute '_ref_price'. Did you mean: 'ref_price'?
+2024-06-11 02:06:44,688 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-22' coro=<Bot_Operation.start() done, defined at c:\Users\arman\myProjects\ag-bin-py\clean\bot_operation.py:82> exception=ExchangeClosedByUser('Connection closed by the user')>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\clean\bot_operation.py", line 86, in start
+    entryReferencePrice = (await self.exchange.watch_ticker(self.symbol))['last']
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\pro\binance.py", line 1011, in watch_ticker
+    tickers = await self.watch_tickers([symbol], self.extend(params, {'callerMethodName': 'watchTicker'}))
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\pro\binance.py", line 1025, in watch_tickers
+    newTickers = await self.watch_multi_ticker_helper('watchTickers', channelName, symbols, params)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\pro\binance.py", line 1095, in watch_multi_ticker_helper
+    result = await self.watch_multiple(url, messageHashes, self.deep_extend(request, params), subscriptionArgs, subscribe)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ccxt.base.errors.ExchangeClosedByUser: Connection closed by the user
+2024-06-11 02:07:04,436 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-12' coro=<Bot_Operation.start() done, defined at c:\Users\arman\myProjects\ag-bin-py\clean\bot_operation.py:82> exception=AttributeError("'StrategyA' object has no attribute '_ref_price'")>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\clean\bot_operation.py", line 94, in start
+    self.actualizar_datos({"precio_actual":lastPrice})
+  File "c:\Users\arman\myProjects\ag-bin-py\clean\bot_operation.py", line 43, in actualizar_datos
+    accion, precio_entrada = self._strategy.evaluar_orden(datos_mercado)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\arman\myProjects\ag-bin-py\clean\bot_strategies\StrategyA.py", line 21, in evaluar_orden
+    if not self.ref_price:
+           ^^^^^^^^^^^^^^
+  File "c:\Users\arman\myProjects\ag-bin-py\clean\bot_strategies\StrategyA.py", line 12, in ref_price
+    return self._ref_price
+           ^^^^^^^^^^^^^^^
+AttributeError: 'StrategyA' object has no attribute '_ref_price'. Did you mean: 'ref_price'?
+2024-06-11 02:08:01,844 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-12' coro=<Bot_Operation.start() done, defined at c:\Users\arman\myProjects\ag-bin-py\clean\bot_operation.py:82> exception=AttributeError("'StrategyA' object has no attribute 'calcular_escala'")>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\clean\bot_operation.py", line 94, in start
+    self.actualizar_datos({"precio_actual":lastPrice})
+  File "c:\Users\arman\myProjects\ag-bin-py\clean\bot_operation.py", line 43, in actualizar_datos
+    accion, precio_entrada = self._strategy.evaluar_orden(datos_mercado)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\arman\myProjects\ag-bin-py\clean\bot_strategies\StrategyA.py", line 25, in evaluar_orden
+    print(self.calcular_escala(datos_mercado["precio_actual"]))
+          ^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'StrategyA' object has no attribute 'calcular_escala'
+2024-06-11 02:08:29,818 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-12' coro=<Bot_Operation.start() done, defined at c:\Users\arman\myProjects\ag-bin-py\clean\bot_operation.py:82> exception=AttributeError("'StrategyA' object has no attribute 'lower_price'")>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\clean\bot_operation.py", line 94, in start
+    self.actualizar_datos({"precio_actual":lastPrice})
+  File "c:\Users\arman\myProjects\ag-bin-py\clean\bot_operation.py", line 43, in actualizar_datos
+    accion, precio_entrada = self._strategy.evaluar_orden(datos_mercado)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\arman\myProjects\ag-bin-py\clean\bot_strategies\StrategyA.py", line 27, in evaluar_orden
+    print("precio de referencia:",self.ref_price, "lowerPrice",self.lower_price,"upperPrice",self.upper_price)
+                                                               ^^^^^^^^^^^^^^^^
+AttributeError: 'StrategyA' object has no attribute 'lower_price'. Did you mean: '_ref_price'?

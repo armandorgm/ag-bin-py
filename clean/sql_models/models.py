@@ -16,6 +16,7 @@ class BotOperation_model(Base):
     active = Column(Boolean)
     threshold = Column(Integer)
     name = Column(String, nullable=False, unique=True)
+    strategy = Column(Integer,ForeignKey('strategies.id'),nullable=False)
     
     #Relations
     #profit_operations = relationship("ProfitOperation", back_populates="bot_operation")
@@ -57,6 +58,9 @@ class Strategy_model(Base):
     __tablename__ = 'strategies'
     id = cast(int,Column(Integer, primary_key=True, unique=True))
     name = cast(str,Column(String, nullable=False))
+    
+    def __repr__(self):
+        return f"{self.id}, {self.name}"
 
 class Symbol_model(Base):
     __tablename__ = 'symbols'

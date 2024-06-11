@@ -8,12 +8,15 @@ from ccxt.pro import binanceusdm
 #from dao import OrderManagerDAO
 from bot import Bot
 from interfaces.exchange_basic import iPositionSide
-class BotOperation(Bot):
+class Bot_Operation(Bot):
     
-    def __init__(self, name,strategy_selected,offsetPrecent,razon_comun_type):
+    def __init__(self, exchange:binanceusdm, name, symbol, strategy:Strategy):
         super().__init__(name)
-        print(f"acaba de crear una operacion con nombre {name}, estrategia '{strategy_selected}', offset '{offsetPrecent}'")
-        
+        self.symbol = symbol
+        self.exchange = exchange
+        self.strategy = strategy
+        print(f"acaba de crear una operacion con nombre {name}, estrategia '{strategy}'")
+    """
     def __init__1(self, 
                  exchange:binanceusdm, 
                  position_side:iPositionSide, 
@@ -34,11 +37,10 @@ class BotOperation(Bot):
         self.closingOrderPriceStrategy = None
         self.openingOrderAmountStrategy = None
         self.numero_ordenes_contra = 0  # Contador para las órdenes contrarias consecutivas
-
-        pass
+    """
     
     def actualizar_datos(self, datos_mercado):
-        accion, precio_entrada = self._strategy.evaluar_orden(datos_mercado, self.entryPrice, self.threshold)
+        accion, precio_entrada = self._strategy.evaluar_orden(datos_mercado)
         
         if accion == 'Cerrar LONG y abrir nuevo LONG':
             self.cerrar_orden()
@@ -78,9 +80,8 @@ class BotOperation(Bot):
 
     
     async def start(self):
-        
         super().start()
-        self.status = 1
+        pprint(self.strategy)
         #self.exchange.verbose = True
         entryReferencePrice = (await self.exchange.watch_ticker(self.symbol))['last']
         self.entryPrice = entryReferencePrice

@@ -1,6 +1,6 @@
 import asyncio
 from config_manager import ConfigManager
-from bot_manager import OrderManager
+from bot_manager import BotManager
 from user_interface import UserInterface
 
 
@@ -22,11 +22,13 @@ async def main():
             pass
     if api_key and secret:
         user_interface = UserInterface(["BNB/USDT", "ATA/USDT", "TRX/USDT","BTC/USDT"])
-        order_manager = OrderManager(api_key, secret, user_interface,testMode)
+        order_manager = BotManager(api_key, secret, user_interface,testMode)
         try:
             await order_manager.theTime()
             await order_manager.startMenu()
         except KeyboardInterrupt:
+            pass
+        finally:
             await order_manager.exchange.close()
     
 if __name__ == '__main__':

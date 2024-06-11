@@ -4,7 +4,9 @@ import json
 import logging
 import math
 from typing import List,Union, cast
-from clean.bot_strategies.strategy import Strategy
+from bot_strategies.strategy import Strategy
+from bot_strategies.concrete_strategy import EstrategiaLong
+from bot_strategies.StrategyA import StrategyA
 from menu import Menu
 from interfaces.exchange_basic import Num, iPosition
 from sql_models.models import BotOperation_model
@@ -17,15 +19,15 @@ from dao import OrderManagerDAO
 from ccxt.base.types import OrderType,OrderSide,PositionSide,Order
 from order_monitor import OrderMonitor
 from db_integrity import DbIntegrity
-from interfaces.iOrderManager import iOrderManager
+from interfaces.iOrderManager import iBotManager
 from utils import Utilidades
-from bot_operation_service import BotOperation
+from bot_operation import Bot_Operation
 
 
 test= {
     "order_id" : "55928602627"
 }
-class OrderManager(iOrderManager):
+class BotManager(iBotManager):
     def __init__(self, api_key: str, secret: str, user_interface: UserInterface,testMode:bool=False):
         self.testMode = testMode
         db = "test_order_manager.db" if testMode else "order_manager.db"
@@ -49,10 +51,7 @@ class OrderManager(iOrderManager):
         self.monitor = OrderMonitor(self, self.exchange,self.dao)
         self.integrityChecker = DbIntegrity(self.dao,self.exchange)
         # Obtener la hora del servidor
-    
-    async def close(self):
-        await self.exchange.close()
-         
+             
     async def theTime(self):
         server_time = await self.exchange.fetch_time()  # Tiempo en milisegundos
         server_datetime = datetime.fromtimestamp(server_time / 1000)
@@ -75,8 +74,6 @@ class OrderManager(iOrderManager):
 
 
     async def startMenu(self):
-
-
         try:
             option=None
             while option !=str(0):
@@ -129,7 +126,7 @@ class OrderManager(iOrderManager):
                         await self.funcion001([symbol],positionSide,0.1)
                     
                     case "9":#9) Create Bot Operation
-                        self.create_bot_operation()
+                        self.load_bot_operation()
             
                     case "10":# Stop Bot Operation
                         self.botOperation.stop()
@@ -153,8 +150,18 @@ class OrderManager(iOrderManager):
     def select_strategy(self)->Strategy:
         strategies = self.dao.get_strategies()
         menu = Menu(strategies, "\tSelect a strategy:")
+        selection = menu.select()
+        print(f"Strategy selected is {selection.id} {selection.name}")
+        return self.getStrategyById(selection)
         
-        return menu.select()     
+    def getStrategyById(self,id:int)->Strategy:
+        match id:
+            case 1:#EstrategiaLong
+                return EstrategiaLong
+            case 2:#StrategyA
+                return StrategyA
+            case _:
+                raise "Strategy Id Unkwnown"
     
     def select_symbol(self):
         symbols = self.dao.get_symbols()
@@ -167,17 +174,15 @@ class OrderManager(iOrderManager):
         strategy_selected = self.select_strategy()
         offsetPrecent = float(input("Ingrese la razon comunun entre precios en porcentaje\n"))
         razon_comun_type = int(input("seleccione uno:\n1.)geometric \n2.)aritmetic\n"))
-        self.botOperation = BotOperation(name, strategy_selected,offsetPrecent,razon_comun_type)
+        self.botOperation = Bot_Operation(name, strategy_selected,offsetPrecent,razon_comun_type)
         #self.botOperation = BotOperation(self.exchange,"LONG","TRX/USDT",0.02,"standard","miBotLong")
         botTask = asyncio.create_task(self.botOperation.start())
     
     def load_bot_operation(self):
         boOpData = self.dao.getBotOperation(1)
         
-        strategy_selected = self.select_strategy()
-        offsetPrecent = float(input("Ingrese la razon comunun entre precios en porcentaje\n"))
-        razon_comun_type = int(input("seleccione uno:\n1.)geometric \n2.)aritmetic\n"))
-        self.botOperation = BotOperation(boOpData.name, strategy_selected,offsetPrecent,razon_comun_type)
+        strategy = self.getStrategyById(boOpData.strategy)
+        self.botOperation = Bot_Operation(self.exchange,boOpData.name, boOpData.symbol, strategy(boOpData.threshold))
         #self.botOperation = BotOperation(self.exchange,"LONG","TRX/USDT",0.02,"standard","miBotLong")
         botTask = asyncio.create_task(self.botOperation.start())
     
@@ -620,7 +625,7 @@ if __name__ == "__main__":
     '''
 
     async def monitor_order_cli(order_id,symbol,type,side,amount,price, positionSide):
-        orderManager = OrderManager()
+        orderManager = BotManager()
         await orderManager.monitor_order_and_create_second(order_id, symbol,type,side,amount,price, positionSide)
 
     if len(sys.argv) == 8:

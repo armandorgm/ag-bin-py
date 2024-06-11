@@ -14,6 +14,9 @@ class Strategy(ABC):
         pass
     """
     
+    def __init__(self,offset:float=None) -> None:
+        self.offset = offset
+
     @abstractmethod
-    def evaluar_orden(self, datos_mercado, precio_entrada, porcentaje):
+    def evaluar_orden(self, datos_mercado):
         pass

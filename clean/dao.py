@@ -18,7 +18,7 @@ class OrderManagerDAO:
         self.Session = sessionmaker(bind=self.engine)
         Base.metadata.create_all(self.engine)
 
-    def get_strategies(self):
+    def get_strategies(self)->tuple["id":int,"name":str]:
         session = self.Session()
         strategies = session.query(Strategy_model).all()
         session.close()

@@ -4,8 +4,8 @@ from pprint import pprint
 import logging
 from sql_models.models import BotOperation_model
 from db_integrity import DbIntegrity
-from interfaces.iOrderManager import iOrderManager
-from bot_operation_service import BotOperation as BotOperationClass
+from interfaces.iOrderManager import iBotManager
+from bot_operation import Bot_Operation
 
 # Configurar logging
 logging.basicConfig(level=logging.INFO,
@@ -17,7 +17,7 @@ logging.basicConfig(level=logging.INFO,
 logger = logging.getLogger(__name__)
 
 class OrderMonitor:
-        def __init__(self, orderManager:"iOrderManager",exchange:binanceusdm,dao:OrderManagerDAO):
+        def __init__(self, orderManager:"iBotManager",exchange:binanceusdm,dao:OrderManagerDAO):
             self.orderManager = orderManager
             self.orderContainer =[]
             self.exchange = exchange
@@ -64,7 +64,7 @@ class OrderMonitor:
         async def start(self):
             botOperations = self.dao.getBotOperations()
             for botOperation in botOperations:
-                theBotOperation = BotOperationClass(botOperation.id,botOperation.entry_price,botOperation.position_side,botOperation.symbol,botOperation.threshold,"standard")
+                theBotOperation = Bot_Operation(botOperation.id,botOperation.entry_price,botOperation.position_side,botOperation.symbol,botOperation.threshold,"standard")
                 print(f"\n{'#'*4} botOperation {botOperation.id} {botOperation.symbol} {botOperation.position_side} {'#'*4}")
                 await self.orderManager.clearProfitOperationByBotOperationId(botOperation.id)
                 

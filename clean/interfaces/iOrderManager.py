@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from ccxt.base.types import OrderType,OrderSide,PositionSide,Order
 
-class iOrderManager(ABC):
+class iBotManager(ABC):
     @abstractmethod
     async def startMenu(self):
         pass
