@@ -987,3 +987,84 @@ Traceback (most recent call last):
     print("precio de referencia:",self.ref_price, "lowerPrice",self.lower_price,"upperPrice",self.upper_price)
                                                                ^^^^^^^^^^^^^^^^
 AttributeError: 'StrategyA' object has no attribute 'lower_price'. Did you mean: '_ref_price'?
+2024-06-11 16:19:27,972 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-12' coro=<Bot_Operation.start() done, defined at c:\Users\arman\myProjects\ag-bin-py\clean\bot_operation.py:65> exception=AttributeError("'StrategyA' object has no attribute 'backSignal'")>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\clean\bot_operation.py", line 77, in start
+    self.actualizar_datos({"precio_actual":lastPrice})
+  File "c:\Users\arman\myProjects\ag-bin-py\clean\bot_operation.py", line 48, in actualizar_datos
+    accion, precio_entrada = self._strategy.evaluar_precio(datos_mercado,self.action)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\arman\myProjects\ag-bin-py\clean\bot_strategies\StrategyA.py", line 42, in evaluar_precio
+    self.backSignal({""})
+    ^^^^^^^^^^^^^^^
+AttributeError: 'StrategyA' object has no attribute 'backSignal'
+2024-06-11 16:45:22,656 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-12' coro=<Bot_Operation.start() done, defined at c:\Users\arman\myProjects\ag-bin-py\clean\bot_operation.py:65> exception=TypeError('StrategyA.get_min_amount() takes 0 positional arguments but 1 was given')>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\clean\bot_operation.py", line 77, in start
+    self.actualizar_datos({"precio_actual":lastPrice})
+  File "c:\Users\arman\myProjects\ag-bin-py\clean\bot_operation.py", line 48, in actualizar_datos
+    accion, precio_entrada = self._strategy.evaluar_precio(datos_mercado,self.action)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\arman\myProjects\ag-bin-py\clean\bot_strategies\StrategyA.py", line 47, in evaluar_precio
+    orden_callback("LONG", "BUY", self.amount, price)
+                                  ^^^^^^^^^^^
+  File "c:\Users\arman\myProjects\ag-bin-py\clean\bot_strategies\StrategyA.py", line 30, in amount
+    return self.get_min_amount()
+           ^^^^^^^^^^^^^^^^^^^^^
+TypeError: StrategyA.get_min_amount() takes 0 positional arguments but 1 was given
+2024-06-11 16:48:55,431 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-12' coro=<Bot_Operation.start() done, defined at c:\Users\arman\myProjects\ag-bin-py\clean\bot_operation.py:65> exception=NameError("name 'price' is not defined")>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\clean\bot_operation.py", line 77, in start
+    self.actualizar_datos({"precio_actual":lastPrice})
+  File "c:\Users\arman\myProjects\ag-bin-py\clean\bot_operation.py", line 48, in actualizar_datos
+    accion, precio_entrada = self._strategy.evaluar_precio(datos_mercado,self.action)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\arman\myProjects\ag-bin-py\clean\bot_strategies\StrategyA.py", line 47, in evaluar_precio
+    orden_callback("LONG", "BUY", self.amount, price)
+                                               ^^^^^
+NameError: name 'price' is not defined. Did you mean: 'print'?
+2024-06-11 16:54:08,655 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-12' coro=<Bot_Operation.start() done, defined at c:\Users\arman\myProjects\ag-bin-py\clean\bot_operation.py:65> exception=TypeError("'params' is an invalid keyword argument for print()")>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\clean\bot_operation.py", line 77, in start
+    self.actualizar_datos({"precio_actual":lastPrice})
+  File "c:\Users\arman\myProjects\ag-bin-py\clean\bot_operation.py", line 48, in actualizar_datos
+    accion, precio_entrada = self._strategy.evaluar_precio(datos_mercado,self.action)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\arman\myProjects\ag-bin-py\clean\bot_strategies\StrategyA.py", line 47, in evaluar_precio
+    order = orden_callback("LONG", "BUY", self.amount, datos_mercado["precio_actual"])
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\arman\myProjects\ag-bin-py\clean\bot_operation.py", line 44, in action
+    print("se colocaria una orden:",self.symbol,"limit",order_side,amount, price, params={"positionSide":position_side})
+TypeError: 'params' is an invalid keyword argument for print()
+2024-06-11 16:56:17,557 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-12' coro=<Bot_Operation.start() done, defined at c:\Users\arman\myProjects\ag-bin-py\clean\bot_operation.py:65> exception=TypeError("Profit_Operation.__init__() missing 1 required positional argument: 'amount'")>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\clean\bot_operation.py", line 77, in start
+    self.actualizar_datos({"precio_actual":lastPrice})
+  File "c:\Users\arman\myProjects\ag-bin-py\clean\bot_operation.py", line 48, in actualizar_datos
+    accion, precio_entrada = self._strategy.evaluar_precio(datos_mercado,self.action)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\arman\myProjects\ag-bin-py\clean\bot_strategies\StrategyA.py", line 49, in evaluar_precio
+    profit_operation = Profit_Operation(datos_mercado["precio_actual"],"LONG", self.upper_price,)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: Profit_Operation.__init__() missing 1 required positional argument: 'amount'
+2024-06-12 07:46:22,951 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-12' coro=<Bot_Operation.start() done, defined at c:\Users\arman\myProjects\ag-bin-py\clean\bot_operation.py:65> exception=RequestTimeout('Connection to wss://fstream.binance.com/ws/0 timed out due to a ping-pong keepalive missing on time')>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\clean\bot_operation.py", line 75, in start
+    lastPrice = (await self.exchange.watch_ticker(self.symbol))['last']
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\pro\binance.py", line 1011, in watch_ticker
+    tickers = await self.watch_tickers([symbol], self.extend(params, {'callerMethodName': 'watchTicker'}))
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\pro\binance.py", line 1025, in watch_tickers
+    newTickers = await self.watch_multi_ticker_helper('watchTickers', channelName, symbols, params)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\pro\binance.py", line 1095, in watch_multi_ticker_helper
+    result = await self.watch_multiple(url, messageHashes, self.deep_extend(request, params), subscriptionArgs, subscribe)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ccxt.base.errors.RequestTimeout: Connection to wss://fstream.binance.com/ws/0 timed out due to a ping-pong keepalive missing on time

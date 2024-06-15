@@ -1,4 +1,4 @@
-from typing import List
+from typing import Callable, List
 from abc import ABC, abstractmethod
 class Strategy(ABC):
     """
@@ -18,5 +18,5 @@ class Strategy(ABC):
         self.offset = offset
 
     @abstractmethod
-    def evaluar_orden(self, datos_mercado):
+    def evaluar_precio(self, datos_mercado, orden_callback: Callable[[str, float, int], None]):
         pass

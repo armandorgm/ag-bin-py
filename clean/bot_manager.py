@@ -6,7 +6,7 @@ import math
 from typing import List,Union, cast
 from bot_strategies.strategy import Strategy
 from bot_strategies.concrete_strategy import EstrategiaLong
-from bot_strategies.StrategyA import StrategyA
+from clean.bot_strategies.strategy_a.main import StrategyA
 from menu import Menu
 from interfaces.exchange_basic import Num, iPosition
 from sql_models.models import BotOperation_model
@@ -182,7 +182,7 @@ class BotManager(iBotManager):
         boOpData = self.dao.getBotOperation(1)
         
         strategy = self.getStrategyById(boOpData.strategy)
-        self.botOperation = Bot_Operation(self.exchange,boOpData.name, boOpData.symbol, strategy(boOpData.threshold))
+        self.botOperation = Bot_Operation(self.exchange,boOpData.name, boOpData.symbol, strategy(id,boOpData.threshold))
         #self.botOperation = BotOperation(self.exchange,"LONG","TRX/USDT",0.02,"standard","miBotLong")
         botTask = asyncio.create_task(self.botOperation.start())
     

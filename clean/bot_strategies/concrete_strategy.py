@@ -22,7 +22,7 @@ class ConcreteStrategyB(Strategy):
 
 class EstrategiaLong(Strategy):
 
-    def evaluar_orden(self, datos_mercado, precio_entrada, porcentaje):
+    def evaluar_precio(self, datos_mercado, precio_entrada, porcentaje):
         # Aquí implementamos la lógica de la orden LONG
         precio_objetivo = precio_entrada * (1 + porcentaje / 100)
         precio_margen = precio_entrada * (1 - porcentaje / 100)
@@ -37,7 +37,7 @@ class EstrategiaLong(Strategy):
 
 class EstrategiaShort(Strategy):
 
-    def evaluar_orden(self, datos_mercado, precio_entrada, porcentaje)->tuple[StrategyMessage,Union[float,None]]:
+    def evaluar_precio(self, datos_mercado, precio_entrada, porcentaje)->tuple[StrategyMessage,Union[float,None]]:
         # Aquí implementamos la lógica de la orden SHORT
         precio_objetivo = precio_entrada * (1 - porcentaje / 100)
         precio_margen = precio_entrada * (1 + porcentaje / 100)

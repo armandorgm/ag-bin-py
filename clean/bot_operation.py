@@ -39,32 +39,15 @@ class Bot_Operation(Bot):
         self.numero_ordenes_contra = 0  # Contador para las órdenes contrarias consecutivas
     """
     
-    def actualizar_datos(self, datos_mercado):
-        accion, precio_entrada = self._strategy.evaluar_orden(datos_mercado)
+    def action(self, position_side, order_side, amount, price):
+        #self.exchange.create_order(self.symbol,"limit",order_side,amount, price, params={"positionSide":position_side})
+        print("se colocaria una orden:",self.symbol,"limit",order_side,amount, price, {"positionSide":position_side})
+        return
         
-        if accion == 'Cerrar LONG y abrir nuevo LONG':
-            self.cerrar_orden()
-            self.abrir_orden('LONG', datos_mercado['precio_actual'])
-        elif accion == 'Abrir LONG':
-            self.abrir_orden('LONG', datos_mercado['precio_actual'])
-            self.numero_ordenes_contra += 1
-            if self.numero_ordenes_contra >= 2:  # Cambiar a estrategia SHORT después de 2 movimientos contrarios consecutivos
-                print("Precio giró en contra. offset:",self.numero_ordenes_contra)
-                self.cambiar_estrategia(EstrategiaShort())
-                self.numero_ordenes_contra = 0
-        elif accion == 'Mantener':
-            pass
-        elif accion == 'Cerrar SHORT y abrir nuevo SHORT':
-            self.cerrar_orden()
-            self.abrir_orden('SHORT', datos_mercado['precio_actual'])
-
-        elif accion == "Abrir Short":
-            print("Precio giró en contra")
-            self.abrir_orden('SHORT', datos_mercado['precio_actual'])
-            self.numero_ordenes_contra += 1
-            if self.numero_ordenes_contra >= 2:  # Cambiar a estrategia SHORT después de 2 movimientos contrarios consecutivos
-                self.cambiar_estrategia(EstrategiaLong())
-                self.numero_ordenes_contra = 0
+    def actualizar_datos(self, datos_mercado):
+        accion, precio_entrada = self._strategy.evaluar_precio(datos_mercado,self.action)
+        
+       
             
 
     def abrir_orden(self, tipo, precio_actual):
