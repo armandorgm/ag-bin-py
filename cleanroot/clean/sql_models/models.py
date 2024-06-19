@@ -1,22 +1,23 @@
 from typing import Union, cast
 from sqlalchemy import Column, Integer, String, Float, ForeignKey,Boolean
-from sqlalchemy.ext.declarative import declarative_base
+#from sqlalchemy.ext.declarative import declarative_base
+#Base = declarative_base()
+from .. import Base
 from sqlalchemy.orm import relationship
 
 # Crea una instancia Base para declarar modelos
-Base = declarative_base()
 
 # Definir modelos
 class BotOperation_model(Base):
     __tablename__ = 'bot_operations'
-    id = Column(Integer, primary_key=True)
+    id:int = Column(Integer, primary_key=True) # type: ignore
     entry_price = Column(Float, nullable=False)
-    symbol = Column(String, nullable=False, unique=True)
+    symbol:str = Column(String, nullable=False, unique=True) # type: ignore
     #position_side = Column(String, nullable=False)
     active = Column(Boolean)
-    threshold = Column(Integer)
+    threshold:str = Column(String, nullable=False) # type: ignore
     name = Column(String, nullable=False, unique=True)
-    strategy = Column(Integer,ForeignKey('strategies.id'),nullable=False)
+    strategyOpId:int = Column(Integer,ForeignKey('strategies.id'),nullable=False) # type: ignore
     
     #Relations
     #profit_operations = relationship("ProfitOperation", back_populates="bot_operation")

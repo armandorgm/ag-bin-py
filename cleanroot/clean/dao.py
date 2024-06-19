@@ -1,13 +1,14 @@
 from typing import Union, cast
 from sqlalchemy import create_engine, Column, Integer, Float, String, Sequence,Boolean
 #from sqlalchemy.ext.declarative import declarative_base #deprecated
-from sqlalchemy.orm import declarative_base
+#from sqlalchemy.orm import declarative_base
+from . import Base
+# Base = declarative_base()
 
 from sqlalchemy.orm import sessionmaker
-from sql_models.models import OrderStatus,BotOperation_model,ProfitOperation,Strategy_model,Symbol_model
+from .sql_models.models import OrderStatus,BotOperation_model,ProfitOperation,Strategy_model,Symbol_model
 from sqlalchemy import or_
 
-Base = declarative_base()
 
     
 # DAO refactorizado
@@ -138,7 +139,7 @@ class OrderManagerDAO:
         session.close()
         return operations
     
-    def getBotOperation(self,operationId:int)->BotOperation_model:
+    def getBotOperation(self,operationId:int)->BotOperation_model|None:
         session = self.Session()
         operation = session.query(BotOperation_model).get(operationId)
         session.close()
@@ -148,7 +149,9 @@ class OrderManagerDAO:
         session = self.Session()
         orderStatus = session.query(OrderStatus).get(orderId)
         session.close()
-        return orderStatus
+        if orderStatus:
+            return orderStatus
+        raise BaseException(f"Failed to get order status with orderId:{orderId}")
     
     def getOperationOrdersByOperationId(self,operationId:int):
         session = self.Session()

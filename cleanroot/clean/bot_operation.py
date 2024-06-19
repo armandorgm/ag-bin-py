@@ -1,13 +1,12 @@
 from asyncio import sleep
 import asyncio
 from pprint import pprint
-from bot_strategies.concrete_strategy import EstrategiaLong,EstrategiaShort
-from bot_strategies.strategy import Strategy
+from .bot_strategies.concrete_strategy import EstrategiaLong,EstrategiaShort
+from .bot_strategies.strategy import Strategy
 from ccxt.pro import binanceusdm
 #from models import BotOperation as BotOperationModel
 #from dao import OrderManagerDAO
-from bot import Bot
-from interfaces.exchange_basic import iPositionSide
+from .bot import Bot
 class Bot_Operation(Bot):
     
     def __init__(self, exchange:binanceusdm, name, symbol, strategy:Strategy):
@@ -44,9 +43,7 @@ class Bot_Operation(Bot):
         print("se colocaria una orden:",self.symbol,"limit",order_side,amount, price, {"positionSide":position_side})
         return
         
-    def actualizar_datos(self, datos_mercado):
-        accion, precio_entrada = self._strategy.evaluar_precio(datos_mercado,self.action)
-        
+      
        
             
 
@@ -74,8 +71,7 @@ class Bot_Operation(Bot):
             try:
                 lastPrice = (await self.exchange.watch_ticker(self.symbol))['last']
                 pprint(lastPrice)
-                self.actualizar_datos({"precio_actual":lastPrice})
-
+                self._strategy.evaluar_precio(lastPrice,self.action)
                 #pprint(await self.exchange.watch_ohlcv(self.symbol,"1m",None,5))
                 #pprint((await self.exchange.watch_order_book(self.symbol,5))["asks"][0])
             except KeyboardInterrupt:

@@ -4,20 +4,17 @@ from . import Base
 
 
 # Definir modelos
-class Pending_Operation_Model(Base):
+class Profit_Operation_Model(Base):
     __tablename__ = 'pending_operation'
     id = Column(Integer, primary_key=True)
-    exchangeId = Column(Integer,nullable=False)
-    position_side :Union[Literal["LONG"],Literal["SHORT"]]= Column(String, nullable=False)
+    exchangeId = Column(String,nullable=False)
     amount = Column(Float, nullable=False)
+    position_side = Column(String, nullable=False)
     entry_price = Column(Float,nullable=False)
-    open_fee = Column(Float,nullable=False)
+    open_fee = Column(String,nullable=False)
     closing_price = Column(Float, nullable=True)
     close_fee = Column(Float,nullable=True)
+    status = Column(String,nullable=False)
 
 
-class Reference_Price_Model(Base):
-    __tablename__ = 'reference_price'
-    id = Column(Integer, primary_key=True)
-    price = Column(Float, nullable=False)
 

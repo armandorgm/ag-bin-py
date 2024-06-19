@@ -1,5 +1,8 @@
+from decimal import Decimal
 from typing import Callable, List
 from abc import ABC, abstractmethod
+
+from ..interfaces.exchange_basic import SymbolPrecision
 class Strategy(ABC):
     """
     The Strategy interface declares operations common to all supported versions
@@ -14,8 +17,6 @@ class Strategy(ABC):
         pass
     """
     
-    def __init__(self,offset:float=None) -> None:
-        self.offset = offset
 
     @abstractmethod
     def evaluar_precio(self, datos_mercado, orden_callback: Callable[[str, float, int], None]):

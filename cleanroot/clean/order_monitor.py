@@ -1,11 +1,11 @@
-from dao import OrderManagerDAO
+from .dao import OrderManagerDAO
 from  ccxt.pro import binanceusdm
 from pprint import pprint
 import logging
-from sql_models.models import BotOperation_model
-from db_integrity import DbIntegrity
-from interfaces.iOrderManager import iBotManager
-from bot_operation import Bot_Operation
+from .sql_models.models import BotOperation_model
+from .db_integrity import DbIntegrity
+from .interfaces.iOrderManager import iBotManager
+from .bot_operation import Bot_Operation
 
 # Configurar logging
 logging.basicConfig(level=logging.INFO,

@@ -2,7 +2,7 @@ from datetime import datetime
 from decimal import Decimal
 from typing import Any
 
-from interfaces.exchange_basic import Num
+from .interfaces.exchange_basic import Num
 
 def obtener_hora_formato_hh_mm_ms():
     # Obtener la hora actual

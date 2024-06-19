@@ -1,7 +1,9 @@
+print("__name__:",__name__)
+print("__package__:",__package__)
 import asyncio
-from config_manager import ConfigManager
-from bot_manager import BotManager
-from user_interface import UserInterface
+from clean.config_manager import ConfigManager
+from clean.bot_manager import BotManager
+from clean.user_interface import UserInterface
 
 
 async def main():
@@ -32,5 +34,5 @@ async def main():
             await order_manager.exchange.close()
     
 if __name__ == '__main__':
-        asyncio.run(main())
+    asyncio.run(main())
     
