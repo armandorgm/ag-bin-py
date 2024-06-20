@@ -1,10 +1,9 @@
-from typing import Any, Callable, Literal, TypedDict,Union
+from typing import Any, Awaitable, Callable, Literal, TypedDict,Union
 from decimal import Decimal
-from .types import Order,PositionSide
+from .types import Order,PositionSide,OrderSide,MarketInterface
 
 
 iOrderType = Literal['limit', 'market', 'stopMarket']
-iOrderSide = Literal["buy","sell"]
 #iPositionSide = Literal["LONG","SHORT"]
 OrderStatus = Literal["draft"]
 StrategyMessage = Literal["Mantener","Cerrar LONG y abrir nuevo LONG","Abrir LONG","Cerrar SHORT y abrir nuevo SHORT","Abrir Short"]
@@ -23,4 +22,4 @@ class SymbolPrecision(TypedDict):
     price:int 
     quote:int
     
-iStrategy_Callback_Signal = Callable[[str, str, Decimal, Decimal], Order]
+iStrategy_Callback_Signal =  Callable[[str, str, Decimal, Decimal,iOrderType], Awaitable[Order]]

@@ -1,0 +1,29 @@
+#################### evaluar_precio starts at '65862.9' ####################
+Ordenes pendientes por cerrar: 0
+valor_final/valor_inicial==<class 'decimal.Decimal'>/<class 'decimal.Decimal'>
+2 escalas sobrepasadas con respecto a la ultima actualizacion
+antes: 65757.64568201553864821811614 type:<class 'decimal.Decimal'>
+despues: 65862.89999999999999999999999 type:<class 'decimal.Decimal'>
+se actualizaron  escalas en un:2 ahora:65862.89999999999999999999999
+se colocaria una orden: BTCUSDT limit BUY 43 65862.9 {'positionSide': 'LONG'}
+
+fetch Request: binanceusdm POST https://testnet.binancefuture.com/fapi/v1/order RequestHeaders: {'X-MBX-APIKEY': '295e618816e5947c265dc0d60866b449d0164e9fca217b1deca0f8056f42245e', 'Content-Type': 'application/x-www-form-urlencoded', 'User-Agent': 'python-requests/2.31.0', 'Accept-Encoding': 'gzip, deflate'} 
+RequestBody: 
+    timestamp=1718857761832
+    symbol=BTCUSDT
+    side=BUY
+    newClientOrderId=x-xcKtGhcu5a84efbfef0a86081d6f20
+    newOrderRespType=RESULT
+    type=LIMIT
+    quantity=43
+    price=65862.9
+    timeInForce=GTC
+    positionSide=LONG
+    recvWindow=10000
+    signature=f585e640f0920b8e0425a5d7108ba402472d7fbdb723346ffb758bb48dd2e310
+
+ 'precision': {'amount': 3, 'base': 8, 'price': 1, 'quote': 8},
+
+fetch Response: binanceusdm POST https://testnet.binancefuture.com/fapi/v1/order 400 ResponseHeaders: {'Content-Type': 'application/json', 'Content-Length': '83', 'Connection': 'keep-alive', 'Date': 'Thu, 20 Jun 2024 04:29:22 GMT', 'Server': 'Bengine', 'x-mbx-used-weight-1m': '-1', 'x-mbx-order-count-10s': '1', 'x-mbx-order-count-1m': '1', 'x-response-time': '4ms', 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS', 'X-Cache': 'Error from cloudfront', 'Via': '1.1 2ee9a973245ee110bff6037af5589b14.cloudfront.net (CloudFront)', 'X-Amz-Cf-Pop': 'EZE50-P1', 'X-Amz-Cf-Id': 'KXgdnqp-z9JP7JslPmGpKZCG7rkKlQpK-malG35W8ZxBmD6wCTKBMg=='} ResponseBody: {"code":-2027,"msg":"Exceeded the maximum allowable position at current leverage."}
+2024-06-20 01:29:23,776 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-20' coro=<Bot_Operation.start() done, defined at c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_operation.py:69> exception=ExchangeError('binanceusdm {"code":-2027,"msg":"Exceeded the maximum allowable position at current leverage."}')>

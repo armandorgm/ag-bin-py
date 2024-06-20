@@ -186,11 +186,10 @@ class BotManager(iBotManager):
     async def load_bot_operation(self):
         boOpData = self.dao.getBotOperation(1)
         if boOpData:
-            data = self.exchange.market(boOpData.symbol)
-            precision:SymbolPrecision = data["precision"]
-            pprint(data)
+            marketData = self.exchange.market(boOpData.symbol)
+            pprint(marketData)
             currentPrice = (await self.exchange.watch_ticker(boOpData.symbol))['last'] # type: ignore
-            self.botOperation = Bot_Operation(self.exchange,boOpData.name, boOpData.symbol, StrategyA(precision, boOpData.threshold, str(currentPrice),StrategyA_DAO("StrategyA.db")))
+            self.botOperation = Bot_Operation(self.exchange,boOpData.name, boOpData.symbol, StrategyA(marketData, boOpData.threshold, str(currentPrice),StrategyA_DAO("StrategyA.db")))
             #self.botOperation = BotOperation(self.exchange,"LONG","TRX/USDT",0.02,"standard","miBotLong")
             botTask = asyncio.create_task(self.botOperation.start())
         else:

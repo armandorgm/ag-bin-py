@@ -1,4 +1,5 @@
 from decimal import Decimal
+import json
 
 from sqlalchemy import create_engine
 
@@ -24,13 +25,24 @@ class StrategyA_DAO(iStrategyA_DAO):
     def profit_operation_parser(po:Profit_Operation_Model):
         return Profit_Operation(po.id, po.exchangeId,po.amount, po.position_side, po.entry_price,po.open_fee, po.closing_price,po.close_fee,po.status) # type: ignore
     
-    def create_pending_operations(self,exchangeId:str, amount:Num, position_side:PositionSide, entry_price:Num, open_fee:Fee, closing_price:float)->Profit_Operation:
+    def create_pending_operations(self,exchangeId:str, amount:Num, position_side:PositionSide, entry_price:float, open_fee:Fee, closing_price:Decimal)->Profit_Operation:
         session = self.Session()
-        pending_operation = Profit_Operation_Model(exchangeId=exchangeId,position_side=position_side,amount=amount,entry_price=entry_price,open_fee=open_fee,closing_price=closing_price,close_fee=None,status="open")
+        pending_operation = Profit_Operation_Model(exchangeId=exchangeId,position_side=position_side,amount=amount,entry_price=entry_price,open_fee=json.dumps(open_fee),closing_price=float(closing_price),close_fee=None,status="open")
         session.add(pending_operation)
         session.commit()
         return StrategyA_DAO.profit_operation_parser(pending_operation)
-    
+    def delete_pending_operations(self,id:int):
+        session = self.Session()
+        pending_operation = session.query(Profit_Operation_Model).filter_by(id=id).first()
+        if pending_operation:
+            # Elimina el objeto de la sesión
+            session.delete(pending_operation)
+            session.commit()
+            print(f"Operación con ID {id} eliminada correctamente.")
+        else:
+            print(f"No se encontró ninguna operación con ID {id}.")
+
+        
     def get_pending_operations(self)->list[Profit_Operation]:
         session = self.Session()
         pending_operation_model_list = session.query(Profit_Operation_Model).all()

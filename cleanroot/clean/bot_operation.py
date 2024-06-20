@@ -1,6 +1,9 @@
 from asyncio import sleep
 import asyncio
+from decimal import Decimal
 from pprint import pprint
+
+from .interfaces.types import Order, OrderType
 from .bot_strategies.concrete_strategy import EstrategiaLong,EstrategiaShort
 from .bot_strategies.strategy import Strategy
 from ccxt.pro import binanceusdm
@@ -38,10 +41,14 @@ class Bot_Operation(Bot):
         self.numero_ordenes_contra = 0  # Contador para las órdenes contrarias consecutivas
     """
     
-    def action(self, position_side, order_side, amount, price):
-        #self.exchange.create_order(self.symbol,"limit",order_side,amount, price, params={"positionSide":position_side})
-        print("se colocaria una orden:",self.symbol,"limit",order_side,amount, price, {"positionSide":position_side})
-        return
+    async def createOrder(self, position_side, order_side, amount, price,orderType:OrderType)->Order:
+        print("se colocará una orden:",self.symbol,orderType,f"##{order_side}##",amount, price, {"positionSide":position_side})
+        self.exchange.verbose = True
+        try:
+            order = await self.exchange.create_order(self.symbol,'limit',order_side,amount,price,{"positionSide":position_side})
+        finally:
+            self.exchange.verbose = False
+        return order
         
       
        
@@ -71,9 +78,7 @@ class Bot_Operation(Bot):
             try:
                 lastPrice = (await self.exchange.watch_ticker(self.symbol))['last']
                 pprint(lastPrice)
-                self._strategy.evaluar_precio(lastPrice,self.action)
-                #pprint(await self.exchange.watch_ohlcv(self.symbol,"1m",None,5))
-                #pprint((await self.exchange.watch_order_book(self.symbol,5))["asks"][0])
+                await self._strategy.evaluar_precio(Decimal(str(lastPrice)),self.createOrder)
             except KeyboardInterrupt:
                 await self.exchange.close()
             finally:
@@ -93,20 +98,3 @@ class Bot_Operation(Bot):
         """
 
         self._strategy = strategy
-
-    
-        
-"""
-if __name__ == "__main__":
-    # The client code picks a concrete strategy and passes it to the context.
-    # The client should be aware of the differences between strategies in order
-    # to make the right choice.
-    context = BotOperation(ConcreteStrategyA())
-    print("Client: Strategy is set to normal sorting.")
-    context.do_some_business_logic()
-    print()
-
-    print("Client: Strategy is set to reverse sorting.")
-    context.strategy = ConcreteStrategyB()
-    context.do_some_business_logic()
-"""

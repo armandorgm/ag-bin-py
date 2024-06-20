@@ -15,7 +15,7 @@ class BotOperation_model(Base):
     symbol:str = Column(String, nullable=False, unique=True) # type: ignore
     #position_side = Column(String, nullable=False)
     active = Column(Boolean)
-    threshold:str = Column(String, nullable=False) # type: ignore
+    threshold:str = Column(Float, nullable=False) # type: ignore
     name = Column(String, nullable=False, unique=True)
     strategyOpId:int = Column(Integer,ForeignKey('strategies.id'),nullable=False) # type: ignore
     

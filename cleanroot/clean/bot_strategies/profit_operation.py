@@ -27,13 +27,6 @@ class Profit_Operation:
         self.close_price = close_price
         self.close_fee = None
 
-    def check_price(self, current_price:float):
-        # Define la función lambda basada en el `position_side`
-        if self.position_side.upper == 'LONG':
-            print("checkeando operacion por cerrar", "LONG","Debug position side:",self.position_side)
-            checker = lambda price: price >= self.close_price
-        else:  # Asumiendo que la otra opción es 'SHORT'
-            print("checkeando operacion por cerrar", "SHORT","Debug position side:",self.position_side)
-            print("self.close_price_trigger:",self.close_price)
-            checker = lambda price: price <= self.close_price
-        return checker(current_price)
+    def check_price(self, current_price:Decimal):
+        print("checkeando operacion por cerrar", current_price >= self.close_price)
+        return current_price >= self.close_price
