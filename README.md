@@ -1,2 +1,1 @@
-# ag-bin-py
-making me me rich
+first working version with errors

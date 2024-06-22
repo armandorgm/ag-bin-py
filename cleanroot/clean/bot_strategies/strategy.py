@@ -1,6 +1,8 @@
 from decimal import Decimal
 from typing import Any, Awaitable, Callable, Coroutine, List
 from abc import ABC, abstractmethod
+
+from ..interfaces.types import OrderType
 from ..interfaces.exchange_basic import SymbolPrecision,Order,PositionSide,OrderSide
 class Strategy(ABC):
     """
@@ -18,5 +20,5 @@ class Strategy(ABC):
     
 
     @abstractmethod
-    def evaluar_precio(self, datos_mercado:Decimal, orden_callback: Callable[[PositionSide, OrderSide, Decimal, Decimal], Coroutine[Any,Any,Order]])->Coroutine[Any,Any,Order]:
+    def evaluar_precio(self, datos_mercado:Decimal, orden_callback: Callable[[PositionSide, OrderSide, Decimal, Decimal,OrderType], Coroutine[Any,Any,Order]])->Coroutine[Any,Any,Order]:
         pass

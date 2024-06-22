@@ -1,13 +1,14 @@
 from decimal import ROUND_UP, Decimal
 import math
-from typing import Literal
+from typing import Any, Callable, Literal
+
 from .types import CheckpointReachMessage
 from ...interfaces.strategyA_dao_interface import iStrategyA_DAO
 from ..profit_operation import Profit_Operation
 from ..strategy import Strategy
 from pprint import pprint
 import ccxt
-from...interfaces.exchange_basic import iStrategy_Callback_Signal,MarketInterface,PositionSide, SymbolPrecision
+from...interfaces.exchange_basic import Order, iStrategy_Callback_Signal,MarketInterface,PositionSide, SymbolPrecision
 #getcontext().prec = 8
 
 class StrategyA(Strategy):
@@ -24,7 +25,7 @@ class StrategyA(Strategy):
         self.pending_close_profit_operation_list = self.pending_operations
         self.positionSide:PositionSide="long"
         self.reference_price = Decimal(str(currentCheckpoint))
-        self.createOrder: iStrategy_Callback_Signal|None = None
+        self.createOrderCallback: iStrategy_Callback_Signal|None = None
 
     @property
     def previousPrice(self):
@@ -110,19 +111,23 @@ class StrategyA(Strategy):
     def getProfitPriceOf(self, openPrice:Decimal):
         return openPrice*(1+self.offset)
     
-    async def checkPendingOrdersToClose(self,current_price:Decimal):
+    async def checkPendingOrdersToClose(self,symbol:str,current_price:Decimal,fetch_order:Callable[..., Any]):
             """
             Revisar si hay ordenes por cerrar
             """
             operaciones_restantes = []
             print("Ordenes pendientes por cerrar:", len(self.pending_close_profit_operation_list))
             for pending_profit_operation in self.pending_close_profit_operation_list:
-                pprint(pending_profit_operation)
-                if pending_profit_operation.check_price(current_price):
-                    print(f"Precio de cierre de operacion alcanzado ({pending_profit_operation.close_price})")
+                try:
+                    orderData:Order = await fetch_order(pending_profit_operation.exchangeId,symbol)
+                except:
+                    continue
+                print(orderData["status"])
+                if orderData["status"] == "closed": #before pending_profit_operation.check_price(current_price)
+                    #print(f"Precio de cierre de operacion alcanzado ({pending_profit_operation.close_price})")
                     order_side = "sell"
                     try:
-                        order = await self.createOrder(pending_profit_operation.position_side, order_side, pending_profit_operation.amount,pending_profit_operation.close_price,"limit") # type: ignore
+                        order = await self.createOrderCallback(pending_profit_operation.position_side, order_side, pending_profit_operation.amount,pending_profit_operation.close_price,"limit") # type: ignore
                         if order["id"]:
                             print(f"ORDEN DE CIERRE ID({order["id"]}) COLOCADA")
                     except ccxt.NetworkError as e:
@@ -143,41 +148,29 @@ class StrategyA(Strategy):
                     
             self.pending_close_profit_operation_list = operaciones_restantes
     
-    async def evaluar_precio(self, current_price:Decimal, createOrder: iStrategy_Callback_Signal):
-        print("#"*20,f"evaluar_precio starts at '{current_price}'","#"*20)
-        self.createOrder = createOrder
+    async def evaluar_precio(self, current_price:Decimal, createOrderCallback: iStrategy_Callback_Signal):
+        print("#"*4,f"evaluar_precio starts at '{current_price}'","#"*4)
+        self.createOrderCallback = createOrderCallback
         self.currentPrice = current_price
         #Revisar si hay ordenes por cerrar
-        await self.checkPendingOrdersToClose(current_price)
+        
+        escalasSobrepasadas = self.calcular_saltos_en_progresion(self.reference_price, current_price)
+        print(f"{escalasSobrepasadas} escalas sobrepasadas con respecto a la ultima actualizacion")
+        
+        if escalasSobrepasadas:
+            self.updatePriceCheckpoints (escalasSobrepasadas)
+            order = await createOrderCallback("LONG", "BUY", Decimal(self.amount), current_price, "limit")
+            pending_profit_operation = self.dao.create_pending_operations(order["id"],order["amount"],order["info"]["positionSide"], float(order["price"]), order["fee"],self.getProfitPriceOf(Decimal(str(order["price"]))))
+            self.pending_close_profit_operation_list.append(pending_profit_operation)
         
         if current_price >= self.nextPrice:
-            escalasSobrepasadas = self.calcular_saltos_en_progresion(self.reference_price, current_price)
-            print(f"{escalasSobrepasadas} escalas sobrepasadas con respecto a la ultima actualizacion")
-            self.consecutives_price_up += escalasSobrepasadas
-
-            self.updatePriceCheckpoints (escalasSobrepasadas)
-            if self.consecutives_price_up >= 2:
-                order = await createOrder("LONG", "BUY", Decimal(self.amount), current_price,"market")
-                if not order["average"]:
-                    pprint(order)
-                print("preIntance close_trigger",self.nextPrice,type(self.nextPrice))
-                if order["id"] and order["price"]:
-                    pending_profit_operation = self.dao.create_pending_operations(order["id"],order["amount"],order["info"]["positionSide"], float(order["price"]), order["fee"],self.getProfitPriceOf(Decimal(str(order["price"]))))
-                self.pending_close_profit_operation_list.append(pending_profit_operation)
-
+            self.consecutives_price_up += escalasSobrepasadas            
         elif current_price <=self.previousPrice:
-            print("#"*10,"precio inferior alcanzado","#"*10)
-            escalasSobrepasadas = self.calcular_saltos_en_progresion(self.reference_price, current_price)
-            print(f"{escalasSobrepasadas} escalas sobrepasadas con respecto a la ultima actualizacion")
-            self.updatePriceCheckpoints (escalasSobrepasadas)
-
             self.consecutives_price_up = 0
         else:
             print("checkpoint not reached ")
 
 
-        
-            
+                    
         print("#"*20,f"evaluar_precio ends prev:{self.previousPrice.quantize(Decimal("1e-{0}".format(self.pricePrecision)))} actual:{self.reference_price.quantize(Decimal("1e-{0}".format(self.pricePrecision)))} next:{self.nextPrice.quantize(Decimal("1e-{0}".format(self.pricePrecision)))}","#"*20)
-        return None, None
     

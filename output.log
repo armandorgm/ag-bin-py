@@ -5181,3 +5181,136 @@ Traceback (most recent call last):
     if order["id"]:
        ~~~~~^^^^^^
 TypeError: string indices must be integers, not 'str'
+2024-06-20 12:35:29,472 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-1273' coro=<Bot_Operation.start() done, defined at c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_operation.py:69> exception=ExchangeClosedByUser('Connection closed by the user')>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_operation.py", line 73, in start
+    entryReferencePrice = (await self.exchange.watch_ticker(self.symbol))['last']
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\pro\binance.py", line 1011, in watch_ticker
+    tickers = await self.watch_tickers([symbol], self.extend(params, {'callerMethodName': 'watchTicker'}))
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\pro\binance.py", line 1025, in watch_tickers
+    newTickers = await self.watch_multi_ticker_helper('watchTickers', channelName, symbols, params)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\pro\binance.py", line 1095, in watch_multi_ticker_helper
+    result = await self.watch_multiple(url, messageHashes, self.deep_extend(request, params), subscriptionArgs, subscribe)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ccxt.base.errors.ExchangeClosedByUser: Connection closed by the user
+2024-06-20 14:53:34,396 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-20' coro=<Bot_Operation.start() done, defined at c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_operation.py:40> exception=ArgumentsRequired('binanceusdm fetchOrder() requires a symbol argument')>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_operation.py", line 54, in start
+    await self.strategy.checkPendingOrdersToClose(lastPrice,self.exchange.fetch_order)
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py", line 120, in checkPendingOrdersToClose
+    pprint(await fetch_order(pending_profit_operation.exchangeId))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\binance.py", line 5855, in fetch_order
+    raise ArgumentsRequired(self.id + ' fetchOrder() requires a symbol argument')
+ccxt.base.errors.ArgumentsRequired: binanceusdm fetchOrder() requires a symbol argument
+2024-06-20 14:53:53,554 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-24' coro=<Bot_Operation.start() done, defined at c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_operation.py:40> exception=ExchangeClosedByUser('Connection closed by the user')>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_operation.py", line 44, in start
+    entryReferencePrice = (await self.exchange.watch_ticker(self.symbol))['last']
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\pro\binance.py", line 1011, in watch_ticker
+    tickers = await self.watch_tickers([symbol], self.extend(params, {'callerMethodName': 'watchTicker'}))
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\pro\binance.py", line 1025, in watch_tickers
+    newTickers = await self.watch_multi_ticker_helper('watchTickers', channelName, symbols, params)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\pro\binance.py", line 1095, in watch_multi_ticker_helper
+    result = await self.watch_multiple(url, messageHashes, self.deep_extend(request, params), subscriptionArgs, subscribe)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ccxt.base.errors.ExchangeClosedByUser: Connection closed by the user
+2024-06-20 16:49:47,120 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-20' coro=<Bot_Operation.start() done, defined at c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_operation.py:40> exception=RequestTimeout('Connection to wss://fstream.binance.com/ws/0 timed out due to a ping-pong keepalive missing on time')>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_operation.py", line 51, in start
+    lastPrice = Decimal(str((await self.exchange.watch_ticker(self.symbol))['last']))
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\pro\binance.py", line 1011, in watch_ticker
+    tickers = await self.watch_tickers([symbol], self.extend(params, {'callerMethodName': 'watchTicker'}))
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\pro\binance.py", line 1025, in watch_tickers
+    newTickers = await self.watch_multi_ticker_helper('watchTickers', channelName, symbols, params)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\pro\binance.py", line 1095, in watch_multi_ticker_helper
+    result = await self.watch_multiple(url, messageHashes, self.deep_extend(request, params), subscriptionArgs, subscribe)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ccxt.base.errors.RequestTimeout: Connection to wss://fstream.binance.com/ws/0 timed out due to a ping-pong keepalive missing on time
+2024-06-20 19:12:20,511 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-1228' coro=<Bot_Operation.start() done, defined at c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_operation.py:40> exception=InvalidNonce('binanceusdm {"code":-1021,"msg":"Timestamp for this request was 1000ms ahead of the server\'s time."}')>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_operation.py", line 54, in start
+    await self.strategy.checkPendingOrdersToClose(self.symbol,lastPrice,self.exchange.fetch_order)
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py", line 121, in checkPendingOrdersToClose
+    orderData:Order = await fetch_order(pending_profit_operation.exchangeId,symbol)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\binance.py", line 5883, in fetch_order
+    response = await self.fapiPrivateGetOrder(self.extend(request, params))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\binance.py", line 10301, in request
+    response = await self.fetch2(path, api, method, params, headers, body, config)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\base\exchange.py", line 813, in fetch2
+    return await self.fetch(request['url'], request['method'], request['headers'], request['body'])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\base\exchange.py", line 243, in fetch
+    self.handle_errors(http_status_code, http_status_text, url, method, headers, http_response, json_response, request_headers, request_body)
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\binance.py", line 10269, in handle_errors
+    self.throw_exactly_matched_exception(self.exceptions['exact'], error, feedback)
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\base\exchange.py", line 4055, in throw_exactly_matched_exception
+    raise exact[string](message)
+ccxt.base.errors.InvalidNonce: binanceusdm {"code":-1021,"msg":"Timestamp for this request was 1000ms ahead of the server's time."}
+2024-06-20 20:56:52,043 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-20' coro=<Bot_Operation.start() done, defined at c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_operation.py:40> exception=RequestTimeout('Connection to wss://fstream.binance.com/ws/0 timed out due to a ping-pong keepalive missing on time')>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_operation.py", line 51, in start
+    lastPrice = Decimal(str((await self.exchange.watch_ticker(self.symbol))['last']))
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\pro\binance.py", line 1011, in watch_ticker
+    tickers = await self.watch_tickers([symbol], self.extend(params, {'callerMethodName': 'watchTicker'}))
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\pro\binance.py", line 1025, in watch_tickers
+    newTickers = await self.watch_multi_ticker_helper('watchTickers', channelName, symbols, params)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\pro\binance.py", line 1095, in watch_multi_ticker_helper
+    result = await self.watch_multiple(url, messageHashes, self.deep_extend(request, params), subscriptionArgs, subscribe)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ccxt.base.errors.RequestTimeout: Connection to wss://fstream.binance.com/ws/0 timed out due to a ping-pong keepalive missing on time
+2024-06-21 21:58:56,656 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-20' coro=<Bot_Operation.start() done, defined at c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_operation.py:40> exception=RequestTimeout('binanceusdm GET https://fapi.binance.com/fapi/v1/order?timestamp=1719017925134&symbol=TRXUSDT&orderId=11903857728&recvWindow=10000&signature=96f48634d0affacdf60bce18582889256c40d8adad17444d949dee6a93267854')>
+Traceback (most recent call last):
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\base\exchange.py", line 199, in fetch
+    async with session_method(yarl.URL(url, encoded=True),
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\aiohttp\client.py", line 1197, in __aenter__
+    self._resp = await self._coro
+                 ^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\aiohttp\client.py", line 507, in _request
+    with timer:
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\aiohttp\helpers.py", line 735, in __exit__
+    raise asyncio.TimeoutError from None
+TimeoutError
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_operation.py", line 54, in start
+    await self.strategy.checkPendingOrdersToClose(self.symbol,lastPrice,self.exchange.fetch_order)
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py", line 121, in checkPendingOrdersToClose
+    orderData:Order = await fetch_order(pending_profit_operation.exchangeId,symbol)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\binance.py", line 5883, in fetch_order
+    response = await self.fapiPrivateGetOrder(self.extend(request, params))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\binance.py", line 10301, in request
+    response = await self.fetch2(path, api, method, params, headers, body, config)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\base\exchange.py", line 813, in fetch2
+    return await self.fetch(request['url'], request['method'], request['headers'], request['body'])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\base\exchange.py", line 233, in fetch
+    raise RequestTimeout(details) from e
+ccxt.base.errors.RequestTimeout: binanceusdm GET https://fapi.binance.com/fapi/v1/order?timestamp=1719017925134&symbol=TRXUSDT&orderId=11903857728&recvWindow=10000&signature=96f48634d0affacdf60bce18582889256c40d8adad17444d949dee6a93267854
