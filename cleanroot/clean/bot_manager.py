@@ -55,6 +55,7 @@ class BotManager(iBotManager):
         print("exchange instatiace")
         self.monitor = OrderMonitor(self, self.exchange,self.dao)
         self.integrityChecker = DbIntegrity(self.dao,self.exchange)
+        self.botOperationStrategies = [StrategyA]
         # Obtener la hora del servidor
 
     async def theTime(self):
@@ -131,8 +132,9 @@ class BotManager(iBotManager):
                         await self.funcion001([symbol],positionSide,0.1)
 
                     case "9":#9) Create Bot Operation
-                        await self.load_bot_operation()
-
+                        #await self.load_bot_operation()
+                        botOperationData = self.selectBotOperation()
+                        await self.load_bot_operation(botOperationData)
                     case "10":# Stop Bot Operation
                         self.botOperation.stop()
                     case "99":
@@ -161,8 +163,6 @@ class BotManager(iBotManager):
 
     def createStrategyConfig(self,id:int, *args,**kwarg)->Strategy:
         match id:
-            case 1:#EstrategiaLong
-                return EstrategiaLong(*args,**kwarg)
             case 2:#StrategyA
                 return StrategyA(*args,**kwarg)
             case _:
@@ -174,6 +174,7 @@ class BotManager(iBotManager):
         return menu.select()
 
     def create_bot_operation(self):
+        raise Exception("needs updated by ARGM")
         #symbol_selected = self.select_symbol()
         name = input("Ingrese un nombre para la operacion")
         strategy_selected = self.select_strategy()
@@ -183,19 +184,19 @@ class BotManager(iBotManager):
         #self.botOperation = BotOperation(self.exchange,"LONG","TRX/USDT",0.02,"standard","miBotLong")
         botTask = asyncio.create_task(self.botOperation.start())
 
-    async def load_bot_operation(self):
-        boOpData = self.dao.getBotOperation(1)
-        if boOpData:
-            marketData = self.exchange.market(boOpData.symbol)
+    def selectBotOperation(self)->BotOperation_model:
+        menu = Menu(self.dao.getBotOperations(),"select bot operation","description")
+        return menu.select()
+    
+    async def load_bot_operation(self,botData:BotOperation_model):
+        if botData:
+            marketData = self.exchange.market(botData.symbol)
             pprint(marketData)
-            currentPrice = (await self.exchange.watch_ticker(boOpData.symbol))['last'] # type: ignore
-            self.botOperation = Bot_Operation(self.exchange,boOpData.name, boOpData.symbol, StrategyA(marketData, boOpData.threshold, str(currentPrice),StrategyA_DAO("StrategyA.db")))
-            #self.botOperation = BotOperation(self.exchange,"LONG","TRX/USDT",0.02,"standard","miBotLong")
+            currentPrice = (await self.exchange.watch_ticker(botData.symbol))['last'] # type: ignore
+            self.botOperation = Bot_Operation(botData.id, self.exchange, self.dao, botData.symbol, self.botOperationStrategies,botData.strategy_config_id,botData.description)
             botTask = asyncio.create_task(self.botOperation.start())
         else:
             print(f"Missing Operation with Id{1}.")
-
-
 
     @staticmethod
     def calculate_price_with_profit_offset(entry_price: float, positionSide: str, profitOffset: float) -> float:
@@ -240,12 +241,16 @@ class BotManager(iBotManager):
 
     async def clearProfitOperationByBotOperationId(self, botOperationId:int):
         botOperation = self.dao.getBotOperation(botOperationId)
+        if not botOperation:
+            raise Exception("botOperation ID not found")
         profitOperations = self.dao.getProfitOperationsByBotOperationId(botOperationId)
         for profitOperation in profitOperations:
             orders:list[Order]=[]
-            openingOrder = await self.exchange.fetch_order(profitOperation.open_order_id,botOperation.symbol)
+            openingOrder = await self.exchange.fetch_order(profitOperation.open_order_id, botOperation.symbol)
             orders.append( openingOrder)
             closingOrder = await self.exchange.fetch_order(profitOperation.take_profit_order_id,botOperation.symbol)
+            if not closingOrder["id"]:
+                raise Exception("closing Order['id'] is None")
             orders.append( closingOrder)
             eliminarRowResponse = "si"
             if openingOrder["status"] not in ["closed","open"]:

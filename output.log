@@ -5314,3 +5314,206 @@ Traceback (most recent call last):
   File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\base\exchange.py", line 233, in fetch
     raise RequestTimeout(details) from e
 ccxt.base.errors.RequestTimeout: binanceusdm GET https://fapi.binance.com/fapi/v1/order?timestamp=1719017925134&symbol=TRXUSDT&orderId=11903857728&recvWindow=10000&signature=96f48634d0affacdf60bce18582889256c40d8adad17444d949dee6a93267854
+2024-06-22 15:01:09,936 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-18' coro=<Bot_Operation.start() done, defined at c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_operation.py:43> exception=BadSymbol('binanceusdm does not have market symbol testOp')>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_operation.py", line 47, in start
+    entryReferencePrice = (await self.exchange.watch_ticker(self.symbol))['last']
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\pro\binance.py", line 1010, in watch_ticker
+    symbol = self.symbol(symbol)
+             ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\base\exchange.py", line 3595, in symbol
+    market = self.market(symbol)
+             ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\binance.py", line 2562, in market
+    raise BadSymbol(self.id + ' does not have market symbol ' + symbol)
+ccxt.base.errors.BadSymbol: binanceusdm does not have market symbol testOp
+2024-06-22 15:05:23,204 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-20' coro=<Bot_Operation.start() done, defined at c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_operation.py:43> exception=BadSymbol('binanceusdm does not have market symbol testOp')>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_operation.py", line 47, in start
+    entryReferencePrice = (await self.exchange.watch_ticker(self.symbol))['last']
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\pro\binance.py", line 1010, in watch_ticker
+    symbol = self.symbol(symbol)
+             ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\base\exchange.py", line 3595, in symbol
+    market = self.market(symbol)
+             ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\binance.py", line 2562, in market
+    raise BadSymbol(self.id + ' does not have market symbol ' + symbol)
+ccxt.base.errors.BadSymbol: binanceusdm does not have market symbol testOp
+2024-06-22 15:10:45,868 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-20' coro=<Bot_Operation.start() done, defined at c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_operation.py:43> exception=BadSymbol('binanceusdm does not have market symbol testOp')>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_operation.py", line 47, in start
+    entryReferencePrice = (await self.exchange.watch_ticker(self.symbol))['last']
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\pro\binance.py", line 1010, in watch_ticker
+    symbol = self.symbol(symbol)
+             ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\base\exchange.py", line 3595, in symbol
+    market = self.market(symbol)
+             ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\binance.py", line 2562, in market
+    raise BadSymbol(self.id + ' does not have market symbol ' + symbol)
+ccxt.base.errors.BadSymbol: binanceusdm does not have market symbol testOp
+2024-06-22 15:23:09,694 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-18' coro=<Bot_Operation.start() done, defined at c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_operation.py:43> exception=BadSymbol('binanceusdm does not have market symbol testOp')>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_operation.py", line 47, in start
+    entryReferencePrice = (await self.exchange.watch_ticker(self.symbol))['last']
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\pro\binance.py", line 1010, in watch_ticker
+    symbol = self.symbol(symbol)
+             ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\base\exchange.py", line 3595, in symbol
+    market = self.market(symbol)
+             ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\binance.py", line 2562, in market
+    raise BadSymbol(self.id + ' does not have market symbol ' + symbol)
+ccxt.base.errors.BadSymbol: binanceusdm does not have market symbol testOp
+2024-06-22 16:03:01,827 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-20' coro=<Bot_Operation.start() done, defined at c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_operation.py:43> exception=BadSymbol('binanceusdm does not have market symbol testOp')>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_operation.py", line 47, in start
+    entryReferencePrice = (await self.exchange.watch_ticker(self.symbol))['last']
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\pro\binance.py", line 1010, in watch_ticker
+    symbol = self.symbol(symbol)
+             ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\base\exchange.py", line 3595, in symbol
+    market = self.market(symbol)
+             ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\binance.py", line 2562, in market
+    raise BadSymbol(self.id + ' does not have market symbol ' + symbol)
+ccxt.base.errors.BadSymbol: binanceusdm does not have market symbol testOp
+2024-06-22 16:09:45,276 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-20' coro=<Bot_Operation.start() done, defined at c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_operation.py:43> exception=BadSymbol('binanceusdm does not have market symbol testOp')>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_operation.py", line 47, in start
+    entryReferencePrice = (await self.exchange.watch_ticker(self.symbol))['last']
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\pro\binance.py", line 1010, in watch_ticker
+    symbol = self.symbol(symbol)
+             ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\base\exchange.py", line 3595, in symbol
+    market = self.market(symbol)
+             ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\binance.py", line 2562, in market
+    raise BadSymbol(self.id + ' does not have market symbol ' + symbol)
+ccxt.base.errors.BadSymbol: binanceusdm does not have market symbol testOp
+2024-06-22 16:27:48,750 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-18' coro=<Bot_Operation.start() done, defined at c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_operation.py:43> exception=BadSymbol('binanceusdm does not have market symbol testOp')>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_operation.py", line 47, in start
+    entryReferencePrice = (await self.exchange.watch_ticker(self.symbol))['last']
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\pro\binance.py", line 1010, in watch_ticker
+    symbol = self.symbol(symbol)
+             ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\base\exchange.py", line 3595, in symbol
+    market = self.market(symbol)
+             ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\binance.py", line 2562, in market
+    raise BadSymbol(self.id + ' does not have market symbol ' + symbol)
+ccxt.base.errors.BadSymbol: binanceusdm does not have market symbol testOp
+2024-06-22 16:36:29,152 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-21' coro=<Bot_Operation.start() done, defined at c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_operation.py:43> exception=BadSymbol('binanceusdm does not have market symbol testOp')>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_operation.py", line 48, in start
+    entryReferencePrice = (await self.exchange.watch_ticker(self.symbol))['last']
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\pro\binance.py", line 1010, in watch_ticker
+    symbol = self.symbol(symbol)
+             ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\base\exchange.py", line 3595, in symbol
+    market = self.market(symbol)
+             ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\binance.py", line 2562, in market
+    raise BadSymbol(self.id + ' does not have market symbol ' + symbol)
+ccxt.base.errors.BadSymbol: binanceusdm does not have market symbol testOp
+2024-06-22 16:38:16,307 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-20' coro=<Bot_Operation.start() done, defined at c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_operation.py:43> exception=BadSymbol('binanceusdm does not have market symbol testOp')>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_operation.py", line 50, in start
+    entryReferencePrice = (await self.exchange.watch_ticker(self.symbol))['last']
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\pro\binance.py", line 1010, in watch_ticker
+    symbol = self.symbol(symbol)
+             ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\base\exchange.py", line 3595, in symbol
+    market = self.market(symbol)
+             ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\binance.py", line 2562, in market
+    raise BadSymbol(self.id + ' does not have market symbol ' + symbol)
+ccxt.base.errors.BadSymbol: binanceusdm does not have market symbol testOp
+2024-06-22 16:47:04,980 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-20' coro=<Bot_Operation.start() done, defined at c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_operation.py:43> exception=AttributeError("'Bot_Operation' object has no attribute 'botId'")>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_operation.py", line 61, in start
+    await self.strategy.evaluar_precio(lastPrice, self.createOrderBackSignal)
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py", line 163, in evaluar_precio
+    order = await createOrderCallback("LONG", "BUY", Decimal(self.amount), current_price, "limit")
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_operation.py", line 29, in createOrderBackSignal
+    self.dao.registerOpenOperation(self.botId,)
+                                   ^^^^^^^^^^
+AttributeError: 'Bot_Operation' object has no attribute 'botId'
+2024-06-23 17:34:10,947 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-20' coro=<Bot_Operation.start() done, defined at c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_operation.py:40> exception=OperationFailed('binanceusdm {"code":-1008,"msg":"Server is currently overloaded with other requests. Please try again in a few minutes."}')>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_operation.py", line 55, in start
+    tailPrice = entryReferencePrice
+                ^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py", line 163, in evaluar_precio
+    order = await createOrderCallback("LONG", "BUY", Decimal(self.amount), current_price, "limit")
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_operation.py", line 28, in createOrderBackSignal
+    print("se colocará una orden:",self.symbol,orderType,f"##{order_side}##",amount, price, {"positionSide":position_side})
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\binance.py", line 5557, in create_order
+    response = await self.fapiPrivatePostOrder(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\binance.py", line 10301, in request
+    response = await self.fetch2(path, api, method, params, headers, body, config)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\base\exchange.py", line 813, in fetch2
+    return await self.fetch(request['url'], request['method'], request['headers'], request['body'])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\base\exchange.py", line 243, in fetch
+    self.handle_errors(http_status_code, http_status_text, url, method, headers, http_response, json_response, request_headers, request_body)
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\binance.py", line 10268, in handle_errors
+    self.throw_exactly_matched_exception(self.get_exceptions_by_url(url, 'exact'), error, feedback)
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\base\exchange.py", line 4055, in throw_exactly_matched_exception
+    raise exact[string](message)
+ccxt.base.errors.OperationFailed: binanceusdm {"code":-1008,"msg":"Server is currently overloaded with other requests. Please try again in a few minutes."}
+2024-06-24 06:33:18,363 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-95109' coro=<Bot_Operation.start() done, defined at c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_operation.py:40> exception=OperationFailed('binanceusdm {"code":-1008,"msg":"Server is currently overloaded with other requests. Please try again in a few minutes."}')>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_operation.py", line 55, in start
+    tailPrice = entryReferencePrice
+                ^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py", line 163, in evaluar_precio
+    order = await createOrderCallback("LONG", "BUY", Decimal(self.amount), current_price, "limit")
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_operation.py", line 28, in createOrderBackSignal
+    print("se colocará una orden:",self.symbol,orderType,f"##{order_side}##",amount, price, {"positionSide":position_side})
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\binance.py", line 5557, in create_order
+    response = await self.fapiPrivatePostOrder(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\binance.py", line 10301, in request
+    response = await self.fetch2(path, api, method, params, headers, body, config)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\base\exchange.py", line 813, in fetch2
+    return await self.fetch(request['url'], request['method'], request['headers'], request['body'])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\base\exchange.py", line 243, in fetch
+    self.handle_errors(http_status_code, http_status_text, url, method, headers, http_response, json_response, request_headers, request_body)
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\binance.py", line 10268, in handle_errors
+    self.throw_exactly_matched_exception(self.get_exceptions_by_url(url, 'exact'), error, feedback)
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\base\exchange.py", line 4055, in throw_exactly_matched_exception
+    raise exact[string](message)
+ccxt.base.errors.OperationFailed: binanceusdm {"code":-1008,"msg":"Server is currently overloaded with other requests. Please try again in a few minutes."}

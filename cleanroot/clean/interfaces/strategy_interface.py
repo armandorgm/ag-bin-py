@@ -3,12 +3,21 @@ from decimal import Decimal
 
 from sqlalchemy import create_engine
 
-from .types import Fee, Num, PositionSide
+from .types import Fee, MarketInterface, Num, PositionSide
 
 from ..bot_strategies.profit_operation import Profit_Operation
 from ..bot_strategies.strategy_a.model import Profit_Operation_Model
 
-
+class StrategyImplementor(ABC):
+    @abstractmethod
+    def saveStrategyState(self,strategyState):
+        pass
+    
+    @property
+    @abstractmethod
+    def marketData(self)->MarketInterface:
+        pass
+    
 class iStrategyA_DAO(ABC):
     
     @abstractmethod

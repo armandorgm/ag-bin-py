@@ -1,9 +1,10 @@
 from decimal import ROUND_UP, Decimal
+import json
 import math
 from typing import Any, Callable, Literal
 
 from .types import CheckpointReachMessage
-from ...interfaces.strategyA_dao_interface import iStrategyA_DAO
+from ...interfaces.strategy_interface import StrategyImplementor, iStrategyA_DAO
 from ..profit_operation import Profit_Operation
 from ..strategy import Strategy
 from pprint import pprint
@@ -12,11 +13,10 @@ from...interfaces.exchange_basic import Order, iStrategy_Callback_Signal,MarketI
 #getcontext().prec = 8
 
 class StrategyA(Strategy):
+    id:int = 2
+    name:str = "EstrategiaA"
     
-    
-    def __init__(self,marketData:MarketInterface, offset:int|str|Decimal,currentCheckpoint:int|str|Decimal,dao:iStrategyA_DAO) -> None:
-        self.marketData = marketData
-        pprint(marketData["info"]["filters"][5])
+    def __init__(self, master:StrategyImplementor, offset:int|str|Decimal,currentCheckpoint:int|str|Decimal,dao:iStrategyA_DAO) -> None:
         self.offset = Decimal(str(offset))
         self.dao = dao
         self.consecutives_price_up = 0
@@ -26,7 +26,14 @@ class StrategyA(Strategy):
         self.positionSide:PositionSide="long"
         self.reference_price = Decimal(str(currentCheckpoint))
         self.createOrderCallback: iStrategy_Callback_Signal|None = None
+        self.master:StrategyImplementor = master
 
+    @property
+    def marketData(self):
+        return self.master.marketData
+    
+    def saveState(self):
+        self.master.saveStrategyState(json.dumps(self.__dict__))
     @property
     def previousPrice(self):
         return self.getPreviousCheckpointPrice(self.reference_price)
@@ -120,7 +127,8 @@ class StrategyA(Strategy):
             for pending_profit_operation in self.pending_close_profit_operation_list:
                 try:
                     orderData:Order = await fetch_order(pending_profit_operation.exchangeId,symbol)
-                except:
+                except Exception as e:
+                    print(e)
                     continue
                 print(orderData["status"])
                 if orderData["status"] == "closed": #before pending_profit_operation.check_price(current_price)

@@ -8,6 +8,7 @@ from sqlalchemy.orm import relationship
 # Crea una instancia Base para declarar modelos
 
 # Definir modelos
+    
 class BotOperation_model(Base):
     __tablename__ = 'bot_operations'
     id:int = Column(Integer, primary_key=True) # type: ignore
@@ -16,8 +17,8 @@ class BotOperation_model(Base):
     #position_side = Column(String, nullable=False)
     active = Column(Boolean)
     threshold:str = Column(Float, nullable=False) # type: ignore
-    name = Column(String, nullable=False, unique=True)
-    strategyOpId:int = Column(Integer,ForeignKey('strategies.id'),nullable=False) # type: ignore
+    description:str = Column(String, nullable=False, unique=True) # type: ignore
+    strategy_config_id:int = Column(Integer,ForeignKey('strategies.id'),nullable=False) # type: ignore
     
     #Relations
     #profit_operations = relationship("ProfitOperation", back_populates="bot_operation")
@@ -25,7 +26,7 @@ class BotOperation_model(Base):
     
     #Representation
     def __repr__(self):
-        return f"<BotOperation(id={self.id}, entry_price={self.entry_price}, symbol={self.symbol}, start_order_id={self.start_order_id}, position_side={self.position_side}, active={self.active})>"
+        return f"<BotOperation(id={self.id}, entry_price={self.entry_price}, symbol={self.symbol}, active={self.active})>"
 
 class OrderStatus(Base):
     __tablename__ = 'order_status'
@@ -45,11 +46,11 @@ class OrderStatus(Base):
 
 class ProfitOperation(Base):
     __tablename__ = 'profit_operations'
-    id = cast(int,Column(Integer, primary_key=True, unique=True))
-    bot_operation_id = Column(Integer, ForeignKey('bot_operations.id'), nullable=False,)
+    id:int = Column(Integer, primary_key=True, unique=True) # type: ignore
+    bot_operation_id:int = Column(Integer, ForeignKey('bot_operations.id'), nullable=False,) # type: ignore
     slot_price = Column(Float, nullable=False)
-    _open_order_id = Column(Integer,unique=True,nullable=True)
-    take_profit_order_id = Column(Integer,unique=True,nullable=True)
+    _open_order_id:str = Column(String,unique=True,nullable=True) # type: ignore
+    take_profit_order_id:str = Column(String,unique=True,nullable=True) # type: ignore
     #Relación 
     #bot_operation  = relationship("BotOperation_model", back_populates="profit_operations")
     
@@ -65,6 +66,11 @@ class Strategy_model(Base):
 
 class Symbol_model(Base):
     __tablename__ = 'symbols'
-    id = cast(int,Column(Integer, primary_key=True, unique=True))
-    name = cast(str,Column(String, nullable=False))
+    id:int = Column(Integer, primary_key=True, unique=True) # type: ignore
+    name:str = Column(String, nullable=False) # type: ignore
     
+class strategy_config_model(Base):
+    __tablename__ = 'strategy_config'
+    id:int = Column(Integer, primary_key=True, unique=True) # type: ignore
+    strategy_id = Column(String, nullable=False)
+    data:str = Column(String, nullable=False) # type: ignore

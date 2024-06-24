@@ -17,8 +17,15 @@ class Strategy(ABC):
     def do_algorithm(self, data: List):
         pass
     """
+    @abstractmethod
+    def saveState(self):
+        pass
     
-
     @abstractmethod
     def evaluar_precio(self, datos_mercado:Decimal, orden_callback: Callable[[PositionSide, OrderSide, Decimal, Decimal,OrderType], Coroutine[Any,Any,Order]])->Coroutine[Any,Any,Order]:
+        pass
+    
+    @staticmethod
+    @abstractmethod
+    def parseStrategyData(stringSerializedStrategyData:str)->Any:
         pass

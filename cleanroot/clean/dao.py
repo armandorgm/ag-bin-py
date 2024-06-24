@@ -1,25 +1,46 @@
-from typing import Union, cast
+import json
+from typing import List, Union, cast
 from sqlalchemy import create_engine, Column, Integer, Float, String, Sequence,Boolean
+
+from .interfaces.bot_dao_interface import bot_dao_interface
 #from sqlalchemy.ext.declarative import declarative_base #deprecated
 #from sqlalchemy.orm import declarative_base
 from . import Base
 # Base = declarative_base()
 
 from sqlalchemy.orm import sessionmaker
-from .sql_models.models import OrderStatus,BotOperation_model,ProfitOperation,Strategy_model,Symbol_model
+from .sql_models.models import OrderStatus,BotOperation_model,ProfitOperation,Strategy_model,Symbol_model, strategy_config_model
 from sqlalchemy import or_
 
 
     
 # DAO refactorizado
-class OrderManagerDAO:
+class OrderManagerDAO(bot_dao_interface):
     
     def __init__(self, db_file):
         self.engine = create_engine(f'sqlite:///{db_file}')
         self.Session = sessionmaker(bind=self.engine)
         Base.metadata.create_all(self.engine)
-
-    def get_strategies(self)->tuple["id":int,"name":str]:
+        
+    def getBotStrategyConfig(self,botId):
+        session = self.Session()
+        botOperation = session.query(strategy_config_model).filter_by(id=botId).first()
+        if botOperation:
+            return botOperation
+        return None
+    
+    def saveStrategyState(self,botId,strategyState):
+        #BotOperation_model
+        session = self.Session()
+        botOperation = session.query(BotOperation_model).filter_by(id=botId).first()
+        if botOperation:
+            botOperation.strategyState = strategyState
+            session.commit()
+            return True
+        else:
+            return False
+        
+    def get_strategies(self)->List[Strategy_model]:
         session = self.Session()
         strategies = session.query(Strategy_model).all()
         session.close()
@@ -51,7 +72,7 @@ class OrderManagerDAO:
         finally:
             session.close()
     
-    def storeNewProfitOperation(self, botOperationId:int, slotPrice:float, openOrderId:Union[int,None]=None, takeProfitOrderId:int=None):
+    def storeNewProfitOperation(self, botOperationId:int, slotPrice:float, openOrderId:Union[int,None]=None, takeProfitOrderId:int|None=None):
         session = self.Session()
         existing_operation = (session.query(ProfitOperation)
             .filter_by(
@@ -158,6 +179,12 @@ class OrderManagerDAO:
         orderStatus = session.query(OrderStatus).join(BotOperation_model).filter(OrderStatus.operation_id == operationId, or_(OrderStatus.status == "closed", OrderStatus.status == "open")).all()
         session.close()
         return orderStatus
+
+    def registerOpenOperation(self):
+        raise NotImplementedError
+
+
+
     
 
 

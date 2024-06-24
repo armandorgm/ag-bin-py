@@ -3,7 +3,7 @@ import json
 
 from sqlalchemy import create_engine
 
-from ...interfaces.strategyA_dao_interface import iStrategyA_DAO
+from ...interfaces.strategy_interface import iStrategyA_DAO
 
 from ...interfaces.types import Fee, Num, PositionSide
 
