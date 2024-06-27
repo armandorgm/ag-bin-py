@@ -6,7 +6,7 @@ class Profit_Operation:
     def __init__(
         self, 
         id:int,
-        exchangeId:int,
+        exchangeId:str,
         amount:Decimal,
         position_side: Union[
             Literal["LONG"],

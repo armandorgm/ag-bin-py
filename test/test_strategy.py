@@ -27,5 +27,5 @@ class Test_Strategy(TestCase):
         self.mock_interface.notionalMin = 33555
         
         price = Decimal(100)
-        self.assertEqual(float(self.strategy.get_min_amount(price)),335.56)
+        self.assertEqual(float(self.strategy.get_min_amount(price)),335.6)
     

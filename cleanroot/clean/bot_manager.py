@@ -7,7 +7,6 @@ from typing import List, Type,Union, cast
 
 from .bot_strategies.strategy import Strategy
 from .bot_strategies.concrete_strategy import EstrategiaLong
-from .bot_strategies.strategy_a.strategyA_dao import StrategyA_DAO
 from .bot_strategies.strategy_a.strategyA import StrategyA
 from .menu import Menu
 from .interfaces.exchange_basic import Num, SymbolPrecision, iPosition

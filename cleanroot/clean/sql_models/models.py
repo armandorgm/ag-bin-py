@@ -44,7 +44,7 @@ class OrderStatus(Base):
         return f"<OrderStatus(id={self.id}, status={self.status}, operation_id={self.operation_id}, type={self.type}, reduce_only={self.reduce_only})>"
 
 
-class ProfitOperation(Base):
+class ProfitOperation_Model_archive1(Base):
     __tablename__ = 'profit_operations'
     id:int = Column(Integer, primary_key=True, unique=True) # type: ignore
     bot_operation_id:int = Column(Integer, ForeignKey('bot_operations.id'), nullable=False,) # type: ignore
@@ -56,6 +56,20 @@ class ProfitOperation(Base):
     
     #def __init__(self,):
     
+class Profit_Operation_Model(Base):
+    __tablename__ = 'pending_operation'
+    id = Column(Integer, primary_key=True)
+    exchangeId = Column(String,nullable=False)
+    amount = Column(Float, nullable=False)
+    position_side = Column(String, nullable=False)
+    entry_price = Column(Float,nullable=False)
+    open_fee = Column(String,nullable=False)
+    closing_price = Column(Float, nullable=True)
+    close_fee = Column(Float,nullable=True)
+    status = Column(String,nullable=False)
+    botId = Column(Integer,ForeignKey("bot_operations.id"),nullable=False)
+    strategyConfigId=Column(Integer,ForeignKey("strategy_config.id"),nullable=False)
+
 class Strategy_model(Base):
     __tablename__ = 'strategies'
     id = cast(int,Column(Integer, primary_key=True, unique=True))
@@ -74,3 +88,4 @@ class strategy_config_model(Base):
     id:int = Column(Integer, primary_key=True, unique=True) # type: ignore
     strategy_id = Column(String, nullable=False)
     data:str = Column(String, nullable=False) # type: ignore
+    

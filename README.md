@@ -19,3 +19,4 @@ Metas aun no alcanzadas:
 ideas posteriores para estrategias
     open order 1.01% oposite side amount - current sideamount
     -al alcanzar el nextCheckpoint, colocar un limit open en el nuevo previousCheckpoint pero no al alcanzar un checkpointPrevio
+    -unificar las ordenes de la posicion mas lejana y colocarlas en el checkpoint previo

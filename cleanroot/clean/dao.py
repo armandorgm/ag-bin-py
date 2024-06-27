@@ -1,6 +1,11 @@
+from decimal import Decimal
 import json
 from typing import List, Union, cast
 from sqlalchemy import create_engine, Column, Integer, Float, String, Sequence,Boolean
+
+from .bot_strategies.profit_operation import Profit_Operation
+from .interfaces.exchange_basic import Num
+from .interfaces.types import Fee, PositionSide
 
 from .interfaces.bot_dao_interface import bot_dao_interface
 #from sqlalchemy.ext.declarative import declarative_base #deprecated
@@ -9,7 +14,7 @@ from . import Base
 # Base = declarative_base()
 
 from sqlalchemy.orm import sessionmaker
-from .sql_models.models import OrderStatus,BotOperation_model,ProfitOperation,Strategy_model,Symbol_model, strategy_config_model
+from .sql_models.models import OrderStatus,BotOperation_model, Profit_Operation_Model,Strategy_model,Symbol_model, strategy_config_model
 from sqlalchemy import or_
 
 
@@ -182,6 +187,41 @@ class OrderManagerDAO(bot_dao_interface):
 
     def registerOpenOperation(self):
         raise NotImplementedError
+
+    @staticmethod
+    def profit_operation_parser(po:Profit_Operation_Model):
+        return Profit_Operation(po.id, po.exchangeId,po.amount, po.position_side, po.entry_price,po.open_fee, po.closing_price,po.close_fee,po.status) # type: ignore
+    
+    def create_pending_operations(self,exchangeId:str, amount:Num, position_side:PositionSide, entry_price:float, open_fee:Fee, closing_price:Decimal)->Profit_Operation:
+        session = self.Session()
+        pending_operation = Profit_Operation_Model(exchangeId=exchangeId,position_side=position_side,amount=amount,entry_price=entry_price,open_fee=json.dumps(open_fee),closing_price=float(closing_price),close_fee=None,status="open")
+        session.add(pending_operation)
+        session.commit()
+        return OrderManagerDAO.profit_operation_parser(pending_operation)
+    
+    def delete_pending_operations(self,id:int):
+        session = self.Session()
+        pending_operation = session.query(Profit_Operation_Model).filter_by(id=id).first()
+        if pending_operation:
+            # Elimina el objeto de la sesión
+            session.delete(pending_operation)
+            session.commit()
+            print(f"Operación con ID {id} eliminada correctamente.")
+            return True
+        else:
+            print(f"No se encontró ninguna operación con ID {id}.")
+            return False
+
+        
+    def get_pending_operations_for_bot(self,botId:int)->list[Profit_Operation]:
+        session = self.Session()
+        pending_operation_model_list = session.query(Profit_Operation_Model).filter_by().all()
+        session.close()
+        
+        pending_profit_operations:list[Profit_Operation]=[]
+        for POM in pending_operation_model_list:
+            pending_profit_operations.append(StrategyA_DAO.profit_operation_parser(POM))
+        return pending_profit_operations
 
 
 

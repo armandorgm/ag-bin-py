@@ -5517,3 +5517,12 @@ Traceback (most recent call last):
   File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\base\exchange.py", line 4055, in throw_exactly_matched_exception
     raise exact[string](message)
 ccxt.base.errors.OperationFailed: binanceusdm {"code":-1008,"msg":"Server is currently overloaded with other requests. Please try again in a few minutes."}
+2024-06-25 08:59:09,584 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-18' coro=<Bot_Operation.start() done, defined at c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_operation.py:73> exception=TypeError("object of type 'NoneType' has no len()")>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_operation.py", line 90, in start
+    await self.strategy.checkPendingOrdersToClose(self.symbol,lastPrice,self.exchange.fetch_order)
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py", line 127, in checkPendingOrdersToClose
+    print("Ordenes pendientes por cerrar:", len(self.pending_close_profit_operation_list))
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: object of type 'NoneType' has no len()
