@@ -18,7 +18,7 @@ else:
 
 
 OrderSide = Literal['buy', 'sell']
-OrderType = Literal['limit', 'market']
+OrderType = Literal['limit', 'market','TAKE_PROFIT']
 PositionSide = Literal['long', 'short']
 Any = PythonAny
 

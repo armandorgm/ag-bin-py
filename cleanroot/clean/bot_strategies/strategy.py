@@ -25,13 +25,30 @@ class Strategy(ABC):
         self.interface = interface
         
     @abstractmethod
-    def saveState(self):
+    def data(self)->str:
+        pass
+    
+    @abstractmethod
+    async def onOpenOrderExecution(self,orderData:Order)->None:
+        """
+        Es el aviso que le brinda el bot a la estrategia cuando una orden "Open" tiene el status "closed
+        """
+        pass
+    @abstractmethod
+    async def onCloseOrderExecution(self,orderData:Order)->None:
+        """
+        Es el aviso que le brinda el bot a la estrategia cuando una orden "Close" tiene el status "closed
+        """
         pass
     
     @abstractmethod
     def evaluar_precio(self, datos_mercado:Decimal)->Any:
         pass
     
+    @staticmethod
+    def save(self):
+        pass
+            
     @staticmethod
     def from_json(json_string:str):
         print("Strategy.from_json:")
@@ -41,10 +58,11 @@ class Strategy(ABC):
     
     
     def get_min_amount(self,price:Decimal)->Decimal:
+        """
+        Entrega el monto minimo formateado en el que puede abrirse una orden para un simbolo en especifico y 
+        formateado en la precision correcta para que sea valido para el exchange
+        """
         rawAmount = (self.interface.notionalMin/price)
-        print("rawAmount",rawAmount)
-        print(self.interface.amountPrecision)
         formatedAmount = rawAmount.quantize(Decimal("1e-{0}".format(self.interface.amountPrecision)),rounding=ROUND_UP)
-        print("formatedAmount",formatedAmount)
         return formatedAmount
     

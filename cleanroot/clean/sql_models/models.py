@@ -3,7 +3,6 @@ from sqlalchemy import Column, Integer, String, Float, ForeignKey,Boolean
 #from sqlalchemy.ext.declarative import declarative_base
 #Base = declarative_base()
 from .. import Base
-from sqlalchemy.orm import relationship
 
 # Crea una instancia Base para declarar modelos
 
@@ -12,21 +11,13 @@ from sqlalchemy.orm import relationship
 class BotOperation_model(Base):
     __tablename__ = 'bot_operations'
     id:int = Column(Integer, primary_key=True) # type: ignore
-    entry_price = Column(Float, nullable=False)
     symbol:str = Column(String, nullable=False, unique=True) # type: ignore
-    #position_side = Column(String, nullable=False)
     active = Column(Boolean)
-    threshold:str = Column(Float, nullable=False) # type: ignore
     description:str = Column(String, nullable=False, unique=True) # type: ignore
     strategy_config_id:int = Column(Integer,ForeignKey('strategies.id'),nullable=False) # type: ignore
-    
-    #Relations
-    #profit_operations = relationship("ProfitOperation", back_populates="bot_operation")
-    #orders = relationship("OrderStatus", back_populates="bot_operation")  
-    
-    #Representation
+        
     def __repr__(self):
-        return f"<BotOperation(id={self.id}, entry_price={self.entry_price}, symbol={self.symbol}, active={self.active})>"
+        return f"<BotOperation(id={self.id}, symbol={self.symbol}, active={self.active})>"
 
 class OrderStatus(Base):
     __tablename__ = 'order_status'
@@ -35,11 +26,7 @@ class OrderStatus(Base):
     operation_id = Column(Integer, ForeignKey('bot_operations.id'), nullable=False)
     type = Column(String)
     reduce_only = Column(Boolean)
-    
-    # Relaciónes
-    #bot_operation = relationship("BotOperation_model", back_populates="orders")
 
-    #Representation
     def __repr__(self):
         return f"<OrderStatus(id={self.id}, status={self.status}, operation_id={self.operation_id}, type={self.type}, reduce_only={self.reduce_only})>"
 
@@ -51,10 +38,6 @@ class ProfitOperation_Model_archive1(Base):
     slot_price = Column(Float, nullable=False)
     _open_order_id:str = Column(String,unique=True,nullable=True) # type: ignore
     take_profit_order_id:str = Column(String,unique=True,nullable=True) # type: ignore
-    #Relación 
-    #bot_operation  = relationship("BotOperation_model", back_populates="profit_operations")
-    
-    #def __init__(self,):
     
 class Profit_Operation_Model(Base):
     __tablename__ = 'pending_operation'
@@ -69,14 +52,6 @@ class Profit_Operation_Model(Base):
     status = Column(String,nullable=False)
     botId = Column(Integer,ForeignKey("bot_operations.id"),nullable=False)
     strategyConfigId=Column(Integer,ForeignKey("strategy_config.id"),nullable=False)
-
-class Strategy_model(Base):
-    __tablename__ = 'strategies'
-    id = cast(int,Column(Integer, primary_key=True, unique=True))
-    name = cast(str,Column(String, nullable=False))
-    
-    def __repr__(self):
-        return f"{self.id}, {self.name}"
 
 class Symbol_model(Base):
     __tablename__ = 'symbols'

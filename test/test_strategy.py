@@ -3,12 +3,20 @@ from typing import Any
 from unittest import TestCase
 from unittest.mock import MagicMock
 from cleanroot.clean.bot_strategies.strategy import Strategy
+from cleanroot.clean.interfaces.exchange_basic import Order
 
 class FooStrategy(Strategy):
-    def saveState(self):
+    def data(self):
         pass
     def evaluar_precio(self, datos_mercado: Decimal) -> Any:
         pass
+
+    async def onOpenOrderExecution(self, orderData: Order) -> None:
+        raise NotImplementedError
+
+    async def onCloseOrderExecution(self, orderData: Order) -> None:
+        raise NotImplementedError
+
     
 class Test_Strategy(TestCase):
     def setUp(self):

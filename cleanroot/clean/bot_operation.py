@@ -5,6 +5,7 @@ from pprint import pprint
 from typing import Any, List, Literal
 from ccxt.pro import binanceusdm
 import ccxt
+from .utils import Utilidades
 
 from .bot_strategies.profit_operation import Profit_Operation
 
@@ -32,6 +33,7 @@ class Bot_Operation(Bot, StrategyImplementor):
         if not botStrategyConfig:
             raise Exception(f"botStrategyConfig id={self.strategyConfigId} Not found")
         self.strategy = self.loadBotStrategy(botStrategyConfig)
+        self.openOrders:list[str] = []
         print(f"acaba de instanciar una operacion con nombre {description}")
     
     @property
@@ -42,53 +44,71 @@ class Bot_Operation(Bot, StrategyImplementor):
         
         for strategy in self.strategies:
 
-            pprint(botStrategyConfig)
             if strategy.__dict__["id"] == botStrategyConfig.strategy_id:
                 print("botStrategyConfig found:")
                 pprint(botStrategyConfig.data)
-                data = Strategy.from_json(botStrategyConfig.data)
-                return strategy(self, **data) # type: ignore
+                dataJson = Strategy.from_json(botStrategyConfig.data)
+                #tupleData = tuple(dataJson.values())
+                return strategy(self, **dataJson) # type: ignore
+
+        if not len(self.strategies) > 0:
+            raise Exception("Empty EstrategyList loaded")
         raise Exception("Not yet implemented")
     
     def saveStrategyState(self, strategyState):
-        pprint(strategyState)
-        self.dao.saveStrategyState(self.botId, strategyState)
+        result = self.dao.saveStrategyState(self.botId, strategyState)
         
-    async def putOrder(self, position_side, order_side, amount, price,orderType:OrderType)->Order:
+    async def putOrder(self, position_side, order_side, amount, price, orderType)->Order:
         print("se colocará una orden:",self.symbol,orderType,f"##{order_side}##",amount, price, {"positionSide":position_side})
+        newClientOrderId = Utilidades.generarIdUnico()
+        print(f"ordenIdGenerado:{newClientOrderId}")
+        if position_side.lower() == "long" and order_side.lower() == "buy" or \
+        position_side.lower() == "short" and order_side.lower() == "sell":
+            print("it's an opening order")
+            self.openOrders.append(newClientOrderId)
+        else:
+            print("it's a CLOSING order")
         self.exchange.verbose = True
-        self.dao.registerOpenOperation(self.botId)
+        #self.dao.registerOpenOperation()#NotImplemented Yet
         try:
-            order = await self.exchange.create_order(self.symbol,'limit',order_side,amount,price,{"positionSide":position_side})
+            order = await self.exchange.create_order(self.symbol, orderType, order_side, float(amount), price, {"positionSide":position_side,"newClientOrderId":newClientOrderId})
         finally:
             self.exchange.verbose = False
         return order    
-
-    def abrir_orden(self, tipo, precio_actual):
-        self.precio_entrada = precio_actual
-        print(f'Abrir {tipo} a precio {precio_actual}')
-        
-    def cerrar_orden(self):
-        print('Cerrar orden actual')
     
+    async def checkOpeningOrders(self):
+        print("check OPEN X orders")
+        closedOrders = []
+        openOrders = []
+        for origClientOrderId in self.openOrders:
+
+                self.exchange.verbose = True
+                orderData:Order = await self.exchange.fetch_order(origClientOrderId, self.symbol,{"origClientOrderId":origClientOrderId})
+                self.exchange.verbose = False
+                print(orderData["status"])
+                if orderData["status"] == "closed": #before pending_profit_operation.check_price(current_price)
+                    await self.strategy.onOpenOrderExecution(orderData)
+                        
+                else:#si la condicion no se cumple guardar la operacion
+                    openOrders.append(origClientOrderId)
+                    print(f"Precio de cierre de operacion NO alcanzado ({orderData["price"]})")
+        self.openOrders = openOrders
+        
     async def start(self):
         super().start()
-        pprint(self.strategy)
         #self.exchange.verbose = True
-        print(f"symbol======{self.symbol}\n",self)
-        print(self)
-        print(f"symbol======{self.symbol}\n",self)
         entryReferencePrice = (await self.exchange.watch_ticker(self.symbol))['last']
-        self.entryPrice = entryReferencePrice
         pprint(f"entryReferencePrice:{entryReferencePrice}, offset:{self.strategy.offset*100}%")
         self.exchange.verbose = False
         tailPrice = entryReferencePrice
         while self.status:
             try:
                 lastPrice = Decimal(str((await self.exchange.watch_ticker(self.symbol))['last']))
-                if not tailPrice == lastPrice:
+                if not tailPrice == lastPrice or True:
                     tailPrice=lastPrice
-                    await self.checkPendingOrdersToClose(lastPrice)
+                    #await self.checkPendingOrdersToClose(lastPrice)
+                    if len(self.openOrders):
+                        await self.checkOpeningOrders()
                     await self.strategy.evaluar_precio(lastPrice)
             except KeyboardInterrupt:
                 await self.exchange.close()
@@ -158,7 +178,6 @@ class Bot_Operation(Bot, StrategyImplementor):
     @property
     def pricePrecision(self)->int:
         value = self.marketData["precision"]["price"]
-        print("pricePrecisionType:", type(value))
         return value
 
     

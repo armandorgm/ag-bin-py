@@ -3,13 +3,13 @@ from decimal import Decimal
 
 from sqlalchemy import create_engine
 
-from .types import Fee, MarketInterface, Num, Order, OrderType, PositionSide
+from .types import Fee, MarketInterface, Num, Order, OrderSide, OrderType, PositionSide
 
 from ..bot_strategies.profit_operation import Profit_Operation
 
 class StrategyImplementor(ABC):
     @abstractmethod
-    def saveStrategyState(self,strategyState):
+    def saveStrategyState(self,strategyState:str):
         pass
     
     @property
@@ -26,7 +26,7 @@ class StrategyImplementor(ABC):
         pass
 
     @abstractmethod
-    def putOrder(self, position_side, order_side, amount, price,orderType:OrderType)->Order:
+    async def putOrder(self, position_side:PositionSide|str, order_side:OrderSide, amount:Decimal, price:Decimal, orderType:OrderType)->Order:
         pass
     
     @property

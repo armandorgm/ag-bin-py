@@ -11,8 +11,9 @@ class bot_dao_interface(ABC):
     @abstractmethod
     def registerOpenOperation(self):
         pass
+    
     @abstractmethod
-    def saveStrategyState(self,botId:int,strategyState:str):
+    def saveStrategyState(self,botId:int,strategyState:str)->bool:
         pass
     
     @abstractmethod

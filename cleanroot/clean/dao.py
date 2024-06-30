@@ -14,7 +14,7 @@ from . import Base
 # Base = declarative_base()
 
 from sqlalchemy.orm import sessionmaker
-from .sql_models.models import OrderStatus,BotOperation_model, Profit_Operation_Model,Strategy_model,Symbol_model, strategy_config_model
+from .sql_models.models import OrderStatus,BotOperation_model, Profit_Operation_Model,Symbol_model, strategy_config_model
 from sqlalchemy import or_
 
 
@@ -34,22 +34,17 @@ class OrderManagerDAO(bot_dao_interface):
             return botOperation
         return None
     
-    def saveStrategyState(self,botId,strategyState):
+    def saveStrategyState(self, botId, strategyState):
         #BotOperation_model
         session = self.Session()
         botOperation = session.query(BotOperation_model).filter_by(id=botId).first()
         if botOperation:
-            botOperation.strategyState = strategyState
-            session.commit()
-            return True
-        else:
-            return False
-        
-    def get_strategies(self)->List[Strategy_model]:
-        session = self.Session()
-        strategies = session.query(Strategy_model).all()
-        session.close()
-        return strategies
+            strategyConfig = session.query(strategy_config_model).filter_by(id=botOperation.strategy_config_id).first()
+            if(strategyConfig):
+                strategyConfig.data = strategyState
+                session.commit()
+                return True
+        raise Exception(f"FAIL in saveStrategyState from dao({strategyState})")
     
     def get_symbols(self):
         session = self.Session()

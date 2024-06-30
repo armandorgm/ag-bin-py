@@ -5526,3 +5526,264 @@ Traceback (most recent call last):
     print("Ordenes pendientes por cerrar:", len(self.pending_close_profit_operation_list))
                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 TypeError: object of type 'NoneType' has no len()
+2024-06-27 15:18:07,663 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-20' coro=<Bot_Operation.start() done, defined at c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_operation.py:74> exception=OperationalError('(sqlite3.OperationalError) no such column: pending_operation.botId')>
+Traceback (most recent call last):
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\sqlalchemy\engine\default.py", line 924, in do_execute
+    cursor.execute(statement, parameters)
+sqlite3.OperationalError: no such column: pending_operation.botId
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_operation.py", line 91, in start
+    await self.checkPendingOrdersToClose(lastPrice)
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_operation.py", line 111, in checkPendingOrdersToClose
+    pending_close_profit_operation_list = self.dao.get_pending_operations_for_bot(self.botId)
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\dao.py", line 212, in get_pending_operations_for_bot
+    pending_operation_model_list = session.query(Profit_Operation_Model).filter_by().all()
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\sqlalchemy\orm\query.py", line 2673, in all
+    return self._iter().all()  # type: ignore
+           ^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\sqlalchemy\orm\query.py", line 2827, in _iter
+    result: Union[ScalarResult[_T], Result[_T]] = self.session.execute(
+                                                  ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2351, in execute
+    return self._execute_internal(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2236, in _execute_internal
+    result: Result[Any] = compile_state_cls.orm_execute_statement(
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\sqlalchemy\orm\context.py", line 293, in orm_execute_statement
+    result = conn.execute(
+             ^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1418, in execute
+    return meth(
+           ^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 515, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1640, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1846, in _execute_context
+    return self._exec_single_context(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1986, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 2353, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\sqlalchemy\engine\default.py", line 924, in do_execute
+    cursor.execute(statement, parameters)
+sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) no such column: pending_operation.botId
+[SQL: SELECT pending_operation.id AS pending_operation_id, pending_operation."exchangeId" AS "pending_operation_exchangeId", pending_operation.amount AS pending_operation_amount, pending_operation.position_side AS pending_operation_position_side, pending_operation.entry_price AS pending_operation_entry_price, pending_operation.open_fee AS pending_operation_open_fee, pending_operation.closing_price AS pending_operation_closing_price, pending_operation.close_fee AS pending_operation_close_fee, pending_operation.status AS pending_operation_status, pending_operation."botId" AS "pending_operation_botId", pending_operation."strategyConfigId" AS "pending_operation_strategyConfigId" 
+FROM pending_operation]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2024-06-29 09:34:31,001 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-18' coro=<Bot_Operation.start() done, defined at c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_operation.py:70> exception=TypeError('Object of type Decimal is not JSON serializable')>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_operation.py", line 83, in start
+    await self.strategy.evaluar_precio(lastPrice)
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py", line 124, in evaluar_precio
+    self.save()
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py", line 64, in save
+    self.interface.saveStrategyState(self.data)
+                                     ^^^^^^^^^
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py", line 45, in data
+    return json.dumps(data)
+           ^^^^^^^^^^^^^^^^
+  File "C:\Python312\Lib\json\__init__.py", line 231, in dumps
+    return _default_encoder.encode(obj)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python312\Lib\json\encoder.py", line 200, in encode
+    chunks = self.iterencode(o, _one_shot=True)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python312\Lib\json\encoder.py", line 258, in iterencode
+    return _iterencode(o, 0)
+           ^^^^^^^^^^^^^^^^^
+  File "C:\Python312\Lib\json\encoder.py", line 180, in default
+    raise TypeError(f'Object of type {o.__class__.__name__} '
+TypeError: Object of type Decimal is not JSON serializable
+2024-06-29 12:23:16,257 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-20' coro=<Bot_Operation.start() done, defined at c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_operation.py:90> exception=BadRequest('binanceusdm {"code":-1102,"msg":"Mandatory parameter \'orderid\' was not sent, was empty/null, or malformed."}')>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_operation.py", line 103, in start
+    await self.checkOpeningOrders()
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_operation.py", line 80, in checkOpeningOrders
+    orderData:Order = await self.exchange.fetch_order(origClientOrderId, self.symbol)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\binance.py", line 5883, in fetch_order
+    response = await self.fapiPrivateGetOrder(self.extend(request, params))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\binance.py", line 10301, in request
+    response = await self.fetch2(path, api, method, params, headers, body, config)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\base\exchange.py", line 813, in fetch2
+    return await self.fetch(request['url'], request['method'], request['headers'], request['body'])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\base\exchange.py", line 243, in fetch
+    self.handle_errors(http_status_code, http_status_text, url, method, headers, http_response, json_response, request_headers, request_body)
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\binance.py", line 10269, in handle_errors
+    self.throw_exactly_matched_exception(self.exceptions['exact'], error, feedback)
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\base\exchange.py", line 4055, in throw_exactly_matched_exception
+    raise exact[string](message)
+ccxt.base.errors.BadRequest: binanceusdm {"code":-1102,"msg":"Mandatory parameter 'orderid' was not sent, was empty/null, or malformed."}
+2024-06-29 13:41:36,845 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-20' coro=<Bot_Operation.start() done, defined at c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_operation.py:93> exception=BadRequest('binanceusdm {"code":-1102,"msg":"Mandatory parameter \'orderid\' was not sent, was empty/null, or malformed."}')>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_operation.py", line 107, in start
+    await self.checkOpeningOrders()
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_operation.py", line 82, in checkOpeningOrders
+    orderData:Order = await self.exchange.fetch_order(origClientOrderId, self.symbol)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\binance.py", line 5883, in fetch_order
+    response = await self.fapiPrivateGetOrder(self.extend(request, params))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\binance.py", line 10301, in request
+    response = await self.fetch2(path, api, method, params, headers, body, config)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\base\exchange.py", line 813, in fetch2
+    return await self.fetch(request['url'], request['method'], request['headers'], request['body'])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\base\exchange.py", line 243, in fetch
+    self.handle_errors(http_status_code, http_status_text, url, method, headers, http_response, json_response, request_headers, request_body)
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\binance.py", line 10269, in handle_errors
+    self.throw_exactly_matched_exception(self.exceptions['exact'], error, feedback)
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\base\exchange.py", line 4055, in throw_exactly_matched_exception
+    raise exact[string](message)
+ccxt.base.errors.BadRequest: binanceusdm {"code":-1102,"msg":"Mandatory parameter 'orderid' was not sent, was empty/null, or malformed."}
+2024-06-29 13:48:50,899 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-20' coro=<Bot_Operation.start() done, defined at c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_operation.py:94> exception=BadRequest('binanceusdm {"code":-1102,"msg":"Mandatory parameter \'orderid\' was not sent, was empty/null, or malformed."}')>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_operation.py", line 108, in start
+    await self.checkOpeningOrders()
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_operation.py", line 83, in checkOpeningOrders
+    orderData:Order = await self.exchange.fetch_order(origClientOrderId, self.symbol)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\binance.py", line 5883, in fetch_order
+    response = await self.fapiPrivateGetOrder(self.extend(request, params))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\binance.py", line 10301, in request
+    response = await self.fetch2(path, api, method, params, headers, body, config)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\base\exchange.py", line 813, in fetch2
+    return await self.fetch(request['url'], request['method'], request['headers'], request['body'])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\base\exchange.py", line 243, in fetch
+    self.handle_errors(http_status_code, http_status_text, url, method, headers, http_response, json_response, request_headers, request_body)
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\binance.py", line 10269, in handle_errors
+    self.throw_exactly_matched_exception(self.exceptions['exact'], error, feedback)
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\base\exchange.py", line 4055, in throw_exactly_matched_exception
+    raise exact[string](message)
+ccxt.base.errors.BadRequest: binanceusdm {"code":-1102,"msg":"Mandatory parameter 'orderid' was not sent, was empty/null, or malformed."}
+2024-06-29 14:20:57,742 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-18' coro=<Bot_Operation.start() done, defined at c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_operation.py:94> exception=NotImplementedError()>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_operation.py", line 108, in start
+    await self.checkOpeningOrders()
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_operation.py", line 87, in checkOpeningOrders
+    self.strategy.orderClosed(orderData)
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py", line 141, in orderClosed
+    raise NotImplementedError
+NotImplementedError
+2024-06-29 15:08:42,250 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-20' coro=<Bot_Operation.start() done, defined at c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_operation.py:96> exception=AttributeError("'str' object has no attribute 'close_price'")>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_operation.py", line 110, in start
+    await self.checkOpeningOrders()
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_operation.py", line 93, in checkOpeningOrders
+    print(f"Precio de cierre de operacion NO alcanzado ({origClientOrderId.close_price})")
+                                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'str' object has no attribute 'close_price'
+2024-06-29 15:16:38,115 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-20' coro=<Bot_Operation.start() done, defined at c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_operation.py:96> exception=ExchangeError('binanceusdm {"code":-2022,"msg":"ReduceOnly Order is rejected."}')>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_operation.py", line 110, in start
+    await self.checkOpeningOrders()
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_operation.py", line 89, in checkOpeningOrders
+    await self.strategy.onOpenOrderExecution(orderData)
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py", line 142, in onOpenOrderExecution
+    await self.interface.putOrder(orderData["info"]["positionSide"],self.closingOrderSide,Decimal(orderData["amount"]), self.getProfitPriceOf(Decimal(str(orderData["price"]))), "limit")
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_operation.py", line 74, in putOrder
+    order = await self.exchange.create_order(self.symbol, orderType, order_side, float(amount), price, {"positionSide":position_side,"newClientOrderId":newClientOrderId})
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\binance.py", line 5557, in create_order
+    response = await self.fapiPrivatePostOrder(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\binance.py", line 10301, in request
+    response = await self.fetch2(path, api, method, params, headers, body, config)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\base\exchange.py", line 813, in fetch2
+    return await self.fetch(request['url'], request['method'], request['headers'], request['body'])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\base\exchange.py", line 243, in fetch
+    self.handle_errors(http_status_code, http_status_text, url, method, headers, http_response, json_response, request_headers, request_body)
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\binance.py", line 10270, in handle_errors
+    raise ExchangeError(feedback)
+ccxt.base.errors.ExchangeError: binanceusdm {"code":-2022,"msg":"ReduceOnly Order is rejected."}
+2024-06-29 17:28:40,371 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-20' coro=<Bot_Operation.start() done, defined at c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_operation.py:97> exception=AttributeError("'StrategyA' object has no attribute 'lastEscalasSobrepasadas'")>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_operation.py", line 112, in start
+    await self.strategy.evaluar_precio(lastPrice)
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py", line 126, in evaluar_precio
+    if self.lastEscalasSobrepasadas != 0:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'StrategyA' object has no attribute 'lastEscalasSobrepasadas'
+2024-06-30 03:50:30,448 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-20' coro=<Bot_Operation.start() done, defined at c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_operation.py:97> exception=InvalidNonce('binanceusdm {"code":-1021,"msg":"Timestamp for this request was 1000ms ahead of the server\'s time."}')>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_operation.py", line 111, in start
+    await self.checkOpeningOrders()
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_operation.py", line 86, in checkOpeningOrders
+    orderData:Order = await self.exchange.fetch_order(origClientOrderId, self.symbol,{"origClientOrderId":origClientOrderId})
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\binance.py", line 5883, in fetch_order
+    response = await self.fapiPrivateGetOrder(self.extend(request, params))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\binance.py", line 10301, in request
+    response = await self.fetch2(path, api, method, params, headers, body, config)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\base\exchange.py", line 813, in fetch2
+    return await self.fetch(request['url'], request['method'], request['headers'], request['body'])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\base\exchange.py", line 243, in fetch
+    self.handle_errors(http_status_code, http_status_text, url, method, headers, http_response, json_response, request_headers, request_body)
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\binance.py", line 10269, in handle_errors
+    self.throw_exactly_matched_exception(self.exceptions['exact'], error, feedback)
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\base\exchange.py", line 4055, in throw_exactly_matched_exception
+    raise exact[string](message)
+ccxt.base.errors.InvalidNonce: binanceusdm {"code":-1021,"msg":"Timestamp for this request was 1000ms ahead of the server's time."}
+2024-06-30 04:10:52,117 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-19' coro=<Bot_Operation.start() done, defined at c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_operation.py:97> exception=InvalidNonce('binanceusdm {"code":-1021,"msg":"Timestamp for this request was 1000ms ahead of the server\'s time."}')>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_operation.py", line 112, in start
+    await self.strategy.evaluar_precio(lastPrice)
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py", line 117, in evaluar_precio
+    order = await self.interface.putOrder(self.positionSide, self.openingOrderSide, Decimal(self.get_min_amount(self.getMakerPrice(receivedPrice))), self.getMakerPrice(receivedPrice), "limit")
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_operation.py", line 74, in putOrder
+    order = await self.exchange.create_order(self.symbol, orderType, order_side, float(amount), price, {"positionSide":position_side,"newClientOrderId":newClientOrderId})
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\binance.py", line 5557, in create_order
+    response = await self.fapiPrivatePostOrder(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\binance.py", line 10301, in request
+    response = await self.fetch2(path, api, method, params, headers, body, config)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\base\exchange.py", line 813, in fetch2
+    return await self.fetch(request['url'], request['method'], request['headers'], request['body'])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\base\exchange.py", line 243, in fetch
+    self.handle_errors(http_status_code, http_status_text, url, method, headers, http_response, json_response, request_headers, request_body)
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\binance.py", line 10269, in handle_errors
+    self.throw_exactly_matched_exception(self.exceptions['exact'], error, feedback)
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\base\exchange.py", line 4055, in throw_exactly_matched_exception
+    raise exact[string](message)
+ccxt.base.errors.InvalidNonce: binanceusdm {"code":-1021,"msg":"Timestamp for this request was 1000ms ahead of the server's time."}
