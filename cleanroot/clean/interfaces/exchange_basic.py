@@ -23,3 +23,8 @@ class SymbolPrecision(TypedDict):
     quote:int
     
 iStrategy_Callback_Signal =  Callable[[str, str, Decimal, Decimal,iOrderType], Awaitable[Order]]
+
+class ProfitOperation(TypedDict):
+    checkpoint:Decimal
+    openingOrderId:str
+    closingOrderId:str|None

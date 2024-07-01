@@ -1,23 +1,32 @@
 from unittest import IsolatedAsyncioTestCase,TestCase,skip
-from unittest.mock import AsyncMock, MagicMock
-from cleanroot.clean.bot_strategies.strategy_a.strategyA import StrategyA
+from unittest.mock import AsyncMock, MagicMock, Mock
+from cleanroot.clean.bot_strategies.strategy_a.strategyA import StrategyA,StrategyStorage
 from decimal import Decimal,getcontext
 
 import pytest
+
+from cleanroot.clean.interfaces.exchange_basic import ProfitOperation
 context = getcontext()
 context.prec = 16
 class Test_StrategyA_general(IsolatedAsyncioTestCase):
     def setUp(self):
         #self.mock_interface = MagicMock()
         self.mock_interface = AsyncMock()
+        
         self.offset = "2"
-        self.rootCheckpoint=Decimal("1")
+        self.rootCheckpoint="1"
         self.lastCheckpoint = "0.12336"
-        
         positionSide1 = "long"
-        self.longStrategy = StrategyA(self.mock_interface, positionSide1, self.offset,self.rootCheckpoint, self.lastCheckpoint)  # Crea una instancia de StrategyA
-    
         
+        dataStorage:StrategyStorage = {
+            "positionSide": positionSide1,
+            "offset": self.offset,
+            "rootCheckpoint":self.rootCheckpoint,
+            "lastCheckpoint":self.lastCheckpoint
+        }
+        self.longStrategy = StrategyA(self.mock_interface, dataStorage)  # Crea una instancia de StrategyA
+    
+            
         positionSide2 = "short"
         #self.shortStrategy = StrategyA(self.mock_interface, positionSide2, self.offset,self.initialReferenceCheckpoint)  # Crea una instancia de StrategyA
 
@@ -117,9 +126,16 @@ class Test_StrategyA_isolated(IsolatedAsyncioTestCase):
         mock_interface.amountPrecision = 8
         mock_interface.notionalMin = 5
         positionSide1 = "long"
-        offset = Decimal(str(0.1/100))
-        initialReferenceCheckpoint=Decimal("0.12257")
-        longStrategy = StrategyA(mock_interface, positionSide1, offset, initialReferenceCheckpoint,"0.12336")  # Crea una instancia de StrategyA
+        offset = "1.001"
+        initialReferenceCheckpoint="0.12257"
+        data:StrategyStorage = {
+            "positionSide": positionSide1,
+            "offset": offset,
+            "rootCheckpoint":initialReferenceCheckpoint,
+            "lastCheckpoint":"0.12336",
+            "profit_operations":[]
+        }
+        longStrategy = StrategyA(mock_interface, data)  # Crea una instancia de StrategyA
 
 
         currentCheckpoint = Decimal(longStrategy.lastCheckpoint)
@@ -134,19 +150,36 @@ class Test_StrategyA_isolated(IsolatedAsyncioTestCase):
     
     
     async def test_evaluar_precio2(self):
+        profitOperation:ProfitOperation={"checkpoint":Decimal("0.1300709963911075"),
+                                          "openingOrderId":"111000",
+                                          "closingOrderId":None}
+        data:StrategyStorage = {
+            "positionSide": "long",
+            "offset": "1.001",
+            "rootCheckpoint":"100",
+            "lastCheckpoint":"100",
+            "profit_operations":[profitOperation]
+        }
         putOrder = AsyncMock()
+        putOrder.return_value = {"info":{"clientOrderId":"123"}}
         mock_interface = AsyncMock()
         mock_interface.pricePrecision = 8
         mock_interface.amountPrecision = 8
         mock_interface.notionalMin = 5
         mock_interface.putOrder = putOrder
+        mock_interface.strategyData = data
+        mock_interface.saveStrategyState = Mock()
+        async def fetch_order(foo):
+            print("called with",end=" ")
+            print(foo)
+            return {"status":"closed"}
+        mock_interface.fetch_order = fetch_order 
+        
+        
 
-        positionSide1 = "long"
-        offset = "1.001"
-        initialReferenceCheckpoint=Decimal("0.12257")
-        longStrategy = StrategyA(mock_interface, positionSide1, offset, initialReferenceCheckpoint,"0.12336")  # Crea una instancia de StrategyA
+        longStrategy = StrategyA(mock_interface, data)  # Crea una instancia de StrategyA
            
-        priceList:list[float] = [0.12336,0.12335,0.12337,0.12338,0.12337,0.13,0.14,0.15]
+        priceList:list[float] = [100,100.1,100.21,100,100.1,100.21]
 
         for newPrice in priceList:
             await longStrategy.evaluar_precio(Decimal(str(newPrice)))

@@ -6,7 +6,7 @@ from cleanroot.clean.bot_strategies.strategy import Strategy
 from cleanroot.clean.interfaces.exchange_basic import Order
 
 class FooStrategy(Strategy):
-    def data(self):
+    def cacheData(self):
         pass
     def evaluar_precio(self, datos_mercado: Decimal) -> Any:
         pass
@@ -16,6 +16,11 @@ class FooStrategy(Strategy):
 
     async def onCloseOrderExecution(self, orderData: Order) -> None:
         raise NotImplementedError
+
+    @property
+    def data(self) -> dict[str, Any]:
+        raise NotImplementedError
+
 
     
 class Test_Strategy(TestCase):

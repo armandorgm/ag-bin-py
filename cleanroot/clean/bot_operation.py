@@ -1,6 +1,7 @@
 from asyncio import sleep
 import asyncio
 from decimal import Decimal
+import json
 from pprint import pprint
 from typing import Any, List, Literal
 from ccxt.pro import binanceusdm
@@ -49,7 +50,7 @@ class Bot_Operation(Bot, StrategyImplementor):
                 pprint(botStrategyConfig.data)
                 dataJson = Strategy.from_json(botStrategyConfig.data)
                 #tupleData = tuple(dataJson.values())
-                return strategy(self, **dataJson) # type: ignore
+                return strategy(self, dataJson) # type: ignore
 
         if not len(self.strategies) > 0:
             raise Exception("Empty EstrategyList loaded")
@@ -109,7 +110,7 @@ class Bot_Operation(Bot, StrategyImplementor):
                     #await self.checkPendingOrdersToClose(lastPrice)
                     if len(self.openOrders):
                         await self.checkOpeningOrders()
-                    await self.strategy.evaluar_precio(lastPrice)
+                    asyncio.create_task( self.strategy.evaluar_precio(lastPrice))
             except KeyboardInterrupt:
                 await self.exchange.close()
             finally:
@@ -179,6 +180,16 @@ class Bot_Operation(Bot, StrategyImplementor):
     def pricePrecision(self)->int:
         value = self.marketData["precision"]["price"]
         return value
+
+    @property
+    def strategyData(self) -> dict:
+        res = self.dao.getBotStrategyConfig(self.botId)
+        if res:
+            return json.loads(res.data)
+        raise Exception("not getBotStrategyConfig found in dao.getBotStrategyConfig()")
+
+    async def fetch_order(self,orderId) -> Order | None:
+        return await self.exchange.fetch_order(orderId,self.symbol,{"origClientOrderId":orderId})
 
     
 

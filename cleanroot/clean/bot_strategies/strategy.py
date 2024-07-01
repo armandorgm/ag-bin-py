@@ -25,7 +25,12 @@ class Strategy(ABC):
         self.interface = interface
         
     @abstractmethod
-    def data(self)->str:
+    def cacheData(self)->str:
+        pass
+    
+    @property
+    @abstractmethod
+    def data(self)->dict[str,Any]:
         pass
     
     @abstractmethod
