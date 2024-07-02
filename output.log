@@ -6646,3 +6646,358 @@ Traceback (most recent call last):
   File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\base\exchange.py", line 237, in fetch
     raise ExchangeNotAvailable(details) from e
 ccxt.base.errors.ExchangeNotAvailable: binanceusdm GET https://testnet.binancefuture.com/fapi/v1/order?timestamp=1719816032527&symbol=BTCUSDT&origClientOrderId=529d0d61-80f2-48d2-bfae-4c238df5fc86&recvWindow=10000&signature=b994bc4891e2e39c710be0a41029bc96326c8dc1b65f5782849368809de51951
+2024-07-01 11:30:58,314 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-6045' coro=<StrategyA.evaluar_precio() done, defined at c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py:139> exception=InvalidNonce('binanceusdm {"code":-1021,"msg":"Timestamp for this request was 1000ms ahead of the server\'s time."}')>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py", line 153, in evaluar_precio
+    print("indice NO encontrado")
+                        ^^^^^^^^^^
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_operation.py", line 75, in putOrder
+    order = await self.exchange.create_order(self.symbol, orderType, order_side, float(amount), price, {"positionSide":position_side,"newClientOrderId":newClientOrderId})
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\binance.py", line 5557, in create_order
+    response = await self.fapiPrivatePostOrder(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\binance.py", line 10301, in request
+    response = await self.fetch2(path, api, method, params, headers, body, config)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\base\exchange.py", line 813, in fetch2
+    return await self.fetch(request['url'], request['method'], request['headers'], request['body'])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\base\exchange.py", line 243, in fetch
+    self.handle_errors(http_status_code, http_status_text, url, method, headers, http_response, json_response, request_headers, request_body)
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\binance.py", line 10269, in handle_errors
+    self.throw_exactly_matched_exception(self.exceptions['exact'], error, feedback)
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\base\exchange.py", line 4055, in throw_exactly_matched_exception
+    raise exact[string](message)
+ccxt.base.errors.InvalidNonce: binanceusdm {"code":-1021,"msg":"Timestamp for this request was 1000ms ahead of the server's time."}
+2024-07-01 11:31:00,667 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-20' coro=<Bot_Operation.start() done, defined at c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_operation.py:98> exception=InvalidNonce('binanceusdm {"code":-1021,"msg":"Timestamp for this request was 1000ms ahead of the server\'s time."}')>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_operation.py", line 112, in start
+    await self.checkOpeningOrders()
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_operation.py", line 87, in checkOpeningOrders
+    orderData:Order = await self.exchange.fetch_order(origClientOrderId, self.symbol,{"origClientOrderId":origClientOrderId})
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\binance.py", line 5883, in fetch_order
+    response = await self.fapiPrivateGetOrder(self.extend(request, params))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\binance.py", line 10301, in request
+    response = await self.fetch2(path, api, method, params, headers, body, config)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\base\exchange.py", line 813, in fetch2
+    return await self.fetch(request['url'], request['method'], request['headers'], request['body'])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\base\exchange.py", line 243, in fetch
+    self.handle_errors(http_status_code, http_status_text, url, method, headers, http_response, json_response, request_headers, request_body)
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\async_support\binance.py", line 10269, in handle_errors
+    self.throw_exactly_matched_exception(self.exceptions['exact'], error, feedback)
+  File "C:\Users\arman\myProjects\ag-bin-py\.venv\Lib\site-packages\ccxt\base\exchange.py", line 4055, in throw_exactly_matched_exception
+    raise exact[string](message)
+ccxt.base.errors.InvalidNonce: binanceusdm {"code":-1021,"msg":"Timestamp for this request was 1000ms ahead of the server's time."}
+2024-07-02 00:41:57,591 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-26' coro=<StrategyA.evaluar_precio() done, defined at c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py:161> exception=IndexError('list index out of range')>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py", line 173, in evaluar_precio
+    if not (await self.isCheckpointProfitOperationActive(self.nextCheckpoint)) :
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py", line 141, in isCheckpointProfitOperationActive
+    print(f"first checkpoint in _profitOperations is ({type(self._profitOperations[0]['checkpoint'])})")
+                                                            ~~~~~~~~~~~~~~~~~~~~~~^^^
+IndexError: list index out of range
+2024-07-02 00:41:59,602 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-28' coro=<StrategyA.evaluar_precio() done, defined at c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py:161> exception=IndexError('list index out of range')>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py", line 173, in evaluar_precio
+    if not (await self.isCheckpointProfitOperationActive(self.nextCheckpoint)) :
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py", line 141, in isCheckpointProfitOperationActive
+    print(f"first checkpoint in _profitOperations is ({type(self._profitOperations[0]['checkpoint'])})")
+                                                            ~~~~~~~~~~~~~~~~~~~~~~^^^
+IndexError: list index out of range
+2024-07-02 00:42:04,072 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-30' coro=<StrategyA.evaluar_precio() done, defined at c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py:161> exception=IndexError('list index out of range')>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py", line 173, in evaluar_precio
+    if not (await self.isCheckpointProfitOperationActive(self.nextCheckpoint)) :
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py", line 141, in isCheckpointProfitOperationActive
+    print(f"first checkpoint in _profitOperations is ({type(self._profitOperations[0]['checkpoint'])})")
+                                                            ~~~~~~~~~~~~~~~~~~~~~~^^^
+IndexError: list index out of range
+2024-07-02 00:42:14,157 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-34' coro=<StrategyA.evaluar_precio() done, defined at c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py:161> exception=IndexError('list index out of range')>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py", line 173, in evaluar_precio
+    if not (await self.isCheckpointProfitOperationActive(self.nextCheckpoint)) :
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py", line 141, in isCheckpointProfitOperationActive
+    print(f"first checkpoint in _profitOperations is ({type(self._profitOperations[0]['checkpoint'])})")
+                                                            ~~~~~~~~~~~~~~~~~~~~~~^^^
+IndexError: list index out of range
+2024-07-02 00:42:18,869 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-38' coro=<StrategyA.evaluar_precio() done, defined at c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py:161> exception=IndexError('list index out of range')>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py", line 173, in evaluar_precio
+    if not (await self.isCheckpointProfitOperationActive(self.nextCheckpoint)) :
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py", line 141, in isCheckpointProfitOperationActive
+    print(f"first checkpoint in _profitOperations is ({type(self._profitOperations[0]['checkpoint'])})")
+                                                            ~~~~~~~~~~~~~~~~~~~~~~^^^
+IndexError: list index out of range
+2024-07-02 00:42:40,600 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-40' coro=<StrategyA.evaluar_precio() done, defined at c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py:161> exception=IndexError('list index out of range')>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py", line 173, in evaluar_precio
+    if not (await self.isCheckpointProfitOperationActive(self.nextCheckpoint)) :
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py", line 141, in isCheckpointProfitOperationActive
+    print(f"first checkpoint in _profitOperations is ({type(self._profitOperations[0]['checkpoint'])})")
+                                                            ~~~~~~~~~~~~~~~~~~~~~~^^^
+IndexError: list index out of range
+2024-07-02 00:42:45,051 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-42' coro=<StrategyA.evaluar_precio() done, defined at c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py:161> exception=IndexError('list index out of range')>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py", line 173, in evaluar_precio
+    if not (await self.isCheckpointProfitOperationActive(self.nextCheckpoint)) :
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py", line 141, in isCheckpointProfitOperationActive
+    print(f"first checkpoint in _profitOperations is ({type(self._profitOperations[0]['checkpoint'])})")
+                                                            ~~~~~~~~~~~~~~~~~~~~~~^^^
+IndexError: list index out of range
+2024-07-02 00:43:32,292 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-52' coro=<StrategyA.evaluar_precio() done, defined at c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py:161> exception=IndexError('list index out of range')>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py", line 173, in evaluar_precio
+    if not (await self.isCheckpointProfitOperationActive(self.nextCheckpoint)) :
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py", line 141, in isCheckpointProfitOperationActive
+    print(f"first checkpoint in _profitOperations is ({type(self._profitOperations[0]['checkpoint'])})")
+                                                            ~~~~~~~~~~~~~~~~~~~~~~^^^
+IndexError: list index out of range
+2024-07-02 00:43:34,307 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-54' coro=<StrategyA.evaluar_precio() done, defined at c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py:161> exception=IndexError('list index out of range')>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py", line 173, in evaluar_precio
+    if not (await self.isCheckpointProfitOperationActive(self.nextCheckpoint)) :
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py", line 141, in isCheckpointProfitOperationActive
+    print(f"first checkpoint in _profitOperations is ({type(self._profitOperations[0]['checkpoint'])})")
+                                                            ~~~~~~~~~~~~~~~~~~~~~~^^^
+IndexError: list index out of range
+2024-07-02 00:43:36,616 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-56' coro=<StrategyA.evaluar_precio() done, defined at c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py:161> exception=IndexError('list index out of range')>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py", line 173, in evaluar_precio
+    if not (await self.isCheckpointProfitOperationActive(self.nextCheckpoint)) :
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py", line 141, in isCheckpointProfitOperationActive
+    print(f"first checkpoint in _profitOperations is ({type(self._profitOperations[0]['checkpoint'])})")
+                                                            ~~~~~~~~~~~~~~~~~~~~~~^^^
+IndexError: list index out of range
+2024-07-02 00:43:57,706 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-59' coro=<StrategyA.evaluar_precio() done, defined at c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py:161> exception=IndexError('list index out of range')>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py", line 173, in evaluar_precio
+    if not (await self.isCheckpointProfitOperationActive(self.nextCheckpoint)) :
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py", line 141, in isCheckpointProfitOperationActive
+    print(f"first checkpoint in _profitOperations is ({type(self._profitOperations[0]['checkpoint'])})")
+                                                            ~~~~~~~~~~~~~~~~~~~~~~^^^
+IndexError: list index out of range
+2024-07-02 00:43:59,937 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-61' coro=<StrategyA.evaluar_precio() done, defined at c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py:161> exception=IndexError('list index out of range')>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py", line 173, in evaluar_precio
+    if not (await self.isCheckpointProfitOperationActive(self.nextCheckpoint)) :
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py", line 141, in isCheckpointProfitOperationActive
+    print(f"first checkpoint in _profitOperations is ({type(self._profitOperations[0]['checkpoint'])})")
+                                                            ~~~~~~~~~~~~~~~~~~~~~~^^^
+IndexError: list index out of range
+2024-07-02 00:44:16,025 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-63' coro=<StrategyA.evaluar_precio() done, defined at c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py:161> exception=IndexError('list index out of range')>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py", line 173, in evaluar_precio
+    if not (await self.isCheckpointProfitOperationActive(self.nextCheckpoint)) :
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py", line 141, in isCheckpointProfitOperationActive
+    print(f"first checkpoint in _profitOperations is ({type(self._profitOperations[0]['checkpoint'])})")
+                                                            ~~~~~~~~~~~~~~~~~~~~~~^^^
+IndexError: list index out of range
+2024-07-02 00:45:27,724 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-67' coro=<StrategyA.evaluar_precio() done, defined at c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py:161> exception=IndexError('list index out of range')>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py", line 173, in evaluar_precio
+    if not (await self.isCheckpointProfitOperationActive(self.nextCheckpoint)) :
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py", line 141, in isCheckpointProfitOperationActive
+    print(f"first checkpoint in _profitOperations is ({type(self._profitOperations[0]['checkpoint'])})")
+                                                            ~~~~~~~~~~~~~~~~~~~~~~^^^
+IndexError: list index out of range
+2024-07-02 00:46:58,949 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-72' coro=<StrategyA.evaluar_precio() done, defined at c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py:161> exception=IndexError('list index out of range')>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py", line 173, in evaluar_precio
+    if not (await self.isCheckpointProfitOperationActive(self.nextCheckpoint)) :
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py", line 141, in isCheckpointProfitOperationActive
+    print(f"first checkpoint in _profitOperations is ({type(self._profitOperations[0]['checkpoint'])})")
+                                                            ~~~~~~~~~~~~~~~~~~~~~~^^^
+IndexError: list index out of range
+2024-07-02 00:47:01,223 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-74' coro=<StrategyA.evaluar_precio() done, defined at c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py:161> exception=IndexError('list index out of range')>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py", line 173, in evaluar_precio
+    if not (await self.isCheckpointProfitOperationActive(self.nextCheckpoint)) :
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py", line 141, in isCheckpointProfitOperationActive
+    print(f"first checkpoint in _profitOperations is ({type(self._profitOperations[0]['checkpoint'])})")
+                                                            ~~~~~~~~~~~~~~~~~~~~~~^^^
+IndexError: list index out of range
+2024-07-02 00:47:40,678 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-76' coro=<StrategyA.evaluar_precio() done, defined at c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py:161> exception=IndexError('list index out of range')>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py", line 173, in evaluar_precio
+    if not (await self.isCheckpointProfitOperationActive(self.nextCheckpoint)) :
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py", line 141, in isCheckpointProfitOperationActive
+    print(f"first checkpoint in _profitOperations is ({type(self._profitOperations[0]['checkpoint'])})")
+                                                            ~~~~~~~~~~~~~~~~~~~~~~^^^
+IndexError: list index out of range
+2024-07-02 00:47:43,171 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-78' coro=<StrategyA.evaluar_precio() done, defined at c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py:161> exception=IndexError('list index out of range')>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py", line 173, in evaluar_precio
+    if not (await self.isCheckpointProfitOperationActive(self.nextCheckpoint)) :
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py", line 141, in isCheckpointProfitOperationActive
+    print(f"first checkpoint in _profitOperations is ({type(self._profitOperations[0]['checkpoint'])})")
+                                                            ~~~~~~~~~~~~~~~~~~~~~~^^^
+IndexError: list index out of range
+2024-07-02 00:47:45,586 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-80' coro=<StrategyA.evaluar_precio() done, defined at c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py:161> exception=IndexError('list index out of range')>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py", line 173, in evaluar_precio
+    if not (await self.isCheckpointProfitOperationActive(self.nextCheckpoint)) :
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py", line 141, in isCheckpointProfitOperationActive
+    print(f"first checkpoint in _profitOperations is ({type(self._profitOperations[0]['checkpoint'])})")
+                                                            ~~~~~~~~~~~~~~~~~~~~~~^^^
+IndexError: list index out of range
+2024-07-02 00:47:55,998 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-82' coro=<StrategyA.evaluar_precio() done, defined at c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py:161> exception=IndexError('list index out of range')>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py", line 173, in evaluar_precio
+    if not (await self.isCheckpointProfitOperationActive(self.nextCheckpoint)) :
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py", line 141, in isCheckpointProfitOperationActive
+    print(f"first checkpoint in _profitOperations is ({type(self._profitOperations[0]['checkpoint'])})")
+                                                            ~~~~~~~~~~~~~~~~~~~~~~^^^
+IndexError: list index out of range
+2024-07-02 00:47:58,145 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-84' coro=<StrategyA.evaluar_precio() done, defined at c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py:161> exception=IndexError('list index out of range')>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py", line 173, in evaluar_precio
+    if not (await self.isCheckpointProfitOperationActive(self.nextCheckpoint)) :
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py", line 141, in isCheckpointProfitOperationActive
+    print(f"first checkpoint in _profitOperations is ({type(self._profitOperations[0]['checkpoint'])})")
+                                                            ~~~~~~~~~~~~~~~~~~~~~~^^^
+IndexError: list index out of range
+2024-07-02 00:48:11,889 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-86' coro=<StrategyA.evaluar_precio() done, defined at c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py:161> exception=IndexError('list index out of range')>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py", line 173, in evaluar_precio
+    if not (await self.isCheckpointProfitOperationActive(self.nextCheckpoint)) :
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py", line 141, in isCheckpointProfitOperationActive
+    print(f"first checkpoint in _profitOperations is ({type(self._profitOperations[0]['checkpoint'])})")
+                                                            ~~~~~~~~~~~~~~~~~~~~~~^^^
+IndexError: list index out of range
+2024-07-02 00:48:46,917 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-96' coro=<StrategyA.evaluar_precio() done, defined at c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py:161> exception=IndexError('list index out of range')>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py", line 173, in evaluar_precio
+    if not (await self.isCheckpointProfitOperationActive(self.nextCheckpoint)) :
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py", line 141, in isCheckpointProfitOperationActive
+    print(f"first checkpoint in _profitOperations is ({type(self._profitOperations[0]['checkpoint'])})")
+                                                            ~~~~~~~~~~~~~~~~~~~~~~^^^
+IndexError: list index out of range
+2024-07-02 00:50:15,278 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-107' coro=<StrategyA.evaluar_precio() done, defined at c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py:161> exception=IndexError('list index out of range')>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py", line 173, in evaluar_precio
+    if not (await self.isCheckpointProfitOperationActive(self.nextCheckpoint)) :
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py", line 141, in isCheckpointProfitOperationActive
+    print(f"first checkpoint in _profitOperations is ({type(self._profitOperations[0]['checkpoint'])})")
+                                                            ~~~~~~~~~~~~~~~~~~~~~~^^^
+IndexError: list index out of range
+2024-07-02 00:51:01,369 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-111' coro=<StrategyA.evaluar_precio() done, defined at c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py:161> exception=IndexError('list index out of range')>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py", line 173, in evaluar_precio
+    if not (await self.isCheckpointProfitOperationActive(self.nextCheckpoint)) :
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py", line 141, in isCheckpointProfitOperationActive
+    print(f"first checkpoint in _profitOperations is ({type(self._profitOperations[0]['checkpoint'])})")
+                                                            ~~~~~~~~~~~~~~~~~~~~~~^^^
+IndexError: list index out of range
+2024-07-02 00:51:04,301 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-113' coro=<StrategyA.evaluar_precio() done, defined at c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py:161> exception=IndexError('list index out of range')>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py", line 173, in evaluar_precio
+    if not (await self.isCheckpointProfitOperationActive(self.nextCheckpoint)) :
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py", line 141, in isCheckpointProfitOperationActive
+    print(f"first checkpoint in _profitOperations is ({type(self._profitOperations[0]['checkpoint'])})")
+                                                            ~~~~~~~~~~~~~~~~~~~~~~^^^
+IndexError: list index out of range
+2024-07-02 00:51:06,494 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-115' coro=<StrategyA.evaluar_precio() done, defined at c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py:161> exception=IndexError('list index out of range')>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py", line 173, in evaluar_precio
+    if not (await self.isCheckpointProfitOperationActive(self.nextCheckpoint)) :
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py", line 141, in isCheckpointProfitOperationActive
+    print(f"first checkpoint in _profitOperations is ({type(self._profitOperations[0]['checkpoint'])})")
+                                                            ~~~~~~~~~~~~~~~~~~~~~~^^^
+IndexError: list index out of range
+2024-07-02 00:51:08,795 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-117' coro=<StrategyA.evaluar_precio() done, defined at c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py:161> exception=IndexError('list index out of range')>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py", line 173, in evaluar_precio
+    if not (await self.isCheckpointProfitOperationActive(self.nextCheckpoint)) :
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py", line 141, in isCheckpointProfitOperationActive
+    print(f"first checkpoint in _profitOperations is ({type(self._profitOperations[0]['checkpoint'])})")
+                                                            ~~~~~~~~~~~~~~~~~~~~~~^^^
+IndexError: list index out of range
+2024-07-02 00:51:20,830 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-119' coro=<StrategyA.evaluar_precio() done, defined at c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py:161> exception=IndexError('list index out of range')>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py", line 173, in evaluar_precio
+    if not (await self.isCheckpointProfitOperationActive(self.nextCheckpoint)) :
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py", line 141, in isCheckpointProfitOperationActive
+    print(f"first checkpoint in _profitOperations is ({type(self._profitOperations[0]['checkpoint'])})")
+                                                            ~~~~~~~~~~~~~~~~~~~~~~^^^
+IndexError: list index out of range
+2024-07-02 00:51:23,259 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-121' coro=<StrategyA.evaluar_precio() done, defined at c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py:161> exception=IndexError('list index out of range')>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py", line 173, in evaluar_precio
+    if not (await self.isCheckpointProfitOperationActive(self.nextCheckpoint)) :
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py", line 141, in isCheckpointProfitOperationActive
+IndexError: list index out of range
+2024-07-02 00:51:25,939 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-123' coro=<StrategyA.evaluar_precio() done, defined at c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py:161> exception=IndexError('list index out of range')>
+Traceback (most recent call last):
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py", line 173, in evaluar_precio
+    if not (await self.isCheckpointProfitOperationActive(self.nextCheckpoint)) :
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\arman\myProjects\ag-bin-py\cleanroot\clean\bot_strategies\strategy_a\strategyA.py", line 141, in isCheckpointProfitOperationActive
+IndexError: list index out of range

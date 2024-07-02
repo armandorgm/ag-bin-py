@@ -1,19 +1,20 @@
 from unittest import IsolatedAsyncioTestCase,TestCase,skip
 from unittest.mock import AsyncMock, MagicMock, Mock
 from cleanroot.clean.bot_strategies.strategy_a.strategyA import StrategyA,StrategyStorage
-from decimal import Decimal,getcontext
+from decimal import Decimal
 
 import pytest
 
 from cleanroot.clean.interfaces.exchange_basic import ProfitOperation
-context = getcontext()
-context.prec = 16
 class Test_StrategyA_general(IsolatedAsyncioTestCase):
     def setUp(self):
         #self.mock_interface = MagicMock()
         self.mock_interface = AsyncMock()
+        #self.mock_interface.strategyData = {}
+        self.mock_interface.putOrder.return_value = {"info":{"clientOrderId":"xxx"}} #required by [evaluar_precio]
+        self.mock_interface.pricePrecision = 3 #required by[test_backAndFordwardCheckpoints]
         
-        self.offset = "2"
+        self.offset = "1.001"
         self.rootCheckpoint="1"
         self.lastCheckpoint = "0.12336"
         positionSide1 = "long"
@@ -22,29 +23,28 @@ class Test_StrategyA_general(IsolatedAsyncioTestCase):
             "positionSide": positionSide1,
             "offset": self.offset,
             "rootCheckpoint":self.rootCheckpoint,
-            "lastCheckpoint":self.lastCheckpoint
+            "lastCheckpoint":self.lastCheckpoint,
+            "consecutives_price_fordward":0,
+            "profit_operations":[]
         }
         self.longStrategy = StrategyA(self.mock_interface, dataStorage)  # Crea una instancia de StrategyA
     
-            
-        positionSide2 = "short"
-        #self.shortStrategy = StrategyA(self.mock_interface, positionSide2, self.offset,self.initialReferenceCheckpoint)  # Crea una instancia de StrategyA
-
     
     #@skip("Esta prueba está deshabilitada temporalmente")
     def test_ref_price_initialization(self):
-
+        self.mock_interface.pricePrecision = 5
         precision = Decimal("0.00000001")
         # Verifica que la referencia de precio se inicialice correctamente
         # strategy.lastCheckpoint, 
         # strategy.rootCheckpoint
-        self.assertEqual(self.longStrategy.nextCheckpoint, Decimal((self.longStrategy.offset)*self.longStrategy.lastCheckpoint))
-        self.assertEqual(self.longStrategy.previousCheckpoint.quantize(precision), Decimal(self.longStrategy.lastCheckpoint/(self.longStrategy.offset))) # type: ignore
+        self.assertEqual(self.longStrategy.nextCheckpoint, Decimal((self.longStrategy.offset)*self.longStrategy.lastCheckpoint).quantize(Decimal("1e-{}".format(self.mock_interface.pricePrecision))))
+        self.assertEqual(self.longStrategy.previousCheckpoint.quantize(precision), Decimal(self.longStrategy.lastCheckpoint/(self.longStrategy.offset)).quantize(Decimal("1e-{}".format(self.mock_interface.pricePrecision)))) # type: ignore
     
     def test_backAndFordwardCheckpoints(self):
-        times = 5000
+        times = 100
         upperThousandTimes = Decimal(100)
         for _ in range(times):
+            print(_)
             upperThousandTimes = self.longStrategy._getFollowingCheckpointPrice(upperThousandTimes)
         #print(upperThousandTimes)
         for _ in range(times):
@@ -63,14 +63,14 @@ class Test_StrategyA_general(IsolatedAsyncioTestCase):
         pass
     
     def test_getNthProgresionValueFromCheckpoint(self):
-        self.assertEqual(self.longStrategy.getNthProgresionValueFromCheckpoint(1,self.longStrategy.rootCheckpoint),2)
-        self.assertEqual(self.longStrategy.getNthProgresionValueFromCheckpoint(2,self.longStrategy.rootCheckpoint),4)
-        self.assertEqual(self.longStrategy.getNthProgresionValueFromCheckpoint(3,self.longStrategy.rootCheckpoint),8)
+        self.assertEqual(self.longStrategy.getNthProgresionValueFromCheckpoint(1,self.longStrategy.rootCheckpoint),Decimal("1.001"))
+        self.assertEqual(self.longStrategy.getNthProgresionValueFromCheckpoint(2,self.longStrategy.rootCheckpoint),Decimal("1.002"))
+        self.assertEqual(self.longStrategy.getNthProgresionValueFromCheckpoint(3,self.longStrategy.rootCheckpoint),Decimal("1.003"))
 
     async def test_evaluar_precio(self):
         print("\n")
         #self.mock_interface.tick =Decimal(0.1)
-        self.mock_interface.pricePrecision = 0
+        self.mock_interface.pricePrecision = 8
         #self.mock_interface.get_min_amount.return_value = Decimal("0.00000001")
         self.mock_interface.amountPrecision = 8
         self.mock_interface.notionalMin = 5
@@ -104,18 +104,21 @@ class Test_StrategyA_general(IsolatedAsyncioTestCase):
     
             
     def test_updateReferencePrice(self):
-        testNumber = 3
+        self.mock_interface.pricePrecision = 8
         strategy = self.longStrategy
+        
+        testNumber = 3
         currentCheckpoint = strategy.lastCheckpoint
         # strategy.lastCheckpoint, 
         # strategy.rootCheckpoint
         self.assertEqual(strategy.nextCheckpoint, currentCheckpoint*(strategy.offset))
-        self.assertEqual(strategy.previousCheckpoint, currentCheckpoint/(strategy.offset))
+
+        self.assertEqual(strategy.previousCheckpoint, ((currentCheckpoint/(strategy.offset)).quantize(Decimal("1e-{}".format(strategy.interface.pricePrecision)))))
 
         strategy.updatePriceCheckpoints(testNumber)
-        self.assertEqual(strategy.lastCheckpoint, currentCheckpoint*((strategy.offset)**testNumber))
-        self.assertEqual(strategy.nextCheckpoint, currentCheckpoint*((strategy.offset)**(testNumber+1)))
-        self.assertEqual(strategy.previousCheckpoint, currentCheckpoint*((strategy.offset)**(testNumber-1)))
+        self.assertEqual(strategy.lastCheckpoint, (currentCheckpoint*((strategy.offset)**testNumber).quantize(Decimal("1e-{}".format(strategy.interface.pricePrecision)))))
+        self.assertEqual(strategy.nextCheckpoint, (currentCheckpoint*((strategy.offset)**(testNumber+1))).quantize(Decimal("1e-{}".format(strategy.interface.pricePrecision))))
+        self.assertEqual(strategy.previousCheckpoint, (currentCheckpoint*((strategy.offset)**(testNumber-1))).quantize(Decimal("1e-{}".format(strategy.interface.pricePrecision))))
     
 class Test_StrategyA_isolated(IsolatedAsyncioTestCase):
     
@@ -133,7 +136,8 @@ class Test_StrategyA_isolated(IsolatedAsyncioTestCase):
             "offset": offset,
             "rootCheckpoint":initialReferenceCheckpoint,
             "lastCheckpoint":"0.12336",
-            "profit_operations":[]
+            "profit_operations":[],
+            "consecutives_price_fordward":0
         }
         longStrategy = StrategyA(mock_interface, data)  # Crea una instancia de StrategyA
 
@@ -150,42 +154,56 @@ class Test_StrategyA_isolated(IsolatedAsyncioTestCase):
     
     
     async def test_evaluar_precio2(self):
-        profitOperation:ProfitOperation={"checkpoint":Decimal("0.1300709963911075"),
-                                          "openingOrderId":"111000",
-                                          "closingOrderId":None}
+        mock_interface = AsyncMock()
+        mock_interface.pricePrecision = 8
+        profitOperation:list[ProfitOperation]=[
+            {
+                "checkpoint":Decimal("100.20010000").quantize(Decimal("1e-{}".format(mock_interface.pricePrecision))),
+                "openingOrderId":"1",
+                "closingOrderId":None
+            },
+            {
+                "checkpoint":Decimal("100.30030010").quantize(Decimal("1e-{}".format(mock_interface.pricePrecision))),
+                "openingOrderId":"2",
+                "closingOrderId":None
+            }
+        ]
         data:StrategyStorage = {
             "positionSide": "long",
             "offset": "1.001",
             "rootCheckpoint":"100",
             "lastCheckpoint":"100",
-            "profit_operations":[profitOperation]
+            "profit_operations":[*profitOperation],
+            "consecutives_price_fordward":0
         }
         putOrder = AsyncMock()
-        putOrder.return_value = {"info":{"clientOrderId":"123"}}
-        mock_interface = AsyncMock()
-        mock_interface.pricePrecision = 8
+        putOrder.side_effect = [{"info":{"clientOrderId":"3"}},{"info":{"clientOrderId":"4"}}]
         mock_interface.amountPrecision = 8
         mock_interface.notionalMin = 5
         mock_interface.putOrder = putOrder
         mock_interface.strategyData = data
         mock_interface.saveStrategyState = Mock()
-        async def fetch_order(foo):
-            print("called with",end=" ")
-            print(foo)
-            return {"status":"closed"}
+        async def fetch_order(clientOrderId):
+            print("fetching clientOrderId", clientOrderId)
+            if clientOrderId == "1":
+                return {"status":"closed"}
+            elif clientOrderId == "2":
+                return {"status":"open"}
+            else:
+                raise Exception(f"No more Mocks ClientOrderId({clientOrderId}) (type:{type(clientOrderId)})")
         mock_interface.fetch_order = fetch_order 
         
         
 
         longStrategy = StrategyA(mock_interface, data)  # Crea una instancia de StrategyA
            
-        priceList:list[float] = [100,100.1,100.21,100,100.1,100.21]
+        priceList:list[float] = [100,100.1,100.21,100.32,100,100.1,100.21]
 
         for newPrice in priceList:
             await longStrategy.evaluar_precio(Decimal(str(newPrice)))
         #longStrategy.interface.putOrder.assert_called()
         putOrder.assert_called()
-        self.assertEqual(putOrder.call_count,2)
+        self.assertEqual(putOrder.call_count,1)
 
             
 

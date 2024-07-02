@@ -3,10 +3,10 @@ variables required
 lastScale from initial price, permanentStore
 """
 import asyncio
-from decimal import ROUND_UP, Decimal
+from decimal import ROUND_UP, Decimal,InvalidOperation
 import simplejson as json
 import math
-from typing import Any, Callable, Literal, TypedDict
+from typing import Any, Callable, Literal, Optional, TypedDict
 
 from ...interfaces.strategy_interface import StrategyImplementor
 from ..profit_operation import Profit_Operation
@@ -35,7 +35,7 @@ class StrategyA(Strategy):
         self.offset = Decimal(str(data["offset"]))
         self.positionSide = data["positionSide"]
         self.rootCheckpoint = Decimal(str(data["rootCheckpoint"]))
-        self.lastCheckpoint = Decimal(data["lastCheckpoint"])
+        self.lastCheckpoint = Decimal(data["lastCheckpoint"]).quantize(Decimal("1e-{0}".format(self.interface.pricePrecision)))
         self.lastPrice = Decimal(data["lastCheckpoint"])
         self._profitOperations = data["profit_operations"]
         self.lastScaleArchived = None
@@ -62,9 +62,11 @@ class StrategyA(Strategy):
         }
         pprint(data)
         return json.dumps(data)
+    
     @property
     def previousCheckpoint(self):
         return self._getPreviousCheckpointPrice(self.lastCheckpoint)
+    
     @property
     def nextCheckpoint(self):
         return self._getFollowingCheckpointPrice(self.lastCheckpoint)
@@ -74,11 +76,12 @@ class StrategyA(Strategy):
 
     def _getPreviousCheckpointPrice(self,checkpointPrice: Decimal):
         return (checkpointPrice / self.offset).quantize(Decimal("1e-{0}".format(self.interface.pricePrecision)))
+    
     def save(self):
         self.interface.saveStrategyState(self.cacheData)
         
     def updatePriceCheckpoints(self,escalas:int):
-        self.lastCheckpoint*=(self.offset**escalas).quantize(Decimal("1e-{0}".format(self.interface.pricePrecision)))
+        self.lastCheckpoint= (self.lastCheckpoint*(self.offset**escalas)).quantize(Decimal("1e-{0}".format(self.interface.pricePrecision)))
         print(f"se actualizaron  escalas en un:{escalas} currentCheckpoint:{self.lastCheckpoint}") 
     
     def calcular_saltos_en_progresion(self, fromCheckpoint:Decimal, toNewPrice:Decimal):
@@ -100,7 +103,7 @@ class StrategyA(Strategy):
     def getNthProgresionValueFromCheckpoint(self,numero_de_saltos_de_la_progresion:int,fromCheckpointPrice:Decimal):
         value2 = fromCheckpointPrice * (self.offset**(numero_de_saltos_de_la_progresion))
         #value = self.longStrategy.currentCheckpoint*(1+self.longStrategy.offset)**numero_de_saltos_de_la_progresion
-        return value2
+        return value2.quantize(Decimal("1e-{}".format(self.interface.pricePrecision)))
     
     def getProfitPriceOf(self, openPrice:Decimal):
         return openPrice*self.offset
@@ -120,26 +123,45 @@ class StrategyA(Strategy):
             #    raise TypeError(f"{type(profit_Operation["checkpoint"])}!={type(checkpoint)}{profit_Operation["checkpoint"]}!={checkpoint}")
             c1=Decimal(profit_Operation["checkpoint"]).quantize(Decimal("1e-{0}".format(self.interface.pricePrecision)))
             c2 =checkpoint.quantize(Decimal("1e-{0}".format(self.interface.pricePrecision)))
-            print(f"comparing {type(c1)}({c1}) and {type(c2)}({c2}))")
             #.quantize(Decimal("1e-{0}".format(self.interface.amountPrecision)),rounding=ROUND_UP)
+            print(f"if {c1} == {c2} ({c1==c2})")
             if c1 == c2:
-                openO_task = asyncio.create_task(self.interface.fetch_order(profit_Operation["openingOrderId"]))
-                closeO_task = asyncio.create_task(self.interface.fetch_order(profit_Operation["openingOrderId"]))
+                tasks=[asyncio.create_task(self.interface.fetch_order(profit_Operation["openingOrderId"]))]
+                if profit_Operation["closingOrderId"]:
+                    tasks.append(asyncio.create_task(self.interface.fetch_order(profit_Operation["closingOrderId"])))
                 
-                for order in [await openO_task,await closeO_task]:
+                for order in await asyncio.gather(*tasks):
                     print(f"in for loop order:",end="")
                     pprint(order)
                     if order and order["status"] == "open":
                         return True
+                return False
             else:
-                print(f"checkpoint {checkpoint} not found in the list below:")
+                print(f"checkpoint {checkpoint}(type:{type(checkpoint)}) not found in the list below:")
+        
         pprint(self._profitOperations)
         return False
     
+    def updateProfitOperation(self,newProfitOperation:ProfitOperation):
+        indice = next((i for i, po in enumerate(self._profitOperations) if po.get("checkpoint") == self.nextCheckpoint),None)
+        if indice is not None:
+            print("indice encontrado:",end="")
+            pprint(self._profitOperations[indice])
+            self._profitOperations[indice] = newProfitOperation
+            print("operacion modificada:",end="")
+            pprint(self._profitOperations[indice])
+            print("all ProfitOperations:",end="")
+            pprint(self._profitOperations)
+        else:
+            print("indice NO encontrado")
+            self._profitOperations.append(newProfitOperation)
+            print("operacion agregada",end=":")
+            pprint(self._profitOperations)
+        
     async def evaluar_precio(self, receivedPrice:Decimal):
         escalasSobrepasadas = self.calcular_saltos_en_progresion(self.lastCheckpoint, receivedPrice)
         if escalasSobrepasadas:
-            print("\n","#"*4,f"evaluar_precio starts (receivedPrice '{receivedPrice}')",f"(previous:{self.previousCheckpoint}), (currentCheckpoint:{self.lastCheckpoint}), (following:{self.nextCheckpoint})","#"*4)
+            print(f"\n{'#'*4} evaluar_precio starts{'#'*4} \nreceivedPrice '{receivedPrice}' {'· '*3}previous:{self.previousCheckpoint} {'· '*3}currentCheckpoint:{self.lastCheckpoint} {'· '*3}following:{self.nextCheckpoint}")
 
             print(f"{escalasSobrepasadas} escalas sobrepasadas con respecto a la ultima actualizacion")
         
@@ -152,20 +174,8 @@ class StrategyA(Strategy):
                         print(f"consecutives_price_fordward >= 2 ({self.consecutives_price_fordward >= 2})")
                         order = await self.interface.putOrder(self.positionSide, self.openingOrderSide, Decimal(self.get_min_amount(self.getMakerPrice(receivedPrice))), self.getMakerPrice(receivedPrice), "limit")
                         profitOperation:ProfitOperation = {"checkpoint":str(self.nextCheckpoint),"openingOrderId":order["info"]["clientOrderId"],"closingOrderId":None}
-                        #profitOp = next((po for po in self._profitOperations if po["checkpoint"]==self.nextCheckpoint), None)
-                        indice = next((i for i, po in enumerate(self._profitOperations) if po.get("checkpoint") == self.nextCheckpoint),None)
-                        if indice:
-                            print("indice encontrado")
-                            self._profitOperations[indice] = profitOperation
-                            print("operaciones modificada:",end="")
-                            pprint(self._profitOperations)
-                        else:
-                            print("indice NO encontrado")
-                            self._profitOperations.append(profitOperation)
-                            print("operacion agregada",end=":")
-                            pprint(self._profitOperations)
-
-                        print(f"orden id:{order["info"]["clientOrderId"]}")
+                        self.updateProfitOperation(profitOperation)
+                        print(f"orden colocada con id:{order["info"]["clientOrderId"]}")
                         #pending_profit_operation = self.interface.create_pending_operations(order["id"],order["amount"],order["info"]["positionSide"], float(order["price"]), order["fee"],self.getProfitPriceOf(Decimal(str(order["price"]))))
                     else:
                         print("self.isCheckpointProfitOperationActive == True")
@@ -199,20 +209,48 @@ class StrategyA(Strategy):
         if tick > currentPrice:
             raise ValueError(f"tick({tick}) cant be greater than price({currentPrice}). in Method StrategyA.getMakerPrice()")
         #print("tick=",tick)
+        value = None
         if self.positionSide.lower() == "long":
-            return currentPrice+(tick*(-1))
+            value = currentPrice+(tick*(-1))
         elif self.positionSide.lower() == "short":
-            return currentPrice+(tick)
+            value = currentPrice+(tick)
         else:
             raise BaseException("Position Side Unknown")
+        if value <= 0:
+            raise ValueError(f"getMakerPrice is {value}")
+        return value
 
-    async def onOpenOrderExecution(self, orderData: Order):
-        pprint(orderData)
-        if orderData["amount"]:
-            await self.interface.putOrder(orderData["info"]["positionSide"],self.closingOrderSide,Decimal(orderData["amount"]), self.getProfitPriceOf(Decimal(str(orderData["price"]))), "limit")
+    def getProfitOperationByOpenOrderId(self,clientOpenOrderId:str)->Optional[ProfitOperation]:
+        for profit_operation in self._profitOperations:
+            if profit_operation["openingOrderId"] == clientOpenOrderId:
+                return profit_operation
+    def getProfitOperationByCloseOrderId(self,clientCloseOrderId:str)->Optional[ProfitOperation]:
+        for profit_operation in self._profitOperations:
+            if profit_operation["closingOrderId"] == clientCloseOrderId:
+                return profit_operation
+        
+    async def onOpenOrderExecution(self, openOrderData: Order):
+        pprint(openOrderData)
+        if openOrderData["amount"] and openOrderData["clientOrderId"]:
+            closeOrder = await self.interface.putOrder(openOrderData["info"]["positionSide"],self.closingOrderSide,Decimal(openOrderData["amount"]), self.getProfitPriceOf(Decimal(str(openOrderData["price"]))), "limit")
+            profit_operation = self.getProfitOperationByOpenOrderId(openOrderData["clientOrderId"])
+            if profit_operation:
+                profit_operation["closingOrderId"] = closeOrder["clientOrderId"]
+            else:
+                print(f"WARNING: opening order {openOrderData['clientOrderId']} not found in (profit_operation list) to add closing id")
 
-    async def onCloseOrderExecution(self, orderData: Order) -> None:
-        pprint(orderData)
-        if orderData["amount"]:
-            await self.interface.putOrder(orderData["info"]["positionSide"],self.openingOrderSide, Decimal(orderData["amount"]), self.getProfitPriceOf(Decimal(str(orderData["price"]))), "limit")
+    async def onCloseOrderExecution(self, closeOrderData: Order) -> None:
+        print("close Order Executed")
+        pprint(closeOrderData)
+        if closeOrderData["amount"] and closeOrderData["clientOrderId"]:
+            profit_operation = self.getProfitOperationByCloseOrderId(closeOrderData["clientOrderId"])
+            if profit_operation:
+                open_order = await self.interface.putOrder(closeOrderData["info"]["positionSide"],self.openingOrderSide, Decimal(closeOrderData["amount"]), profit_operation["checkpoint"], "limit")
+                if open_order["clientOrderId"]:
+                    profit_operation["closingOrderId"] = None
+                    profit_operation["openingOrderId"] = open_order["clientOrderId"]
+                else:
+                    print(f"WARNING: couldnt update/reset (profit_operation list) with new opening order")
+            else:
+                print(f"WARNING: closing order {closeOrderData['clientOrderId']} not found in (profit_operation list) to update it")
 

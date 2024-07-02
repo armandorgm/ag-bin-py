@@ -18,7 +18,7 @@
             "module": "unittest",
             "args": [
                 "-v",
-                "test.test_strategyA"
+                "test.test_strategyA.Test_StrategyA_general.test_backAndFordwardCheckpoints"
             ],
             "console": "integratedTerminal"
         }
