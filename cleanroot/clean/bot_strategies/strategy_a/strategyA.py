@@ -101,9 +101,9 @@ class StrategyA(Strategy):
 
     
     def getNthProgresionValueFromCheckpoint(self,numero_de_saltos_de_la_progresion:int,fromCheckpointPrice:Decimal):
-        value2 = fromCheckpointPrice * (self.offset**(numero_de_saltos_de_la_progresion))
-        #value = self.longStrategy.currentCheckpoint*(1+self.longStrategy.offset)**numero_de_saltos_de_la_progresion
-        return value2.quantize(Decimal("1e-{}".format(self.interface.pricePrecision)))
+        #value = fromCheckpointPrice * (self.offset**(numero_de_saltos_de_la_progresion))
+        value = self.positionCalc(fromCheckpointPrice , (self.offset**(numero_de_saltos_de_la_progresion)))
+        return value.quantize(Decimal("1e-{}".format(self.interface.pricePrecision)))
     
     def getProfitPriceOf(self, openPrice:Decimal):
         return openPrice*self.offset
@@ -254,3 +254,10 @@ class StrategyA(Strategy):
             else:
                 print(f"WARNING: closing order {closeOrderData['clientOrderId']} not found in (profit_operation list) to update it")
 
+    def positionCalc(self, x:Decimal, y:Decimal)->Decimal:
+        if self.positionSide.lower() == "long":
+            return x * y
+        elif self.positionSide.lower() == "short":
+            return x / y
+        else:
+            raise ValueError("Modo no válido")
