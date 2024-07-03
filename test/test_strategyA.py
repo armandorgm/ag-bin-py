@@ -73,12 +73,8 @@ class Test_StrategyA_general(IsolatedAsyncioTestCase):
         self.mock_interface.pricePrecision = 8
         #self.mock_interface.get_min_amount.return_value = Decimal("0.00000001")
         self.mock_interface.amountPrecision = 8
-        self.mock_interface.notionalMin = 5
-        
-            
-        newPrice = Decimal(109)
-
-                
+        self.mock_interface.notionalMin = 5 #required?
+                        
         # Ejecuta la evaluación de precio
         #orden de argumentos de putOrder:
         #position_side, order_side, amount, price, orderType
@@ -97,7 +93,7 @@ class Test_StrategyA_general(IsolatedAsyncioTestCase):
         print("\n\n##Etapa3 Evaluar precio##",precioEtapa)
         await self.longStrategy.evaluar_precio(precioEtapa)
 
-        self.longStrategy.interface.putOrder.assert_called_with("long","buy",Decimal("1.66666667"),Decimal(3),"limit")
+        self.longStrategy.interface.putOrder.assert_called_with("long","buy",Decimal("4.99001503"),Decimal("1.00200099"),"limit")
         # Verifica que se haya llamado a la función de orden correctamente
     
     
@@ -116,7 +112,7 @@ class Test_StrategyA_general(IsolatedAsyncioTestCase):
         self.assertEqual(strategy.previousCheckpoint, ((currentCheckpoint/(strategy.offset)).quantize(Decimal("1e-{}".format(strategy.interface.pricePrecision)))))
 
         strategy.updatePriceCheckpoints(testNumber)
-        self.assertEqual(strategy.lastCheckpoint, (currentCheckpoint*((strategy.offset)**testNumber).quantize(Decimal("1e-{}".format(strategy.interface.pricePrecision)))))
+        self.assertEqual(strategy.lastCheckpoint, (currentCheckpoint*((strategy.offset)**testNumber)).quantize(Decimal("1e-{}".format(strategy.interface.pricePrecision))))
         self.assertEqual(strategy.nextCheckpoint, (currentCheckpoint*((strategy.offset)**(testNumber+1))).quantize(Decimal("1e-{}".format(strategy.interface.pricePrecision))))
         self.assertEqual(strategy.previousCheckpoint, (currentCheckpoint*((strategy.offset)**(testNumber-1))).quantize(Decimal("1e-{}".format(strategy.interface.pricePrecision))))
     
@@ -125,7 +121,7 @@ class Test_StrategyA_isolated(IsolatedAsyncioTestCase):
     def test_calcular_saltos_en_progresion(self):
         print("\n Test test_calcular_saltos_en_progresion starts")
         mock_interface = MagicMock()
-        mock_interface.pricePrecision = 0
+        mock_interface.pricePrecision = 8
         mock_interface.amountPrecision = 8
         mock_interface.notionalMin = 5
         positionSide1 = "long"

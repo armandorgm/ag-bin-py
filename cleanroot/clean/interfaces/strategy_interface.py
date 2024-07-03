@@ -46,6 +46,7 @@ class StrategyImplementor(ABC):
     @abstractmethod
     def notionalMin(self)->Decimal:
         pass
+    @property
     @abstractmethod
     def amountPrecision(self)->int:
         pass

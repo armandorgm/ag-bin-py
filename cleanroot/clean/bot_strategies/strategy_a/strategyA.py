@@ -72,10 +72,14 @@ class StrategyA(Strategy):
         return self._getFollowingCheckpointPrice(self.lastCheckpoint)
     
     def _getFollowingCheckpointPrice(self,checkpointPrice: Decimal):
-        return (checkpointPrice * self.offset).quantize(Decimal("1e-{0}".format(self.interface.pricePrecision)))
+        return self.positionCalc(checkpointPrice, self.offset).quantize(Decimal("1e-{0}".format(self.interface.pricePrecision)))
+        #old working just for "long" below:
+            #return (checkpointPrice * self.offset).quantize(Decimal("1e-{0}".format(self.interface.pricePrecision)))
 
     def _getPreviousCheckpointPrice(self,checkpointPrice: Decimal):
-        return (checkpointPrice / self.offset).quantize(Decimal("1e-{0}".format(self.interface.pricePrecision)))
+        return self.positionCalc(checkpointPrice, self.offset,True).quantize(Decimal("1e-{0}".format(self.interface.pricePrecision)))
+        #old working just for "long" below:
+            #return (checkpointPrice / self.offset).quantize(Decimal("1e-{0}".format(self.interface.pricePrecision)))
     
     def save(self):
         self.interface.saveStrategyState(self.cacheData)
@@ -158,21 +162,25 @@ class StrategyA(Strategy):
             print("operacion agregada",end=":")
             pprint(self._profitOperations)
         
+    
     async def evaluar_precio(self, receivedPrice:Decimal):
         escalasSobrepasadas = self.calcular_saltos_en_progresion(self.lastCheckpoint, receivedPrice)
         if escalasSobrepasadas:
             print(f"\n{'#'*4} evaluar_precio starts{'#'*4} \nreceivedPrice '{receivedPrice}' {'· '*3}previous:{self.previousCheckpoint} {'· '*3}currentCheckpoint:{self.lastCheckpoint} {'· '*3}following:{self.nextCheckpoint}")
 
-            print(f"{escalasSobrepasadas} escalas sobrepasadas con respecto a la ultima actualizacion")
+            print(f"{escalasSobrepasadas if self.positionSide.lower() == "long" else -escalasSobrepasadas} escalas sobrepasadas con respecto a la ultima actualizacion")
         
-            if receivedPrice >= self.nextCheckpoint:
+            #if receivedPrice >= self.nextCheckpoint:
+            if self.isNextCheckpointReached(receivedPrice):
                 print(f"current_price >= self.nextCheckpoint")
                 self.consecutives_price_fordward += 1
                 
                 if self.consecutives_price_fordward >= 2:
                     if not (await self.isCheckpointProfitOperationActive(self.nextCheckpoint)) :
                         print(f"consecutives_price_fordward >= 2 ({self.consecutives_price_fordward >= 2})")
-                        order = await self.interface.putOrder(self.positionSide, self.openingOrderSide, Decimal(self.get_min_amount(self.getMakerPrice(receivedPrice))), self.getMakerPrice(receivedPrice), "limit")
+                        makerPrice = self.getMakerPrice(receivedPrice)
+                        print(f"makerPrice is:{makerPrice}")
+                        order = await self.interface.putOrder(self.positionSide, self.openingOrderSide, Decimal(self.get_min_amount(makerPrice)), makerPrice, "limit")
                         profitOperation:ProfitOperation = {"checkpoint":str(self.nextCheckpoint),"openingOrderId":order["info"]["clientOrderId"],"closingOrderId":None}
                         self.updateProfitOperation(profitOperation)
                         print(f"orden colocada con id:{order["info"]["clientOrderId"]}")
@@ -184,7 +192,8 @@ class StrategyA(Strategy):
                 self.updatePriceCheckpoints (escalasSobrepasadas)
                 
                                 
-            elif receivedPrice <=self.previousCheckpoint:
+            #elif receivedPrice <=self.previousCheckpoint:
+            elif self.isNextCheckpointReached(receivedPrice,True):
                 self.consecutives_price_fordward = 0
                 self.updatePriceCheckpoints (escalasSobrepasadas)
             
@@ -205,7 +214,9 @@ class StrategyA(Strategy):
         self.lastPrice = receivedPrice# 
 
     def getMakerPrice(self,currentPrice:Decimal):
-        tick = 1/(Decimal(10)**self.interface.pricePrecision)
+        #tick = 1/(Decimal("10")**self.interface.pricePrecision)
+        tick = Decimal("1e-{0}".format(self.interface.pricePrecision))
+        print(f"tick in getMakerPrice is: {tick}")
         if tick > currentPrice:
             raise ValueError(f"tick({tick}) cant be greater than price({currentPrice}). in Method StrategyA.getMakerPrice()")
         #print("tick=",tick)
@@ -254,10 +265,35 @@ class StrategyA(Strategy):
             else:
                 print(f"WARNING: closing order {closeOrderData['clientOrderId']} not found in (profit_operation list) to update it")
 
-    def positionCalc(self, x:Decimal, y:Decimal)->Decimal:
+    def positionCalc(self, priceCheckpoint:Decimal, offset:Decimal,reverse:bool=False)->Decimal:
+        calc =[lambda x,y:x*y,lambda x,y:x/y]
+        index:Optional[bool]=None
         if self.positionSide.lower() == "long":
-            return x * y
+            index = bool(0)
         elif self.positionSide.lower() == "short":
-            return x / y
+            index = bool(1)
         else:
-            raise ValueError("Modo no válido")
+            raise ValueError(f"Modo no válido {self.positionCalc}. Modos validos (long/short)")
+        if reverse:
+            index = not index
+        if index == True and offset== 0:
+            raise ZeroDivisionError
+        return calc[index](priceCheckpoint,offset)
+    
+    def isNextCheckpointReached(self,receivedPrice:Decimal,backwards:bool=False):
+        calc =[
+            lambda receivedPrice: receivedPrice >= self.nextCheckpoint,
+            lambda receivedPrice: receivedPrice <= self.nextCheckpoint
+            ]
+        index:Optional[bool]=None
+        if self.positionSide.lower() == "long":
+            index = bool(0)
+        elif self.positionSide.lower() == "short":
+            index = bool(1)
+        else:
+            raise ValueError(f"Modo no válido {self.positionCalc}. Modos validos (long/short)")
+        if backwards:
+            index = not index
+        return calc[index](receivedPrice)
+        
+
