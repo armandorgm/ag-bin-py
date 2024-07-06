@@ -4,6 +4,8 @@ lastScale from initial price, permanentStore
 """
 import asyncio
 from decimal import ROUND_UP, Decimal,InvalidOperation
+from queue import Queue
+import time
 import simplejson as json
 import math
 from typing import Any, Callable, Dict, List, Literal, Optional, TypedDict, Union
@@ -43,6 +45,7 @@ class StrategyA(Strategy):
         self._profitOperations = data["profit_operations"]
         self.lastScaleArchived = None
         self.consecutives_price_fordward = data.get("consecutives_price_fordward",0)
+        self._onOrderUpdateQueue = Queue()
     
     @property
     def data(self)->StrategyStorage:
@@ -384,41 +387,44 @@ class StrategyA(Strategy):
                 return True
         return False
                 
-    async def onOrderUpdate(self,order:Order):
-        assert order["status"] is not None
-        testIdList = ([po["openingOrderId"] for po in self._profitOperations]+[po2["closingOrderId"] for po2 in self._profitOperations if po2["closingOrderId"]])
-        print(f"prueba de codigo para obtener lista plana de todos los id de ordenes. cantidad de ops({len(self._profitOperations)}) cantidad de ids({len(testIdList)}):",)
-        pprint(testIdList)
-        if order["clientOrderId"] in testIdList:
-            #self.ownedOrderIds.remove(order["clientOrderId"])
-            position_side = order["info"]["ps"].lower()
-            order_side = order["side"]
-            
-            print("onOrderUpdate starts...")
-            print(order["clientOrderId"],order["symbol"],order["info"]["ps"],order["side"],order["status"])
-            if position_side == "long" and order_side.lower() == "buy" or \
-            position_side == "short" and order_side.lower() == "sell":
-                print("it's an opening order ",end="| ")
-                if order["clientOrderId"] and self.is_an_opening_order_in_pending_operations(order["clientOrderId"]):
-                    print("found in pending list",end=" | ")
-                    if(order["status"].lower() == "closed"):
-                        print("order closed | Action: Calling onOpenOrderExecution(Order)")
-                        await self.onOpenOrderExecution(order)
-                    else:
-                        print(f"operation IN is not closed | actually({order["status"]})")
-                else:
-                    print("not in operation list. Action: nothing...")
-            else:
-                print("it's a 'OUT' order",end=" | ")
-                if order["status"] == "closed":
-                    print("status(closed)", end=" | ")
-                    if order["clientOrderId"] in [ po["closingOrderId"] for po in self._profitOperations]:
+    async def onOrderUpdate(self,orderReceived:Order):
+        self._onOrderUpdateQueue.put(orderReceived)
+        while not self._onOrderUpdateQueue.empty():
+            order = self._onOrderUpdateQueue.get()
+            assert order["status"] is not None
+            testIdList = ([po["openingOrderId"] for po in self._profitOperations]+[po2["closingOrderId"] for po2 in self._profitOperations if po2["closingOrderId"]])
+            #print(f"prueba de codigo para obtener lista plana de todos los id de ordenes. cantidad de ops({len(self._profitOperations)}) cantidad de ids({len(testIdList)}):",)
+            #pprint(testIdList)
+            if order["clientOrderId"] in testIdList:
+                #self.ownedOrderIds.remove(order["clientOrderId"])
+                position_side = order["info"]["ps"].lower()
+                order_side = order["side"]
+                
+                print("onOrderUpdate starts...")
+                print(time.ctime(), order["clientOrderId"],order["symbol"],order["info"]["ps"],order["side"],order["status"],f"(amount={order["amount"]})",f"(filled={order["filled"]})",f"(remaining={order["remaining"]})")
+                if position_side == "long" and order_side.lower() == "buy" or \
+                position_side == "short" and order_side.lower() == "sell":
+                    print("it's an 'IN  Op. order' ",end="| ")
+                    if order["clientOrderId"] and self.is_an_opening_order_in_pending_operations(order["clientOrderId"]):
                         print("found in pending list",end=" | ")
-                        print("Action(Delete it)",end=" >>> ")
-                        res= self.removePendingOperationBy("closingOrderId",order["clientOrderId"])
-                        print(("SUCCESS" if res else "FAIL")+f" deteling operation"+f"checkpoint({res["checkpoint"]})" if res else "")
-                            
-            print("onOrderUpdate ends...")
+                        if(order["status"].lower() == "closed"):
+                            print("order closed | Action: Calling onOpenOrderExecution(Order)")
+                            await self.onOpenOrderExecution(order)
+                        else:
+                            print(f"operation IN is not closed | actually({order["status"]})")
+                    else:
+                        print("not in operation list. Action: nothing...")
+                else:
+                    print("it's a 'OUT' order",end=" | ")
+                    if order["status"] == "closed":
+                        print("status(closed)", end=" | ")
+                        if order["clientOrderId"] in [ po["closingOrderId"] for po in self._profitOperations]:
+                            print("found in pending list",end=" | ")
+                            print("Action(Delete it)",end=" >>> ")
+                            res= self.removePendingOperationBy("closingOrderId",order["clientOrderId"])
+                            print(("SUCCESS" if res else "FAIL")+f" deteling operation"+f"checkpoint({res["checkpoint"]})" if res else "")
+                                
+                print("onOrderUpdate ends...")
     
     def removePendingOperationBy(self,key:Literal["closingOrderId"],value:Any)->Optional[ProfitOperation]:
         for po in self._profitOperations:
