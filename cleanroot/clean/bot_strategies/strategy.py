@@ -23,7 +23,14 @@ class Strategy(ABC):
     """
     def __init__(self,interface:StrategyImplementor) -> None:
         self.interface = interface
-        
+    
+    @abstractmethod
+    async def preInit(self,*args,**kwargs)->None:
+        pass
+    
+    @abstractmethod
+    async def onOrderUpdate(self,*args,**kwarg):
+        pass
     @abstractmethod
     def cacheData(self)->str:
         pass
@@ -58,7 +65,6 @@ class Strategy(ABC):
     def from_json(json_string:str):
         print("Strategy.from_json:")
         datos = json.loads(json_string)
-        pprint(datos)
         return datos
     
     

@@ -20,6 +20,10 @@ class FooStrategy(Strategy):
     @property
     def data(self) -> dict[str, Any]:
         raise NotImplementedError
+    def onOrderUpdate(self):
+        pass
+    def preInit(self):
+        pass
 
 
     

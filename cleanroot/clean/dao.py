@@ -33,6 +33,16 @@ class OrderManagerDAO(bot_dao_interface):
         if botOperation:
             return botOperation
         return None
+    def getBotStrategyConfigs(self):
+        session = self.Session()
+        botOperation = session.query(strategy_config_model).all()
+        return botOperation
+    def updateBotStrategyConfigs(self,id,data)->None:
+        session = self.Session()
+        strategyConfig = session.query(strategy_config_model).filter_by(id=id).first()
+        if strategyConfig:
+            strategyConfig.data = data
+            session.commit()
     
     def saveStrategyState(self, botId, strategyState):
         #BotOperation_model

@@ -8,9 +8,10 @@ import pytest
 from cleanroot.clean.interfaces.exchange_basic import ProfitOperation
 class Test_StrategyA_general(IsolatedAsyncioTestCase):
     def setUp(self):
-        #self.mock_interface = MagicMock()
-        self.mock_interface = AsyncMock()
+        self.mock_interface = MagicMock()
+        #self.mock_interface = AsyncMock()
         #self.mock_interface.strategyData = {}
+        self.mock_interface.putOrder = AsyncMock()
         self.mock_interface.putOrder.return_value = {"info":{"clientOrderId":"xxx"}} #required by [evaluar_precio]
         self.mock_interface.pricePrecision = 3 #required by[test_backAndFordwardCheckpoints]
         
@@ -111,7 +112,7 @@ class Test_StrategyA_general(IsolatedAsyncioTestCase):
 
         self.assertEqual(strategy.previousCheckpoint, ((currentCheckpoint/(strategy.offset)).quantize(Decimal("1e-{}".format(strategy.interface.pricePrecision)))))
 
-        strategy.updatePriceCheckpoints(testNumber)
+        strategy.updateLastCheckpoint(testNumber)
         self.assertEqual(strategy.lastCheckpoint, (currentCheckpoint*((strategy.offset)**testNumber)).quantize(Decimal("1e-{}".format(strategy.interface.pricePrecision))))
         self.assertEqual(strategy.nextCheckpoint, (currentCheckpoint*((strategy.offset)**(testNumber+1))).quantize(Decimal("1e-{}".format(strategy.interface.pricePrecision))))
         self.assertEqual(strategy.previousCheckpoint, (currentCheckpoint*((strategy.offset)**(testNumber-1))).quantize(Decimal("1e-{}".format(strategy.interface.pricePrecision))))

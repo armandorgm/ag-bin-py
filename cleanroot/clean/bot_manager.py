@@ -7,7 +7,7 @@ from typing import List, Type,Union, cast
 
 from .bot_strategies.strategy import Strategy
 from .bot_strategies.concrete_strategy import EstrategiaLong
-from .bot_strategies.strategy_a.strategyA import StrategyA
+from .bot_strategies.strategy_a.strategyA import StrategyA, StrategyStorage
 from .menu import Menu
 from .interfaces.exchange_basic import Num, SymbolPrecision, iPosition
 from .sql_models.models import BotOperation_model
@@ -92,6 +92,7 @@ class BotManager(iBotManager):
 7) watch Orders
 8) create a counter size order until position is at least half size the oposite
 9) Create Bot Operation
+11) Delete operations From configs
 0) Exit""")
                 # Usar input asincrónico no bloqueante
                 loop = asyncio.get_event_loop()
@@ -122,7 +123,9 @@ class BotManager(iBotManager):
                         await self.createNewBotOperation()
                         break
                     case "7":
-                        await self.monitorByWs()
+                        asyncio.create_task(self.monitorTradesByWs())
+                        asyncio.create_task(self.monitorPositionByWs())
+                        await self.monitorOrdersByWs()
                     case "8":   # crear una operacion que reciba una posicion y crear una
                                 # orden que su tamaño sumado a el tamaño de dicha posicion
                                 # abierta sea igual a la mitad del tamaño de la poscion contraria
@@ -136,6 +139,18 @@ class BotManager(iBotManager):
                         await self.load_bot_operation(botOperationData)
                     case "10":# Stop Bot Operation
                         self.botOperation.stop()
+                    case "11":#Delete pending ops from config
+                        configs = self.dao.getBotStrategyConfigs()
+                        config =Menu(configs,"select one","id")
+                        select = config.select()
+                        data:StrategyStorage = json.loads(select.data)
+                        word = input(f"write Yes if you like to delete {len(data['profit_operations'])} operations ")
+                        if word == "Yes":
+                            data["profit_operations"]=[]
+                            self.dao.updateBotStrategyConfigs(select.id,json.dumps(data))
+                        else:
+                            print("nothing deleted")
+                        
                     case "99":
                         await asyncio.sleep(5)
                         #await self.testFuction()
@@ -276,16 +291,18 @@ class BotManager(iBotManager):
 
         pass
 
-    async def monitorByWs(self):
+    async def monitorOrdersByWs(self):
         #logging.info(json.dumps(self.exchange.has, indent=4, sort_keys=True))
-        await self.monitor.start()
+        #await self.monitor.start()
 
         while True:
             try:
-                print("#"*100)
-                orders = await self.exchange.watch_orders(symbol=None, since=None, limit=None, params={})
+                print("#"*50,"watch_orders","#"*50)
+                orders = await self.exchange.watch_orders(symbol="DOGE/USDT", since=None, limit=None, params={})
                 print("cantidad de ordenes recibidas por ws:",len(orders))
                 for order in orders:
+                    print(f"{order["clientOrderId"]}\n{order["status"]}\n{order["price"]}\n{order["side"]}")
+                    """
                     pprint(order)
                     print(order["lastUpdateTimestamp"],order["datetime"],order["id"],order["info"]["ps"],order["side"],order["type"],order["reduceOnly"],order["price"],order["stopPrice"],order["status"],)
                     print("order[status].lower() value",order["status"].lower())
@@ -299,6 +316,7 @@ class BotManager(iBotManager):
                             res = self.dao.archiveProfitOperation(profitOperation.id)
                             print("the return of a deleted row is:",res,"and profitOperationIs:",profitOperation)
                 await self.monitor.start()
+                    """
 
             except Exception as e:
                 #print(e)
@@ -312,6 +330,23 @@ class BotManager(iBotManager):
                     await self.exchange.sleep(30000)
             except KeyboardInterrupt:
                 break
+    async def monitorTradesByWs(self):
+        while True:
+            print("#"*50,"watch_my_trades","#"*50)
+            trades = await self.exchange.watch_my_trades(symbol="DOGE/USDT", since=None, limit=None, params={})
+            print("cantidad de ordenes recibidas por ws:",len(trades))
+            for order in trades:
+                pprint(order)
+    async def monitorPositionByWs(self):
+        while True:
+            print("#"*50,"watchPositions","#"*50)
+            positions = await self.exchange.watch_positions(symbols=["DOGE/USDT","TRX/USDT"], since=None, limit=None, params={})
+            print("cantidad de ordenes recibidas por ws:",len(positions))
+            for position in positions:
+                pprint(position)
+                    
+
+            
 
     async def monitor_order(self, order_id, symbol):
         raise "not implemented monitor_order yet"
