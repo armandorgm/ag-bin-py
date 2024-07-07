@@ -18,7 +18,7 @@ from ..strategy import Strategy
 from pprint import pprint
 import ccxt
 from...interfaces.exchange_basic import Order, iStrategy_Callback_Signal,MarketInterface,PositionSide, SymbolPrecision, ProfitOperation
-from ccxt.base.errors import InvalidOrder
+from ccxt.base.errors import InvalidOrder, OrderNotFound
 #getcontext().prec = 8
 
 
@@ -99,7 +99,13 @@ class StrategyA(Strategy):
         
         for po in self._profitOperations:
             if po["closingOrderId"]:
-                closing = await self.interface.fetch_order(po["closingOrderId"])
+                try:
+                    closing = await self.interface.fetch_order(po["closingOrderId"])
+                except OrderNotFound as e:
+                    print(f"ERROR: OUT order {po["closingOrderId"]} no existe. Posible razón: se reemplazó la orden de cierre ejecutada por otra duplicada por falta de seguridad en la actualizacíon de las operaciones. Solucion no recomandada para salir del paso:se eliminara la operacion")
+                    self._profitOperations.remove(po)
+                    print(f"operacion removida:",po,"\nReinicializando el procesamiento de las operaciones pendientes")
+                    return await self.processPendingProfitOperations()
                 if closing["status"] == "closed":
                     res = self.removePendingOperationBy("closingOrderId",po["closingOrderId"])
                     if res:
