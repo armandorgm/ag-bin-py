@@ -21,6 +21,13 @@
                 "test.test_strategyA.Test_StrategyA_general.test_backAndFordwardCheckpoints"
             ],
             "console": "integratedTerminal"
+        },
+        {
+            "name": "main",
+            "type": "python",
+            "request": "launch",
+            "program": "cleanroot/main.py",
+            "console": "integratedTerminal"
         }
     ]
 }

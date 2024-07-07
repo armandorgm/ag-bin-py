@@ -17,11 +17,18 @@ else:
     from typing_extensions import NotRequired
 
 
+
+
 OrderSide = Literal['buy', 'sell']
 OrderType = Literal['limit', 'market','TAKE_PROFIT']
 PositionSide = Literal['long', 'short']
 Any = PythonAny
-
+class putOrderType(TypedDict):
+    position_side: str
+    order_side: OrderSide
+    amount: Decimal
+    price: Decimal
+    orderType: OrderType
 
 class Entry:
     def __init__(self, path, api, method, config):

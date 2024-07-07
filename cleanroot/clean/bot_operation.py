@@ -3,7 +3,7 @@ import asyncio
 from decimal import Decimal
 import json
 from pprint import pprint
-from typing import Any, List, Literal
+from typing import Any, List, Literal, Optional
 from ccxt.pro import binanceusdm
 import ccxt
 from .utils import Utilidades
@@ -34,7 +34,6 @@ class Bot_Operation(Bot, StrategyImplementor):
         if not botStrategyConfig:
             raise Exception(f"botStrategyConfig id={self.strategyConfigId} Not found")
         self.strategy = self.loadBotStrategy(botStrategyConfig)
-        self.openOrders:list[str] = []
         print(f"acaba de instanciar una operacion con nombre {description}")
     
     @property
@@ -46,8 +45,6 @@ class Bot_Operation(Bot, StrategyImplementor):
         for strategy in self.strategies:
 
             if strategy.__dict__["id"] == botStrategyConfig.strategy_id:
-                print("botStrategyConfig found:")
-                pprint(botStrategyConfig.data)
                 dataJson = Strategy.from_json(botStrategyConfig.data)
                 #tupleData = tuple(dataJson.values())
                 return strategy(self, dataJson) # type: ignore
@@ -58,64 +55,70 @@ class Bot_Operation(Bot, StrategyImplementor):
     
     def saveStrategyState(self, strategyState):
         result = self.dao.saveStrategyState(self.botId, strategyState)
-        
-    async def putOrder(self, position_side, order_side, amount, price, orderType)->Order:
+    @property
+    def idUnico(self)->str:
+        return Utilidades.generarIdUnico()
+    
+    async def putOrder(self,newClientOrderId, position_side, order_side, amount, price, orderType):
         print("se colocará una orden:",self.symbol,orderType,f"##{order_side}##",amount, price, {"positionSide":position_side})
-        newClientOrderId = Utilidades.generarIdUnico()
         print(f"ordenIdGenerado:{newClientOrderId}")
         if position_side.lower() == "long" and order_side.lower() == "buy" or \
         position_side.lower() == "short" and order_side.lower() == "sell":
-            print("it's an opening order")
-            self.openOrders.append(newClientOrderId)
+            print("putOrder recibio an IN order")
         else:
-            print("it's a CLOSING order")
+            print("putOrder recibio a OUT order")
         self.exchange.verbose = True
         #self.dao.registerOpenOperation()#NotImplemented Yet
         try:
             order = await self.exchange.create_order(self.symbol, orderType, order_side, float(amount), price, {"positionSide":position_side,"newClientOrderId":newClientOrderId})
+        except ccxt.OperationFailed as e:
+            print(e)
+            print("ERROR colocando la Orden", "ccxt.OperationFailed")
+            print(e)
+            raise e
+            
         finally:
             self.exchange.verbose = False
         return order    
     
-    async def checkOpeningOrders(self):
-        print("check OPEN X orders")
-        closedOrders = []
-        openOrders = []
-        for origClientOrderId in self.openOrders:
-
-                self.exchange.verbose = True
-                orderData:Order = await self.exchange.fetch_order(origClientOrderId, self.symbol,{"origClientOrderId":origClientOrderId})
-                self.exchange.verbose = False
-                print(orderData["status"])
-                if orderData["status"] == "closed": #before pending_profit_operation.check_price(current_price)
-                    await self.strategy.onOpenOrderExecution(orderData)
-                        
-                else:#si la condicion no se cumple guardar la operacion
-                    openOrders.append(origClientOrderId)
-                    print(f"Precio de cierre de operacion NO alcanzado ({orderData["price"]})")
-        self.openOrders = openOrders
+    
         
+    async def watchOrders(self):
+        
+        while self.status:
+            orders = await self.exchange.watch_orders(symbol=self.symbol)
+            for order in orders:
+                task = asyncio.create_task(self.strategy.onOrderUpdate(order))
+                
+    async def startMonitorWs(self):
+        asyncio.create_task(self.watchOrders())
+
+    
     async def start(self):
         super().start()
         #self.exchange.verbose = True
-        entryReferencePrice = (await self.exchange.watch_ticker(self.symbol))['last']
-        pprint(f"entryReferencePrice:{entryReferencePrice}, offset:{self.strategy.offset*100}%")
+        #entryReferencePrice = (await self.exchange.watch_ticker(self.symbol))['last']
+        ticker = (await self.exchange.fetch_ticker(self.symbol))
+        entryReferencePrice = ticker['last']
+        
+        await self.strategy.preInit(ticker)
+        await self.startMonitorWs()
         self.exchange.verbose = False
         tailPrice = entryReferencePrice
+        lastPrice = Decimal(str((await self.exchange.watch_ticker(self.symbol))['last']))
+        self.exchange.enableRateLimit =False
         while self.status:
             try:
-                lastPrice = Decimal(str((await self.exchange.watch_ticker(self.symbol))['last']))
+                lastPrice = Decimal(str((await self.exchange.watch_ticker(self.symbol))["last"]))
                 if not tailPrice == lastPrice or True:
                     tailPrice=lastPrice
                     #await self.checkPendingOrdersToClose(lastPrice)
-                    if len(self.openOrders):
-                        await self.checkOpeningOrders()
+                    
                     asyncio.create_task( self.strategy.evaluar_precio(lastPrice))
             except KeyboardInterrupt:
                 await self.exchange.close()
             finally:
-                await asyncio.sleep(1)
-                pass
+                await asyncio.sleep(0.5)
         await self.exchange.close()
 
     def create_pending_operations(self, exchangeId: str, amount: None | str | float | int | Decimal, position_side: Literal['long'] | Literal['short'], entry_price: float, open_fee: FeeInterface | None, closing_price: Decimal) -> Profit_Operation:
@@ -188,7 +191,7 @@ class Bot_Operation(Bot, StrategyImplementor):
             return json.loads(res.data)
         raise Exception("not getBotStrategyConfig found in dao.getBotStrategyConfig()")
 
-    async def fetch_order(self,orderId) -> Order | None:
+    async def fetch_order(self,orderId):
         return await self.exchange.fetch_order(orderId,self.symbol,{"origClientOrderId":orderId})
 
     

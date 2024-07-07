@@ -11,7 +11,7 @@ from ..bot_strategies.profit_operation import Profit_Operation
 class StrategyImplementor(ABC):
     
     @abstractmethod
-    async def fetch_order(self,orderId:str)->Optional[Order]:
+    async def fetch_order(self,orderId:str)->Order:
         pass
     
     @abstractmethod
@@ -32,9 +32,14 @@ class StrategyImplementor(ABC):
     @abstractmethod
     def create_pending_operations(self,exchangeId:str, amount:Num, position_side:PositionSide, entry_price:float, open_fee:Fee, closing_price:Decimal)->Profit_Operation:
         pass
-
+    
+    @property
     @abstractmethod
-    async def putOrder(self, position_side:PositionSide|str, order_side:OrderSide, amount:Decimal, price:Decimal, orderType:OrderType)->Order:
+    def idUnico(self)->str:
+        pass
+    
+    @abstractmethod
+    async def putOrder(self, newClientOrderId, position_side:PositionSide|str, order_side:OrderSide, amount:Decimal, price:Decimal, orderType:OrderType)->Order:
         pass
     
     @property
