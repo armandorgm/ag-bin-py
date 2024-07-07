@@ -98,27 +98,26 @@ class StrategyA(Strategy):
         print(f"There are {len(self._profitOperations)} pending operations")
         
         for po in self._profitOperations:
-            if po["closingOrderId"]:
-                try:
-                    closing = await self.interface.fetch_order(po["closingOrderId"])
-                except OrderNotFound as e:
-                    print(f"ERROR: OUT order {po["closingOrderId"]} no existe. Posible razón: se reemplazó la orden de cierre ejecutada por otra duplicada por falta de seguridad en la actualizacíon de las operaciones. Solucion no recomandada para salir del paso:se eliminara la operacion")
-                    self._profitOperations.remove(po)
-                    print(f"operacion removida:",po,"\nReinicializando el procesamiento de las operaciones pendientes")
-                    return await self.processPendingProfitOperations()
-                if closing["status"] == "closed":
-                    res = self.removePendingOperationBy("closingOrderId",po["closingOrderId"])
-                    if res:
-                        print(f"Checkpoint {res['checkpoint']} with OUT order status{closing["status"]}removed successfully. reinitializing preCheck...")
+            try:
+                if po["closingOrderId"]:
+                    outOrder = await self.interface.fetch_order(po["closingOrderId"])
+                    if outOrder["status"] == "closed":
+                        self._profitOperations.remove(po)
+                        print(f"Checkpoint {po['checkpoint']} with OUT order status{outOrder["status"]}removed successfully. reinitializing preCheck...")
                         return await self.processPendingProfitOperations()
-                elif closing["status"] != "open":
-                    print(f"Desarrollo pendiente para operaciones con ordenes {closing["status"]} que no se pudieron cerrar po X motivos...")
-            else: #if po["closingOrderId"] == None
-                opening = await self.interface.fetch_order(po["openingOrderId"])
-                if opening["status"] == "closed":
-                    await self.onOpenOrderExecution(opening)
-                elif opening["status"] != "open":
-                    print(f"Desarrollo pendiente para operaciones con ordenes {opening["status"]} que no se pudieron cerrar po X motivos...")
+                    elif outOrder["status"] != "open":
+                        print(f"Desarrollo pendiente para operaciones con ordenes {outOrder["status"]} que no se pudieron cerrar po X motivos...")
+                else: #if po["closingOrderId"] == None
+                    inOrder = await self.interface.fetch_order(po["openingOrderId"])
+                    if inOrder["status"] == "closed":
+                        await self.onOpenOrderExecution(inOrder)
+                    elif inOrder["status"] != "open":
+                        print(f"Desarrollo pendiente para operaciones con ordenes {inOrder["status"]} que no se pudieron cerrar po X motivos...")
+            except OrderNotFound as e:
+                print(f"ERROR: OUT order {po["closingOrderId"]} no existe. Posible razón: se reemplazó la orden de cierre ejecutada por otra duplicada por falta de seguridad en la actualizacíon de las operaciones. Solucion no recomandada para salir del paso:se eliminara la operacion")
+                self._profitOperations.remove(po)
+                print(f"operacion removida:",po,"\nReinicializando el procesamiento de las operaciones pendientes")
+                return await self.processPendingProfitOperations()
 
         self.save()
         print(end="pendingProfitOp: ")
@@ -144,7 +143,7 @@ class StrategyA(Strategy):
         self.interface.saveStrategyState(self.cacheData)
         
     def updateLastCheckpoint(self,escalas:int):
-        print(f"lastCheckpoint changed from '{self.lastCheckpoint}'",end=" ")
+        print(time.ctime(),f"lastCheckpoint changed from '{self.lastCheckpoint}'",end=" ")
         #self.lastCheckpoint= (self.lastCheckpoint*(self.offset**escalas)).quantize(Decimal("1e-{0}".format(self.interface.pricePrecision)))
         self.lastCheckpoint= self.positionCalc(self.lastCheckpoint,(self.offset**escalas))
         print(f">>> to '{self.lastCheckpoint}'")
@@ -184,40 +183,7 @@ class StrategyA(Strategy):
     def parsePriceToDecimal(self,abstractNumber:str|int|float|Decimal)->Decimal:
         return Decimal(str(abstractNumber)).quantize(Decimal("1e-{0}".format(self.interface.pricePrecision)))
         
-    async def isCheckpointProfitOperationActive(self, reachedCheckpoint:Decimal):
-        print(f"Looking for {reachedCheckpoint} in ProfitOperation",end=": ")
-        reachedCheckpointFound = False
-        for profit_Operation in self._profitOperations:
-            #if type(profit_Operation["checkpoint"]) != type(checkpoint):
-            #    raise TypeError(f"{type(profit_Operation["checkpoint"])}!={type(checkpoint)}{profit_Operation["checkpoint"]}!={checkpoint}")
-            stored_N_Checkpoint =    self.parsePriceToDecimal(profit_Operation["checkpoint"])
-            reachedCheckpointParsed= self.parsePriceToDecimal(reachedCheckpoint)
-            if stored_N_Checkpoint == reachedCheckpointParsed:
-                reachedCheckpointFound = True
-                print(f"Found {reachedCheckpoint} in ProfitOperation")
-                try:
-                    openingOrder = await self.interface.fetch_order(profit_Operation["openingOrderId"])
-                except Exception as e:
-                    print("ERROR: fetching order para la verificacion si una operacion in/out sigue activa")
-                    raise e
-                if openingOrder:
-                    print(f"fetched IN order correctly")
-                    if openingOrder["status"] == "open":
-                        print(f"Opening order is ACTIVE (status:{openingOrder["status"]})")
-                        return True
-                    else:
-                        print(f"Opening order for 'Checkpoint:{profit_Operation['checkpoint']}' is not open (current:{openingOrder["status"]})")
-                        if profit_Operation["closingOrderId"]:
-                            closingOrder = (await self.interface.fetch_order(profit_Operation["closingOrderId"]))
-                            if closingOrder and closingOrder["status"] == "open":
-                                print(f"OUT order is 'open' (status:{closingOrder["status"]})")
-                                return True
-                            else:
-                                print(f"OUT order is NOT 'open'")
-                
-        if not reachedCheckpointFound:  
-            print(f"checkpoint {reachedCheckpoint} not found in storage {[op['checkpoint'] for op in self._profitOperations]}.by:StrategyA.isCheckpointProfitOperationActive")
-        return False
+    
         
     def updateProfitOperation(self,newProfitOperation:ProfitOperation):
         indice = next((i for i, po in enumerate(self._profitOperations) if po.get("checkpoint") == self.nextCheckpoint),None)
@@ -234,16 +200,16 @@ class StrategyA(Strategy):
             print("operacion agregada",end=":")
             pprint(self._profitOperations)
             
-    async def onNextCheckpointReached(self,receivedPrice:Decimal,escalasSobrepasadas:int):
-        print(f"current_price (ALCANZÓ) self.nextCheckpoint")
-        if self.consecutives_price_fordward >= 1:
-            if not (await self.isCheckpointProfitOperationActive(self.nextCheckpoint)) :
+    async def onNextCheckpointReached(self,receivedPrice:Decimal,escalasSobrepasadas:int,checkpointReached:Decimal):
+        print(f"current_price (ALCANZÓ) self.nextCheckpoint/previousCehckpoint")
+        if self.consecutives_price_fordward >= 1 or True:###########TEMPORAL#########################
+            if not (await self.isCheckpointProfitOperationActive(checkpointReached)) :
                 print(f"consecutives_price_fordward >= 1 ({self.consecutives_price_fordward >= 1})")
                 newClientOrderId = self.interface.idUnico
                 makerPrice = self.getMakerPrice(receivedPrice)
                 amount = Decimal(self.get_min_amount(makerPrice))
                 print(f"makerPrice is:{makerPrice}")
-                profitOperation:ProfitOperation = {"checkpoint":str(self.nextCheckpoint),"openingOrderId":newClientOrderId,"closingOrderId":None}
+                profitOperation:ProfitOperation = {"checkpoint":str(checkpointReached),"openingOrderId":newClientOrderId,"closingOrderId":None}
                 self.updateProfitOperation(profitOperation)
                 print(f"IN orden registrada en pending Operations con id:{newClientOrderId}")
                 #pending_profit_operation = self.interface.create_pending_operations(order["id"],order["amount"],order["info"]["positionSide"], float(order["price"]), order["fee"],self.getProfitPriceOf(Decimal(str(order["price"]))))
@@ -267,8 +233,9 @@ class StrategyA(Strategy):
             
                 #if receivedPrice >= self.nextCheckpoint:
                 if self.isNextCheckpointReached(receivedPrice):
-                    await self.onNextCheckpointReached(receivedPrice,escalasSobrepasadas)       
-                elif self.isNextCheckpointReached(receivedPrice,True):#if receivedPrice <=self.previousCheckpoint
+                    await self.onNextCheckpointReached(receivedPrice,escalasSobrepasadas,self.nextCheckpoint)       
+                elif self.isNextCheckpointReached(receivedPrice,backwards=True):#if receivedPrice <=self.previousCheckpoint
+                    await self.onNextCheckpointReached(receivedPrice,escalasSobrepasadas,self.previousCheckpoint)####TEMPORAL#######
                     self.consecutives_price_fordward = 0
                     self.updateLastCheckpoint (escalasSobrepasadas)
                     
@@ -437,3 +404,40 @@ class StrategyA(Strategy):
             if po[key] == value:
                 self._profitOperations.remove(po)
                 return po
+
+    async def isCheckpointProfitOperationActive(self, reachedCheckpoint:Decimal):
+        print(f"Looking for {reachedCheckpoint} in ProfitOperation",end=": ")
+        reachedCheckpointFound = False
+        for profit_Operation in self._profitOperations:
+            #if type(profit_Operation["checkpoint"]) != type(checkpoint):
+            #    raise TypeError(f"{type(profit_Operation["checkpoint"])}!={type(checkpoint)}{profit_Operation["checkpoint"]}!={checkpoint}")
+            stored_N_Checkpoint =    self.parsePriceToDecimal(profit_Operation["checkpoint"])
+            reachedCheckpointParsed= self.parsePriceToDecimal(reachedCheckpoint)
+            if stored_N_Checkpoint == reachedCheckpointParsed:
+                reachedCheckpointFound = True
+                print(f"Found {reachedCheckpoint} in ProfitOperation")
+                try:
+                    if profit_Operation["closingOrderId"]:
+                        closingOrder = await self.interface.fetch_order(profit_Operation["closingOrderId"])
+                        if closingOrder["status"] == "open":
+                            print(f"OUT order is 'open' (status:{closingOrder["status"]})")
+                            return True
+                        else:
+                            print(f"OUT order is NOT 'open'")
+                    else:
+                        openingOrder = await self.interface.fetch_order(profit_Operation["openingOrderId"])
+                        if openingOrder["status"] == "open":
+                            print(f"Opening order is ACTIVE (status:{openingOrder["status"]})")
+                            return True
+                        else:
+                            print(f"Opening order for 'Checkpoint:{profit_Operation['checkpoint']}' is not open (current:{openingOrder["status"]})")
+                except Exception as e:
+                    print("ERROR: fetching order para la verificacion si una operacion in/out sigue activa")
+                    print(e)
+                    self._profitOperations.remove(profit_Operation)
+                    print(f"ERROR:se eliminó operacion {profit_Operation['checkpoint']} causante de errores y se reinicializó")
+                    return self.isCheckpointProfitOperationActive(reachedCheckpoint=reachedCheckpoint)
+                
+        if not reachedCheckpointFound:  
+            print(f"checkpoint {reachedCheckpoint} not found in storage {[op['checkpoint'] for op in self._profitOperations]}.by:StrategyA.isCheckpointProfitOperationActive")
+        return False
